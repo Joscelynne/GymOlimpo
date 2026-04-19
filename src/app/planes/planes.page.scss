@@ -1,0 +1,36 @@
+.planes-content {
+  --background: #f6f7fb;
+}
+
+.estado-card,
+.info-card,
+.plan-card,
+.condiciones-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.plan-card.recomendado {
+  border: 2px solid #ffd54f;
+  background: linear-gradient(135deg, #fffdf5 0%, #fff8e1 100%);
+}
+
+.badge-recomendado {
+  color: #b26a00;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+.mensaje {
+  margin-top: 12px;
+  font-weight: 600;
+}

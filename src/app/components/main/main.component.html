@@ -1,0 +1,101 @@
+<ion-header class="main-header">
+  <ion-toolbar>
+    <ion-title>Gym Olimpo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="main-content">
+
+  <div class="main-wrapper">
+
+    <ion-card class="hero-card">
+      <ion-card-content>
+        <div class="hero-badge">Panel principal</div>
+        <h1>Bienvenido{{ nombreUsuario ? ', ' + nombreUsuario : '' }}</h1>
+        <p>Gestiona tus planes, reservas, horarios y pagos desde un solo lugar.</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" sizeMd="6">
+          <ion-card class="menu-card perfil-card" button routerLink="/perfil">
+            <ion-card-header>
+              <ion-card-title>Mi perfil</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Revisa tus datos, plan activo, sesiones disponibles y vigencia.
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6">
+          <ion-card class="menu-card reservas-card" button routerLink="/reservas">
+            <ion-card-header>
+              <ion-card-title>Reservas</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Agenda tus sesiones y controla tus cupos disponibles.
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6">
+          <ion-card class="menu-card horarios-card" button routerLink="/horarios">
+            <ion-card-header>
+              <ion-card-title>Horarios</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Consulta los bloques disponibles y los cupos por sesión.
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6">
+          <ion-card class="menu-card planes-card" button routerLink="/planes">
+            <ion-card-header>
+              <ion-card-title>Planes</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Revisa los planes del gimnasio y selecciona el que más te acomode.
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6">
+          <ion-card class="menu-card pagos-card" button routerLink="/pagos">
+            <ion-card-header>
+              <ion-card-title>Pagos</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Visualiza pagos pendientes y valida tu plan seleccionado.
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6">
+          <ion-card class="menu-card admin-card" button routerLink="/admin">
+            <ion-card-header>
+              <ion-card-title>Administración</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              Herramientas de gestión interna y control general del gimnasio.
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="acciones-box">
+      <ion-button expand="block" color="success" class="btn-generar" (click)="generarHorarios()">
+        Generar horarios 30 días
+      </ion-button>
+
+      <ion-button expand="block" color="danger" class="btn-cerrar" (click)="onClick()">
+        Cerrar sesión
+      </ion-button>
+    </div>
+
+  </div>
+
+</ion-content>

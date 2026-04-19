@@ -1,0 +1,116 @@
+.main-content {
+  --background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.main-wrapper {
+  padding: 20px 14px 28px;
+}
+
+.hero-card {
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, #6b0f1a 0%, #8b1e2d 58%, #4b5563 100%);
+  color: white;
+}
+
+.hero-card h1 {
+  margin: 8px 0 10px;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.hero-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.96;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.menu-card {
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 180px;
+}
+
+.menu-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+}
+
+.menu-card ion-card-title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.menu-card ion-card-content {
+  color: #475569;
+  line-height: 1.5;
+}
+
+.perfil-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  border-left: 6px solid #6b0f1a;
+}
+
+.reservas-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  border-left: 6px solid #15803d;
+}
+
+.horarios-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+  border-left: 6px solid #4b5563;
+}
+
+.planes-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+  border-left: 6px solid #8b1e2d;
+}
+
+.pagos-card {
+  background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+  border-left: 6px solid #16a34a;
+}
+
+.admin-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+  border-left: 6px solid #6b7280;
+}
+
+.acciones-box {
+  margin-top: 8px;
+}
+
+.btn-generar {
+  margin-top: 8px;
+  --border-radius: 16px;
+  font-weight: 700;
+  height: 48px;
+}
+
+.btn-cerrar {
+  margin-top: 10px;
+  --border-radius: 16px;
+  font-weight: 700;
+  height: 48px;
+}
+
+@media (max-width: 768px) {
+  .hero-card h1 {
+    font-size: 24px;
+  }
+}

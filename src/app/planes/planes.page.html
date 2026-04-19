@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Planes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/main">Inicio</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding planes-content">
+
+  <ion-card class="estado-card" *ngIf="perfil">
+    <ion-card-header>
+      <ion-card-title>Tu estado actual</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="tienePlanActivo(); else sinPlanActivo">
+      <p><strong>Plan activo:</strong> {{ perfil.planActivo }}</p>
+      <p><strong>Sesiones disponibles:</strong> {{ perfil.sesionesDisponibles ?? 0 }}</p>
+      <p><strong>Vigencia:</strong> {{ perfil.vigenciaInicio || 'No definida' }} al {{ perfil.vigenciaFin || 'No definida' }}</p>
+    </ion-card-content>
+
+    <ng-template #sinPlanActivo>
+      <ion-card-content>
+        <p>No tienes un plan activo en este momento.</p>
+        <p>Selecciona uno de los planes disponibles para comenzar.</p>
+      </ion-card-content>
+    </ng-template>
+  </ion-card>
+
+  <ion-card class="info-card">
+    <ion-card-header>
+      <ion-card-title>Planes disponibles</ion-card-title>
+      <ion-card-subtitle>Elige el plan que mejor se adapte a ti</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card
+    *ngFor="let plan of planes"
+    class="plan-card"
+    [class.recomendado]="plan.recomendado">
+
+    <ion-card-header>
+      <ion-card-subtitle *ngIf="plan.recomendado" class="badge-recomendado">
+        Recomendado
+      </ion-card-subtitle>
+      <ion-card-title>{{ plan.nombre }}</ion-card-title>
+      <ion-card-subtitle>
+        ${{ plan.precio }} · {{ plan.sesiones }} sesión{{ plan.sesiones > 1 ? 'es' : '' }}
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item *ngFor="let item of plan.descripcion">
+          <ion-label>✔ {{ item }}</ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-button
+        expand="block"
+        color="primary"
+        [disabled]="cargando"
+        (click)="seleccionarPlan(plan)">
+        {{ cargando ? 'Procesando...' : 'Seleccionar plan' }}
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="condiciones-card">
+    <ion-card-header>
+      <ion-card-title>Condiciones</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>• Las sesiones deben usarse dentro del mes.</p>
+      <p>• No son acumulables.</p>
+      <p>• No hay devolución por inasistencias.</p>
+      <p>• Cada bloque horario tiene un máximo de 3 cupos.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-text color="danger" *ngIf="mensaje">
+    <p class="mensaje">{{ mensaje }}</p>
+  </ion-text>
+
+</ion-content>

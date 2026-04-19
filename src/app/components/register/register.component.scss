@@ -1,0 +1,146 @@
+.registro-content {
+  --background: linear-gradient(180deg, #f4f7fb 0%, #eef3ff 100%);
+}
+
+.registro-wrapper {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.registro-card {
+  width: 100%;
+  max-width: 760px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(18, 38, 63, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.registro-banner {
+  background: linear-gradient(135deg, #6b0f1a 0%, #8b1e2d 60%, #374151 100%);
+  color: white;
+}
+
+.registro-banner h1 {
+  margin: 8px 0 8px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.registro-banner p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+.registro-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.registro-form {
+  margin-top: 8px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.custom-item {
+  --background: #f8fafc;
+  --border-radius: 16px;
+  --padding-start: 14px;
+  --inner-padding-end: 14px;
+  --min-height: 76px;
+  margin-bottom: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+
+.custom-item ion-label {
+  font-weight: 700;
+  color: #334155 !important;
+  margin-bottom: 6px;
+}
+
+.custom-item ion-input {
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.error-box {
+  background: #fff1f2;
+  color: #b42318;
+  border: 1px solid #fecdd3;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.error-inline {
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 4px 2px 14px;
+}
+
+.acciones-box {
+  margin-top: 10px;
+}
+
+.btn-registro {
+  --background: linear-gradient(135deg, #166534 0%, #22c55e 100%);
+  --background-hover: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+  --border-radius: 16px;
+  --box-shadow: 0 10px 24px rgba(34, 197, 94, 0.25);
+  font-weight: 800;
+  height: 50px;
+}
+
+.login-box {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 14px;
+  color: #475569;
+}
+
+.login-box a {
+  color: #6b0f1a; // burdeo
+}
+
+.login-box a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .registro-banner {
+    padding: 24px 20px 20px;
+  }
+
+  .registro-banner h1 {
+    font-size: 24px;
+  }
+}

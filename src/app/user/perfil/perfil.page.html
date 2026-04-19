@@ -1,0 +1,143 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mi perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/main']">Inicio</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen class="ion-padding perfil-content">
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content>
+      Cargando información del perfil...
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="!cargando && userData">
+
+    <ion-card class="perfil-card principal-card">
+      <ion-card-header>
+        <ion-card-subtitle>Cliente Gym Olimpo</ion-card-subtitle>
+        <ion-card-title>{{ userData.nombre }} {{ userData.apellido }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="email-box">
+          {{ userData.email || user?.email }}
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-grid class="resumen-grid">
+      <ion-row>
+        <ion-col size="6">
+          <ion-card class="mini-card">
+            <ion-card-content>
+              <div class="mini-label">Reservas activas</div>
+              <div class="mini-value">{{ reservas?.length || 0 }}</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-card class="mini-card">
+            <ion-card-content>
+              <div class="mini-label">Pagos pendientes</div>
+              <div class="mini-value">{{ pagosPendientes || 0 }}</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card class="perfil-card">
+      <ion-card-header>
+        <ion-card-title>Información personal</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-list lines="none">
+
+          <ion-item>
+            <ion-label>
+              <h3>RUT</h3>
+              <p>{{ userData.rut || 'No registrado' }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h3>Teléfono</h3>
+              <p>{{ userData.telefono || 'No registrado' }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h3>Rol</h3>
+              <p>{{ userData.rol || 'cliente' }}</p>
+            </ion-label>
+          </ion-item>
+
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="perfil-card">
+      <ion-card-header>
+        <ion-card-title>Plan y sesiones</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-list lines="none">
+
+          <ion-item>
+            <ion-label>
+              <h3>Plan activo</h3>
+              <p>{{ userData.planActivo || 'Pendiente' }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h3>Sesiones disponibles</h3>
+              <p>{{ userData.sesionesDisponibles ?? 0 }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h3>Vigencia inicio</h3>
+              <p>{{ userData.vigenciaInicio || 'No definida' }}</p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h3>Vigencia fin</h3>
+              <p>{{ userData.vigenciaFin || 'No definida' }}</p>
+            </ion-label>
+          </ion-item>
+
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <ion-card *ngIf="!cargando && !userData && errorMensaje">
+    <ion-card-content>
+      {{ errorMensaje }}
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
+
+<ion-footer>
+  <ion-button color="danger" expand="block" (click)="confirmarCierreSesion()" shape="round" class="logout-btn">
+    <ion-icon slot="start" name="log-out"></ion-icon>
+    Cerrar sesión
+  </ion-button>
+</ion-footer>

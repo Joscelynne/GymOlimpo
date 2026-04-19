@@ -1,0 +1,7 @@
+{
+  "name": "firebasegym",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

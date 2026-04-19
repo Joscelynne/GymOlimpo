@@ -1,0 +1,33 @@
+.reservas-content {
+  --background: #f6f7fb;
+}
+
+.estado-card,
+.reserva-card,
+.historial-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.nota-reserva {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.horarios-box {
+  margin-top: 16px;
+}
+
+.horarios-box h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.mensaje {
+  margin-top: 14px;
+  font-weight: 600;
+  color: #b42318;
+}

@@ -1,0 +1,111 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Reservas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/main">Inicio</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding reservas-content">
+
+  <ion-card class="estado-card" *ngIf="perfil">
+    <ion-card-header>
+      <ion-card-title>Tu plan actual</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content *ngIf="tienePlanActivo(); else sinPlan">
+      <p><strong>Plan:</strong> {{ perfil.planActivo }}</p>
+      <p><strong>Sesiones disponibles:</strong> {{ perfil.sesionesDisponibles ?? 0 }}</p>
+      <p><strong>Vigencia:</strong> {{ perfil.vigenciaInicio || 'No definida' }} al {{ perfil.vigenciaFin || 'No definida' }}</p>
+      <p class="nota-reserva">Cada reserva consume 1 sesión de tu plan.</p>
+    </ion-card-content>
+
+    <ng-template #sinPlan>
+      <ion-card-content>
+        <p>No tienes un plan activo o aún no has realizado el pago.</p>
+        <p>Para agendar sesiones, primero debes seleccionar y pagar un plan.</p>
+        <ion-button expand="block" routerLink="/planes">
+          Ver planes disponibles
+        </ion-button>
+      </ion-card-content>
+    </ng-template>
+  </ion-card>
+
+  <ion-card class="reserva-card" *ngIf="tienePlanActivo()">
+    <ion-card-header>
+      <ion-card-title>Agendar sesión</ion-card-title>
+      <ion-card-subtitle>Selecciona una fecha y un bloque horario disponible</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Selecciona una fecha</ion-label>
+        <ion-datetime
+          presentation="date"
+          [min]="today"
+          (ionChange)="onFechaChange($event)">
+        </ion-datetime>
+      </ion-item>
+
+      <div *ngIf="fechaSeleccionada" class="horarios-box">
+        <h3>Horarios disponibles</h3>
+
+        <ion-list *ngIf="horariosDisponibles.length; else sinHorarios">
+          <ion-item
+            button
+            *ngFor="let horario of horariosDisponibles"
+            (click)="seleccionarHorario(horario)"
+            [color]="horarioSeleccionado?.id === horario.id ? 'primary' : ''">
+            <ion-label>
+              <h2>{{ horario.hora }}</h2>
+              <p>Cupos disponibles: {{ horario.cuposDisponibles }} / {{ horario.cupos }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ng-template #sinHorarios>
+          <p>No hay horarios disponibles para esta fecha.</p>
+        </ng-template>
+      </div>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        [disabled]="!horarioSeleccionado || cargando"
+        (click)="guardar()">
+        {{ cargando ? 'Confirmando...' : 'Confirmar reserva' }}
+      </ion-button>
+
+      <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="historial-card">
+    <ion-card-header>
+      <ion-card-title>Mis reservas</ion-card-title>
+    </ion-card-header>
+
+    <ion-list>
+      <ion-item *ngFor="let reserva of reservas">
+        <ion-label>
+          <h2>{{ reserva.fecha }} · {{ reserva.hora }}</h2>
+          <p>Estado: {{ reserva.estado }}</p>
+        </ion-label>
+
+        <ion-button
+          fill="outline"
+          color="danger"
+          (click)="cancelar(reserva.id)"
+          *ngIf="reserva.estado !== 'cancelada'">
+          Cancelar
+        </ion-button>
+      </ion-item>
+
+      <ion-item *ngIf="!reservas.length">
+        <ion-label>No tienes reservas registradas.</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+
+</ion-content>

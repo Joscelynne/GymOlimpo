@@ -1,0 +1,73 @@
+<ion-header class="login-header">
+  <ion-toolbar>
+    <ion-title>Iniciar sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login-content">
+
+  <div class="login-wrapper">
+    <ion-card class="login-card">
+
+      <div class="login-banner">
+        <div class="login-badge">Gym Olimpo</div>
+        <h1>Bienvenido</h1>
+        <p>Accede a tu cuenta para gestionar tus planes y reservas</p>
+      </div>
+
+      <ion-card-content>
+
+        <p *ngIf="errorMessage" class="error-box">
+          {{ errorMessage }}
+        </p>
+
+        <form [formGroup]="formLogin" (ngSubmit)="onSubmit()">
+
+          <ion-item class="custom-item" lines="none">
+            <ion-label position="stacked">Correo electrónico</ion-label>
+            <ion-input
+              type="email"
+              formControlName="email"
+              placeholder="ejemplo@correo.com">
+            </ion-input>
+          </ion-item>
+
+          <ion-item class="custom-item" lines="none">
+            <ion-label position="stacked">Contraseña</ion-label>
+            <ion-input
+              type="password"
+              formControlName="password"
+              placeholder="Ingresa tu contraseña">
+            </ion-input>
+          </ion-item>
+
+          <ion-button
+            expand="block"
+            type="submit"
+            class="btn-login"
+            [disabled]="!formLogin.valid || loading">
+
+            {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
+          </ion-button>
+
+        </form>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          class="btn-google"
+          (click)="loginGoogle()">
+
+          Continuar con Google
+        </ion-button>
+
+        <div class="register-box">
+          <span>¿No tienes cuenta?</span>
+          <a routerLink="/register">Crear cuenta</a>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

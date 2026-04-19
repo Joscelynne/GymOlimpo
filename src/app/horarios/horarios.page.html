@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Horarios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/main">Inicio</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding horarios-content">
+
+  <ion-card *ngIf="cargando">
+    <ion-card-content>
+      Cargando horarios...
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngFor="let horario of horarios" class="horario-card">
+    <ion-card-header>
+      <ion-card-title>{{ horario.fecha }} · {{ horario.hora }}</ion-card-title>
+      <ion-card-subtitle>{{ horario.entrenador || 'Entrenador asignado' }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Cupos disponibles:</strong> {{ horario.cuposDisponibles }} / {{ horario.cupos }}</p>
+      <ion-progress-bar
+        [value]="horario.cupos > 0 ? horario.cuposDisponibles / horario.cupos : 0">
+      </ion-progress-bar>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="!cargando && !horarios.length">
+    <ion-card-content>
+      No hay horarios disponibles por el momento.
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

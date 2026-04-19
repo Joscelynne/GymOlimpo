@@ -1,0 +1,117 @@
+<ion-header class="registro-header">
+  <ion-toolbar>
+    <ion-title>Registro de usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="registro-content">
+
+  <div class="registro-wrapper">
+    <ion-card class="registro-card">
+      <div class="registro-banner">
+        <div class="registro-badge">Gym Olimpo</div>
+        <h1>Crear cuenta</h1>
+        <p>Regístrate para acceder a planes, reservas y seguimiento de tus sesiones.</p>
+      </div>
+
+      <ion-card-content>
+        <div *ngIf="errorMessage" class="error-box">
+          {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="formRegister" (ngSubmit)="onSubmit()" class="registro-form">
+
+          <div class="form-grid">
+            <ion-item class="custom-item" lines="none">
+              <ion-label position="stacked">RUT</ion-label>
+              <ion-input
+                type="text"
+                formControlName="rut"
+                placeholder="12.345.678-9"
+                inputmode="numeric">
+              </ion-input>
+            </ion-item>
+
+            <ion-item class="custom-item" lines="none">
+              <ion-label position="stacked">Teléfono</ion-label>
+              <ion-input
+                type="text"
+                formControlName="telefono"
+                placeholder="+56 9 1234 5678">
+              </ion-input>
+            </ion-item>
+
+            <ion-item class="custom-item" lines="none">
+              <ion-label position="stacked">Nombre</ion-label>
+              <ion-input
+                type="text"
+                formControlName="nombre"
+                placeholder="Ingresa tu nombre">
+              </ion-input>
+            </ion-item>
+
+            <ion-item class="custom-item" lines="none">
+              <ion-label position="stacked">Apellido</ion-label>
+              <ion-input
+                type="text"
+                formControlName="apellido"
+                placeholder="Ingresa tu apellido">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <ion-item class="custom-item" lines="none">
+            <ion-label position="stacked">Correo electrónico</ion-label>
+            <ion-input
+              type="email"
+              formControlName="email"
+              placeholder="ejemplo@correo.com">
+            </ion-input>
+          </ion-item>
+
+          <div class="form-grid">
+            <ion-item class="custom-item" lines="none">
+              <ion-label position="stacked">Contraseña</ion-label>
+              <ion-input
+                type="password"
+                formControlName="password"
+                placeholder="Mínimo 8 caracteres">
+              </ion-input>
+            </ion-item>
+
+            <ion-item class="custom-item" lines="none">
+              <ion-label position="stacked">Confirmar contraseña</ion-label>
+              <ion-input
+                type="password"
+                formControlName="confirmPassword"
+                placeholder="Repite tu contraseña">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <div
+            *ngIf="formRegister?.hasError('passwordMismatch') && formRegister?.get('confirmPassword')?.dirty"
+            class="error-inline">
+            Las contraseñas no coinciden.
+          </div>
+
+          <div class="acciones-box">
+            <ion-button
+              expand="block"
+              type="submit"
+              class="btn-registro"
+              [disabled]="!formRegister.valid || loading">
+              {{ loading ? 'Registrando...' : 'Crear cuenta' }}
+            </ion-button>
+          </div>
+        </form>
+
+        <div class="login-box">
+          <span>¿Ya tienes cuenta?</span>
+          <a routerLink="/login">Iniciar sesión</a>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

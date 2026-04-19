@@ -1,0 +1,17 @@
+.pagos-content {
+  --background: #f6f7fb;
+}
+
+.pendientes-card,
+.form-card,
+.historial-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.mensaje {
+  margin-top: 14px;
+  font-weight: 600;
+  color: #b42318;
+}

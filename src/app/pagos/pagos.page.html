@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pagos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/main">Inicio</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding pagos-content">
+
+  <ion-card class="pendientes-card">
+    <ion-card-header>
+      <ion-card-title>Pagos pendientes</ion-card-title>
+      <ion-card-subtitle>Selecciona el plan que deseas pagar</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-list>
+      <ion-item
+        *ngFor="let pago of pagosPendientes"
+        button
+        (click)="seleccionarPago(pago)"
+        [color]="pagoSeleccionado?.id === pago.id ? 'primary' : ''">
+        <ion-label>
+          <h2>{{ pago.planNombre }}</h2>
+          <p>Monto: ${{ pago.monto }}</p>
+          <p>Estado: {{ pago.estado }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="!pagosPendientes.length">
+        <ion-label>No tienes pagos pendientes.</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+
+  <ion-card class="form-card">
+    <ion-card-header>
+      <ion-card-title>Pagar plan seleccionado</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form [formGroup]="form" (ngSubmit)="guardar()">
+        <ion-item>
+          <ion-label position="stacked">Monto</ion-label>
+          <ion-input type="number" formControlName="monto" readonly></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Referencia / transferencia</ion-label>
+          <ion-input formControlName="referencia"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" [disabled]="!pagoSeleccionado || form.invalid">
+          Confirmar pago
+        </ion-button>
+      </form>
+
+      <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="historial-card">
+    <ion-card-header>
+      <ion-card-title>Historial de pagos</ion-card-title>
+    </ion-card-header>
+
+    <ion-list>
+      <ion-item *ngFor="let pago of pagos">
+        <ion-label>
+          <h2>{{ pago.planNombre }}</h2>
+          <p>${{ pago.monto }} · {{ pago.referencia || 'Sin referencia' }} · {{ pago.estado }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="!pagos.length">
+        <ion-label>No hay pagos registrados.</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+
+</ion-content>
