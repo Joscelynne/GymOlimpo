@@ -13,7 +13,7 @@ export class MainComponent implements OnInit {
   nombreUsuario = '';
 
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private gymService: GymService,
     private afAuth: AngularFireAuth,
     private router: Router
@@ -37,16 +37,6 @@ export class MainComponent implements OnInit {
       await this.router.navigate(['/login']);
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  async generarHorarios() {
-    try {
-      await this.gymService.generarHorariosProximos30Dias();
-      alert('Horarios generados correctamente');
-    } catch (error) {
-      console.error(error);
-      alert('Error al generar horarios');
     }
   }
 }

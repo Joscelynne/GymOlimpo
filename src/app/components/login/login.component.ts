@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -36,27 +37,39 @@ export class LoginComponent {
     try {
       const { email, password } = this.formLogin.value;
       await this.userService.login({ email, password });
-      await this.router.navigate(['/main']);
+      this.redirectByRole();
     } catch (error) {
       console.log(error);
       this.errorMessage = 'Correo o contraseña incorrectos';
-    } finally {
       this.loading = false;
     }
   }
 
   async loginGoogle() {
-  this.loading = true;
-  this.errorMessage = '';
+    this.loading = true;
+    this.errorMessage = '';
 
-  try {
-    await this.userService.loginWithGoogle();
-    await this.router.navigate(['/main']);
-  } catch (error) {
-    console.log(error);
-    this.errorMessage = 'No fue posible iniciar sesión con Google';
-  } finally {
-    this.loading = false;
+    try {
+      await this.userService.loginWithGoogle();
+      this.redirectByRole();
+    } catch (error) {
+      console.log(error);
+      this.errorMessage = 'No fue posible iniciar sesión con Google';
+      this.loading = false;
+    }
   }
-}
+
+  private redirectByRole() {
+    this.userService.user$.pipe(
+      filter(user => user !== undefined), // Wait for profile to load
+      take(1) // Automatically unsubscribe to prevent memory leaks
+    ).subscribe(user => {
+      this.loading = false;
+      if (user && user.rol === 'admin') {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/main']);
+      }
+    });
+  }
 }

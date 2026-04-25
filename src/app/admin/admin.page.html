@@ -1,5 +1,9 @@
 <ion-header><ion-toolbar><ion-title>Administración</ion-title><ion-buttons slot="end"><ion-button routerLink="/main">Inicio</ion-button></ion-buttons></ion-toolbar></ion-header>
 <ion-content class="ion-padding">
   <ion-card><ion-card-header><ion-card-title>Resumen general</ion-card-title></ion-card-header><ion-card-content><p>Reservas registradas: {{ resumen.reservas }}</p><p>Pagos pendientes: {{ resumen.pagosPendientes }}</p><p>Horarios creados: {{ resumen.horarios }}</p></ion-card-content></ion-card>
-  <ion-card><ion-card-header><ion-card-title>Acciones sugeridas</ion-card-title></ion-card-header><ion-card-content><ul><li>Validar pagos pendientes.</li><li>Revisar cupos por horario.</li><li>Confirmar reservas dentro de vigencia.</li></ul></ion-card-content></ion-card>
+  <ion-card><ion-card-header><ion-card-title>Acciones sugeridas</ion-card-title></ion-card-header><ion-card-content><ul><li>Validar pagos pendientes.</li><li>Revisar cupos por horario.</li><li>Confirmar reservas dentro de vigencia.</li></ul>
+    <ion-button expand="block" color="success" (click)="generarHorarios()">
+      Generar horarios 30 días
+    </ion-button>
+  </ion-card-content></ion-card>
 </ion-content>

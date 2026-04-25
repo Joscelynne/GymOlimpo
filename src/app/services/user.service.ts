@@ -3,16 +3,34 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { UserCredential } from '@firebase/auth-types';
 import firebase from 'firebase/compat/app';
-
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
+  private userSubject = new BehaviorSubject<any>(undefined);
+  public user$: Observable<any> = this.userSubject.asObservable();
+
   constructor(
     private auth: AngularFireAuth,
     private firestore: AngularFirestore
-  ) {}
+  ) {
+    this.auth.authState.pipe(
+      switchMap(user => {
+        if (user) {
+          // Obtener el perfil del usuario desde Firestore
+          return this.firestore.collection('users').doc(user.uid).valueChanges();
+        } else {
+          // Si no hay usuario autenticado
+          return of(null);
+        }
+      })
+    ).subscribe(profile => {
+      this.userSubject.next(profile);
+    });
+  }
 
   async register({ rut, nombre, apellido, telefono, email, password }: any): Promise<UserCredential> {
     const credential = await this.auth.createUserWithEmailAndPassword(email, password);

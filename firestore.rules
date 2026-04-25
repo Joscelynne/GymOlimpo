@@ -3,17 +3,63 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // This rule allows anyone with your Firestore database reference to view, edit,
-    // and delete all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Firestore database will be denied until you Update
-    // your rules
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2024, 5, 4);
+    // Función para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Función para obtener los datos del usuario actual desde la colección 'users'
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Función para verificar si el usuario tiene rol de administrador
+    function isAdmin() {
+      return isAuthenticated() && getUserData().rol == 'admin';
+    }
+
+    // Colección de Usuarios
+    match /users/{userId} {
+      // Un usuario solo puede leer su propio documento, un admin puede leer todos
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      
+      // Al registrarse (crear), el usuario solo puede asignarse el rol de "cliente"
+      allow create: if isAuthenticated() && request.auth.uid == userId && request.resource.data.rol == 'cliente';
+      
+      // Al actualizar su perfil, el usuario NO puede cambiar su campo "rol"
+      allow update: if isAuthenticated() && (
+        (request.auth.uid == userId && request.resource.data.rol == resource.data.rol) 
+        || isAdmin()
+      );
+      
+      // Solo el admin puede borrar usuarios
+      allow delete: if isAdmin();
+    }
+
+    // Colección de Horarios (Ejemplo de restricción fuerte)
+    match /horarios/{horarioId} {
+      // Cualquier usuario autenticado puede leer los horarios
+      allow read: if isAuthenticated();
+      // Solo los administradores pueden crear, modificar o eliminar horarios
+      allow write: if isAdmin();
+    }
+
+    // Colección de Reservas
+    match /reservas/{reservaId} {
+      // Read: Se usa resource.data porque el documento ya existe en la base de datos
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Create: Se usa request.resource.data porque el documento viene en camino (no existe aún)
+      allow create: if isAuthenticated() && (request.resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Update: Validamos que el dueño sea quien actualiza, y que no intente modificar el userId
+      allow update: if isAuthenticated() && (
+        (resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid) 
+        || isAdmin()
+      );
+      
+      // Delete: Solo los administradores pueden borrar las reservas
+      allow delete: if isAdmin();
     }
   }
 }

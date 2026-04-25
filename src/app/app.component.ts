@@ -9,17 +9,20 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'Gym Olimpo';
-  appPages = [
+  basePages = [
     { title: 'Inicio', url: '/main', icon: 'home' },
     { title: 'Perfil', url: '/perfil', icon: 'person-circle' },
     { title: 'Reservas', url: '/reservas', icon: 'calendar' },
     { title: 'Horarios', url: '/horarios', icon: 'time' },
     { title: 'Planes', url: '/planes', icon: 'document-text' },
-    { title: 'Pagos', url: '/pagos', icon: 'card' },
+    { title: 'Pagos', url: '/pagos', icon: 'card' }
+  ];
+
+  adminPages = [
     { title: 'Administración', url: '/admin', icon: 'settings' }
   ];
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(public userService: UserService, private router: Router) {}
 
   logout() {
     this.userService.logout().then(() => this.router.navigate(['/login'])).catch(error => {

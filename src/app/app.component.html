@@ -5,12 +5,25 @@
         <ion-list id="inbox-list">
           <ion-list-header>Gym Olimpo</ion-list-header>
           <ion-note>Gestión de reservas y sesiones</ion-note>
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
+          <ng-container *ngIf="userService.user$ | async as user">
+            <!-- Common pages -->
+            <ion-menu-toggle auto-hide="false" *ngFor="let p of basePages">
+              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+
+            <!-- Admin pages -->
+            <ng-container *ngIf="user.rol === 'admin'">
+              <ion-menu-toggle auto-hide="false" *ngFor="let p of adminPages">
+                <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+                  <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+                  <ion-label>{{ p.title }}</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ng-container>
+          </ng-container>
         </ion-list>
         <ion-item (click)="logout()" lines="none">
           <ion-icon slot="start" name="log-out-outline"></ion-icon>

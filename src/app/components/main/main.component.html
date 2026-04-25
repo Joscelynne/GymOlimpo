@@ -73,7 +73,7 @@
           </ion-card>
         </ion-col>
 
-        <ion-col size="12" sizeMd="6">
+        <ion-col size="12" sizeMd="6" *ngIf="(userService.user$ | async)?.rol === 'admin'">
           <ion-card class="menu-card admin-card" button routerLink="/admin">
             <ion-card-header>
               <ion-card-title>Administración</ion-card-title>
@@ -87,10 +87,6 @@
     </ion-grid>
 
     <div class="acciones-box">
-      <ion-button expand="block" color="success" class="btn-generar" (click)="generarHorarios()">
-        Generar horarios 30 días
-      </ion-button>
-
       <ion-button expand="block" color="danger" class="btn-cerrar" (click)="onClick()">
         Cerrar sesión
       </ion-button>
