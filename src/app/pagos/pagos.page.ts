@@ -59,6 +59,15 @@ export class PagosPage implements OnInit {
     });
   }
 
+  abrirFlow(pago: Pago) {
+    if (!pago.linkFlow) {
+      this.mensaje = 'Este plan no tiene link de pago configurado.';
+      return;
+    }
+
+    window.open(pago.linkFlow, '_blank');
+  }
+
   async guardar() {
     if (this.form.invalid || !this.pagoSeleccionado?.id) {
       this.mensaje = 'Debes seleccionar un pago pendiente e ingresar la referencia.';

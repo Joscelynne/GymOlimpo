@@ -16,15 +16,18 @@
     </ion-card-header>
 
     <ion-list>
-      <ion-item
-        *ngFor="let pago of pagosPendientes"
-        button
-        (click)="seleccionarPago(pago)"
+      <ion-item *ngFor="let pago of pagosPendientes" button (click)="seleccionarPago(pago)"
         [color]="pagoSeleccionado?.id === pago.id ? 'primary' : ''">
+
         <ion-label>
           <h2>{{ pago.planNombre }}</h2>
           <p>Monto: ${{ pago.monto }}</p>
           <p>Estado: {{ pago.estado }}</p>
+
+          <ion-button expand="block" color="success" fill="outline" class="ion-margin-top"
+            (click)="abrirFlow(pago); $event.stopPropagation()">
+            Pagar en Flow
+          </ion-button>
         </ion-label>
       </ion-item>
 
@@ -36,7 +39,8 @@
 
   <ion-card class="form-card">
     <ion-card-header>
-      <ion-card-title>Pagar plan seleccionado</ion-card-title>
+      <ion-card-title>Confirmar pago realizado</ion-card-title>
+      <ion-card-subtitle>Después de pagar en Flow, ingresa la referencia o comprobante</ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
