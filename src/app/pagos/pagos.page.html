@@ -16,7 +16,7 @@
     </ion-card-header>
 
     <ion-list>
-      <ion-item *ngFor="let pago of pagosPendientes" button (click)="seleccionarPago(pago)"
+      <ion-item *ngFor="let pago of pagosPendientes" (click)="seleccionarPago(pago)"
         [color]="pagoSeleccionado?.id === pago.id ? 'primary' : ''">
 
         <ion-label>

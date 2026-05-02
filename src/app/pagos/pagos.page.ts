@@ -60,7 +60,9 @@ export class PagosPage implements OnInit {
   }
 
   abrirFlow(pago: Pago) {
+
     if (!pago.linkFlow) {
+
       this.mensaje = 'Este plan no tiene link de pago configurado.';
       return;
     }
