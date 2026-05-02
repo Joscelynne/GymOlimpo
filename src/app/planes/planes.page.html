@@ -17,7 +17,8 @@
     <ion-card-content *ngIf="tienePlanActivo(); else sinPlanActivo">
       <p><strong>Plan activo:</strong> {{ perfil.planActivo }}</p>
       <p><strong>Sesiones disponibles:</strong> {{ perfil.sesionesDisponibles ?? 0 }}</p>
-      <p><strong>Vigencia:</strong> {{ perfil.vigenciaInicio || 'No definida' }} al {{ perfil.vigenciaFin || 'No definida' }}</p>
+      <p><strong>Vigencia:</strong> {{ perfil.vigenciaInicio || 'No definida' }} al {{ perfil.vigenciaFin || 'No
+        definida' }}</p>
     </ion-card-content>
 
     <ng-template #sinPlanActivo>
@@ -35,10 +36,7 @@
     </ion-card-header>
   </ion-card>
 
-  <ion-card
-    *ngFor="let plan of planes"
-    class="plan-card"
-    [class.recomendado]="plan.recomendado">
+  <ion-card *ngFor="let plan of planes" class="plan-card" [class.recomendado]="plan.recomendado">
 
     <ion-card-header>
       <ion-card-subtitle *ngIf="plan.recomendado" class="badge-recomendado">
@@ -57,11 +55,7 @@
         </ion-item>
       </ion-list>
 
-      <ion-button
-        expand="block"
-        color="primary"
-        [disabled]="cargando"
-        (click)="seleccionarPlan(plan)">
+      <ion-button expand="block" color="primary" [disabled]="cargando" (click)="seleccionarPlan(plan)">
         {{ cargando ? 'Procesando...' : 'Seleccionar plan' }}
       </ion-button>
     </ion-card-content>

@@ -20,7 +20,7 @@ export class PlanesPage implements OnInit {
     private userService: UserService,
     private gymService: GymService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.planes = this.gymService.getPlanesDisponibles();

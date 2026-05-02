@@ -5,4 +5,4 @@ import { IonicModule } from '@ionic/angular';
 import { PlanesPageRoutingModule } from './planes-routing.module';
 import { PlanesPage } from './planes.page';
 @NgModule({ imports: [CommonModule, FormsModule, IonicModule, PlanesPageRoutingModule], declarations: [PlanesPage] })
-export class PlanesPageModule {}
+export class PlanesPageModule { }

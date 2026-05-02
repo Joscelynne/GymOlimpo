@@ -30,7 +30,8 @@ export interface Pago {
   planId: string;
   planNombre: string;
   monto: number;
-  referencia: string;
+  referencia: string
+  linkFlow?: string;
   estado: 'pendiente' | 'validado' | 'cancelado';
   createdAt: string;
 }
@@ -42,6 +43,7 @@ export interface PlanGym {
   sesiones: number;
   descripcion: string[];
   recomendado?: boolean;
+  linkFlow?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -49,7 +51,7 @@ export class GymService {
   constructor(
     private firestore: AngularFirestore,
     private auth: AngularFireAuth
-  ) {}
+  ) { }
 
   getHorarios(): Observable<Horario[]> {
     return this.firestore.collection<Horario>('horarios').snapshotChanges().pipe(
@@ -181,6 +183,7 @@ export class GymService {
         nombre: 'Plan estudiante (<60 años)',
         precio: 30000,
         sesiones: 12,
+        linkFlow: 'https://sandbox.flow.cl/uri/zQ2MrKKCb',
         descripcion: [
           'Evaluación inicial',
           'Rutina personalizada mensual',
@@ -213,6 +216,7 @@ export class GymService {
       monto: plan.precio,
       referencia: '',
       estado: 'pendiente',
+      linkFlow: plan.linkFlow || '',
       createdAt: new Date().toISOString()
     });
   }
