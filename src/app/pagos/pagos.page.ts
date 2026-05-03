@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GymService, Pago } from '../services/gym.service';
 
 @Component({
@@ -8,21 +7,12 @@ import { GymService, Pago } from '../services/gym.service';
   styleUrls: ['./pagos.page.scss']
 })
 export class PagosPage implements OnInit {
-  form: FormGroup;
+
   pagos: Pago[] = [];
   pagosPendientes: Pago[] = [];
-  pagoSeleccionado: Pago | null = null;
   mensaje = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private gymService: GymService
-  ) {
-    this.form = this.fb.group({
-      monto: [{ value: 0, disabled: true }, Validators.required],
-      referencia: ['', Validators.required]
-    });
-  }
+  constructor(private gymService: GymService) {}
 
   ngOnInit() {
     this.gymService.getPagosUsuario().subscribe(data => {
@@ -33,29 +23,6 @@ export class PagosPage implements OnInit {
       });
 
       this.pagosPendientes = this.pagos.filter(p => p.estado === 'pendiente');
-
-      if (
-        this.pagoSeleccionado &&
-        !this.pagosPendientes.some(p => p.id === this.pagoSeleccionado?.id)
-      ) {
-        this.pagoSeleccionado = null;
-        this.form.reset({
-          monto: 0,
-          referencia: ''
-        });
-      }
-    });
-  }
-
-  seleccionarPago(pago: Pago) {
-    if (pago.estado !== 'pendiente') return;
-
-    this.pagoSeleccionado = pago;
-    this.mensaje = '';
-
-    this.form.patchValue({
-      monto: pago.monto,
-      referencia: ''
     });
   }
 
@@ -68,28 +35,18 @@ export class PagosPage implements OnInit {
     window.open(pago.linkFlow, '_blank');
   }
 
-  async guardar() {
-    if (this.form.invalid || !this.pagoSeleccionado?.id) {
-      this.mensaje = 'Debes seleccionar un pago pendiente e ingresar la referencia.';
-      return;
-    }
+  async eliminarPago(pago: Pago) {
+    if (!pago.id) return;
+
+    const confirmar = confirm(`¿Eliminar el plan pendiente "${pago.planNombre}"?`);
+    if (!confirmar) return;
 
     try {
-      await this.gymService.pagarPlan(
-        this.pagoSeleccionado.id,
-        this.form.getRawValue().referencia
-      );
-
-      this.mensaje = 'Pago registrado correctamente.';
-      this.pagoSeleccionado = null;
-
-      this.form.reset({
-        monto: 0,
-        referencia: ''
-      });
+      await this.gymService.eliminarPagoPendiente(pago.id);
+      this.mensaje = 'Plan pendiente eliminado correctamente.';
     } catch (error: any) {
       console.error(error);
-      this.mensaje = error.message || 'No fue posible registrar el pago.';
+      this.mensaje = error.message || 'No fue posible eliminar el plan.';
     }
   }
 }
