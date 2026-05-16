@@ -140,70 +140,98 @@ export class GymService {
 
   getPlanesDisponibles(): PlanGym[] {
     return [
-      {
-        id: 'empieza-a-moverte',
-        nombre: 'Empieza a moverte',
-        precio: 32000,
-        sesiones: 8,
-        descripcion: [
-          'Evaluación inicial',
-          'Rutina personalizada mensual',
-          'Acompañamiento profesional en sala'
-        ]
-      },
-      {
-        id: 'movimiento-con-confianza',
-        nombre: 'Movimiento con confianza',
-        precio: 39000,
-        sesiones: 12,
-        descripcion: [
-          'Evaluación inicial',
-          'Rutina personalizada mensual',
-          'Acompañamiento profesional en sala',
-          'Mayor enfoque en generar hábitos saludables'
-        ]
-      },
-      {
-        id: 'prolympo',
-        nombre: 'Prolympo',
-        precio: 48000,
-        sesiones: 12,
-        recomendado: true,
-        descripcion: [
-          'Evaluación inicial',
-          'Rutina personalizada mensual',
-          'Acompañamiento profesional en sala',
-          'Registro de progreso',
-          'Ajustes en cada sesión',
-          'Asesoría nutricional'
-        ]
-      },
-      {
-        id: 'plan-estudiante',
-        nombre: 'Plan estudiante (<60 años)',
-        precio: 30000,
-        sesiones: 12,
-        linkFlow: 'https://sandbox.flow.cl/uri/zQ2MrKKCb',
-        descripcion: [
-          'Evaluación inicial',
-          'Rutina personalizada mensual',
-          'Acompañamiento profesional',
-          'Hábitos saludables',
-          'Registro de progreso',
-          'Ajustes en cada sesión'
-        ]
-      },
-      {
-        id: 'clase-esporadica',
-        nombre: 'Clase esporádica',
-        precio: 6000,
-        sesiones: 1,
-        descripcion: [
-          '1 sesión individual'
-        ]
-      }
-    ];
+          { 
+      id: 'empieza-a-moverte',
+      nombre: 'Empieza a moverte',
+      precio: 32000,  
+      sesiones: 8,
+      linkFlow: 'https://sandbox.flow.cl/uri/5HrfKhwv4',
+      descripcion: [
+        'Evaluación inicial',
+        'Rutina personalizada mensual',
+        'Acompañamiento profesional en sala'
+      ]
+    },
+    {
+      id: 'movimiento-con-confianza',
+      nombre: 'Movimiento con Confianza',
+      precio: 39000,
+      sesiones: 12,
+      linkFlow: 'https://sandbox.flow.cl/uri/0L7krHT8b',
+      descripcion: [
+        'Evaluación inicial',
+        'Rutina personalizada mensual',
+        'Acompañamiento profesional en sala',
+        'Mayor enfoque en generar hábitos saludables'
+      ]
+    },
+    {
+      id: 'prolympo',
+      nombre: 'Prolympo',
+      precio: 48000,
+      sesiones: 12,
+      recomendado: true,
+      linkFlow: 'https://sandbox.flow.cl/uri/dcT46SPK7',
+      descripcion: [
+        'Evaluación inicial',
+        'Rutina personalizada mensual',
+        'Acompañamiento profesional en sala',
+        'Registro de progreso',
+        'Ajustes en cada sesión',
+        'Asesoría nutricional'
+      ]
+    },
+    {
+      id: 'plan-estudiante',
+      nombre: 'Plan estudiante (<60 años)',
+      precio: 30000,
+      sesiones: 12,
+      linkFlow: 'https://sandbox.flow.cl/uri/zQ2MrKKCb',
+      descripcion: [
+        'Evaluación inicial',
+        'Rutina personalizada mensual',
+        'Acompañamiento profesional',
+        'Hábitos saludables',
+        'Registro de progreso',
+        'Ajustes en cada sesión'
+      ]
+    },
+    {
+      id: 'clase-esporadica',
+      nombre: 'Clase esporádica',
+      precio: 6000,
+      sesiones: 1,
+      linkFlow: 'https://sandbox.flow.cl/uri/bmZFK0ty4',
+      descripcion: [
+        '1 sesión individual'
+      ]
+    }
+        ];
   }
+
+  async eliminarPagoPendiente(pagoId: string): Promise<void> {
+  const user = await this.auth.currentUser;
+  if (!user) throw new Error('Debes iniciar sesión');
+
+  const pagoRef = this.firestore.collection('pagos').doc(pagoId).ref;
+  const pagoSnap = await pagoRef.get();
+
+  if (!pagoSnap.exists) {
+    throw new Error('El pago no existe');
+  }
+
+  const pagoData = pagoSnap.data() as Pago;
+
+  if (pagoData.userId !== user.uid) {
+    throw new Error('No puedes eliminar este pago');
+  }
+
+  if (pagoData.estado !== 'pendiente') {
+    throw new Error('Solo puedes eliminar pagos pendientes');
+  }
+
+  await pagoRef.delete();
+}
 
   async crearPagoPlan(plan: PlanGym): Promise<void> {
     const user = await this.auth.currentUser;

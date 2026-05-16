@@ -1,92 +1,81 @@
-<ion-header class="registro-header">
-  <ion-toolbar>
-    <ion-title>Registro de usuario</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="registro-content" fullscreen>
+  <div class="auth-layout">
 
-<ion-content class="registro-content">
-
-  <div class="registro-wrapper">
-    <ion-card class="registro-card">
-      <div class="registro-banner">
-        <div class="registro-badge">Gym Olimpo</div>
-        <h1>Crear cuenta</h1>
-        <p>Regístrate para acceder a planes, reservas y seguimiento de tus sesiones.</p>
+    <section class="brand-panel">
+      <div class="brand-box">
+        <div class="logo-icon green">≋</div>
+        <h1>ÚNETE A<br><span>OLIMPO</span></h1>
+        <p>Comienza tu transformación con el mejor acompañamiento profesional</p>
       </div>
+    </section>
 
-      <ion-card-content>
+    <section class="form-panel">
+      <div class="form-box register-form-box">
+        <h2>Crear Cuenta</h2>
+        <p class="subtitle">Completa tus datos para registrarte</p>
+
         <div *ngIf="errorMessage" class="error-box">
           {{ errorMessage }}
         </div>
 
-        <form [formGroup]="formRegister" (ngSubmit)="onSubmit()" class="registro-form">
+        <form [formGroup]="formRegister" (ngSubmit)="onSubmit()">
 
           <div class="form-grid">
-            <ion-item class="custom-item" lines="none">
-              <ion-label position="stacked">RUT</ion-label>
-              <ion-input
-                type="text"
-                formControlName="rut"
-                placeholder="12.345.678-9"
-                inputmode="numeric">
-              </ion-input>
-            </ion-item>
+            <div>
+              <label>RUT</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="card" slot="start"></ion-icon>
+                <ion-input formControlName="rut" placeholder="12.345.678-9"></ion-input>
+              </ion-item>
+            </div>
 
-            <ion-item class="custom-item" lines="none">
-              <ion-label position="stacked">Teléfono</ion-label>
-              <ion-input
-                type="text"
-                formControlName="telefono"
-                placeholder="+56 9 1234 5678">
-              </ion-input>
-            </ion-item>
+            <div>
+              <label>Teléfono</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="call" slot="start"></ion-icon>
+                <ion-input formControlName="telefono" placeholder="+56 9 1234 5678"></ion-input>
+              </ion-item>
+            </div>
 
-            <ion-item class="custom-item" lines="none">
-              <ion-label position="stacked">Nombre</ion-label>
-              <ion-input
-                type="text"
-                formControlName="nombre"
-                placeholder="Ingresa tu nombre">
-              </ion-input>
-            </ion-item>
+            <div>
+              <label>Nombre</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="person" slot="start"></ion-icon>
+                <ion-input formControlName="nombre" placeholder="Tu nombre"></ion-input>
+              </ion-item>
+            </div>
 
-            <ion-item class="custom-item" lines="none">
-              <ion-label position="stacked">Apellido</ion-label>
-              <ion-input
-                type="text"
-                formControlName="apellido"
-                placeholder="Ingresa tu apellido">
-              </ion-input>
-            </ion-item>
+            <div>
+              <label>Apellido</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="person" slot="start"></ion-icon>
+                <ion-input formControlName="apellido" placeholder="Tu apellido"></ion-input>
+              </ion-item>
+            </div>
           </div>
 
-          <ion-item class="custom-item" lines="none">
-            <ion-label position="stacked">Correo electrónico</ion-label>
-            <ion-input
-              type="email"
-              formControlName="email"
-              placeholder="ejemplo@correo.com">
-            </ion-input>
+          <label>Correo electrónico</label>
+          <ion-item class="input-box" lines="none">
+            <ion-icon name="mail" slot="start"></ion-icon>
+            <ion-input type="email" formControlName="email" placeholder="correo@ejemplo.com"></ion-input>
           </ion-item>
 
           <div class="form-grid">
-            <ion-item class="custom-item" lines="none">
-              <ion-label position="stacked">Contraseña</ion-label>
-              <ion-input
-                type="password"
-                formControlName="password"
-                placeholder="Mínimo 8 caracteres">
-              </ion-input>
-            </ion-item>
+            <div>
+              <label>Contraseña</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="lock-closed" slot="start"></ion-icon>
+                <ion-input type="password" formControlName="password" placeholder="********"></ion-input>
+              </ion-item>
+            </div>
 
-            <ion-item class="custom-item" lines="none">
-              <ion-label position="stacked">Confirmar contraseña</ion-label>
-              <ion-input
-                type="password"
-                formControlName="confirmPassword"
-                placeholder="Repite tu contraseña">
-              </ion-input>
-            </ion-item>
+            <div>
+              <label>Confirmar contraseña</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="lock-closed" slot="start"></ion-icon>
+                <ion-input type="password" formControlName="confirmPassword" placeholder="********"></ion-input>
+              </ion-item>
+            </div>
           </div>
 
           <div
@@ -95,23 +84,21 @@
             Las contraseñas no coinciden.
           </div>
 
-          <div class="acciones-box">
-            <ion-button
-              expand="block"
-              type="submit"
-              class="btn-registro"
-              [disabled]="!formRegister.valid || loading">
-              {{ loading ? 'Registrando...' : 'Crear cuenta' }}
-            </ion-button>
-          </div>
+          <ion-button
+            expand="block"
+            type="submit"
+            class="btn-registro"
+            [disabled]="!formRegister.valid || loading">
+            {{ loading ? 'Registrando...' : 'Crear mi cuenta' }}
+          </ion-button>
         </form>
 
         <div class="login-box">
-          <span>¿Ya tienes cuenta?</span>
+          ¿Ya tienes cuenta?
           <a routerLink="/login">Iniciar sesión</a>
         </div>
-      </ion-card-content>
-    </ion-card>
-  </div>
+      </div>
+    </section>
 
+  </div>
 </ion-content>

@@ -1,21 +1,24 @@
-<ion-header class="login-header">
-  <ion-toolbar>
-    <ion-title>Iniciar sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="login-content" fullscreen>
+  <div class="auth-layout">
 
-<ion-content class="login-content">
+    <section class="brand-panel">
+      <div class="brand-box">
+        <div class="logo-icon">≋</div>
+        <h1>GYM<br><span>OLIMPO</span></h1>
+        <p>SALUD · FUERZA · MOVIMIENTO</p>
 
-  <div class="login-wrapper">
-    <ion-card class="login-card">
-
-      <div class="login-banner">
-        <div class="login-badge">Gym Olimpo</div>
-        <h1>Bienvenido</h1>
-        <p>Accede a tu cuenta para gestionar tus planes y reservas</p>
+        <ul>
+          <li>Gestión de planes y sesiones</li>
+          <li>Reserva de bloques horarios</li>
+          <li>Control de pagos y vigencias</li>
+        </ul>
       </div>
+    </section>
 
-      <ion-card-content>
+    <section class="form-panel">
+      <div class="form-box">
+        <h2>Iniciar Sesión</h2>
+        <p class="subtitle">Accede a tu panel de entrenamiento</p>
 
         <p *ngIf="errorMessage" class="error-box">
           {{ errorMessage }}
@@ -23,51 +26,53 @@
 
         <form [formGroup]="formLogin" (ngSubmit)="onSubmit()">
 
-          <ion-item class="custom-item" lines="none">
-            <ion-label position="stacked">Correo electrónico</ion-label>
+          <label>Correo electrónico</label>
+          <ion-item class="input-box" lines="none">
+            <ion-icon name="mail" slot="start"></ion-icon>
             <ion-input
               type="email"
               formControlName="email"
-              placeholder="ejemplo@correo.com">
+              placeholder="correo@ejemplo.com">
             </ion-input>
           </ion-item>
 
-          <ion-item class="custom-item" lines="none">
-            <ion-label position="stacked">Contraseña</ion-label>
+          <label>Contraseña</label>
+          <ion-item class="input-box" lines="none">
+            <ion-icon name="lock-closed" slot="start"></ion-icon>
             <ion-input
               type="password"
               formControlName="password"
-              placeholder="Ingresa tu contraseña">
+              placeholder="********">
             </ion-input>
           </ion-item>
+
+          <div class="forgot">¿Olvidaste tu contraseña?</div>
 
           <ion-button
             expand="block"
             type="submit"
             class="btn-login"
             [disabled]="!formLogin.valid || loading">
-
             {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
           </ion-button>
-
         </form>
+
+        <div class="divider"></div>
 
         <ion-button
           expand="block"
           fill="outline"
           class="btn-google"
           (click)="loginGoogle()">
-
           Continuar con Google
         </ion-button>
 
         <div class="register-box">
-          <span>¿No tienes cuenta?</span>
+          ¿No tienes cuenta?
           <a routerLink="/register">Crear cuenta</a>
         </div>
+      </div>
+    </section>
 
-      </ion-card-content>
-    </ion-card>
   </div>
-
 </ion-content>

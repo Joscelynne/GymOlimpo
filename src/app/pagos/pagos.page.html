@@ -16,8 +16,7 @@
     </ion-card-header>
 
     <ion-list>
-      <ion-item *ngFor="let pago of pagosPendientes" (click)="seleccionarPago(pago)"
-        [color]="pagoSeleccionado?.id === pago.id ? 'primary' : ''">
+      <ion-item *ngFor="let pago of pagosPendientes">
 
         <ion-label>
           <h2>{{ pago.planNombre }}</h2>
@@ -28,40 +27,19 @@
             (click)="abrirFlow(pago); $event.stopPropagation()">
             Pagar en Flow
           </ion-button>
+
+          <ion-button expand="block" color="danger" fill="outline" class="ion-margin-top"
+            (click)="eliminarPago(pago); $event.stopPropagation()">
+            Eliminar plan pendiente
+          </ion-button>
         </ion-label>
+
       </ion-item>
 
       <ion-item *ngIf="!pagosPendientes.length">
         <ion-label>No tienes pagos pendientes.</ion-label>
       </ion-item>
     </ion-list>
-  </ion-card>
-
-  <ion-card class="form-card">
-    <ion-card-header>
-      <ion-card-title>Confirmar pago realizado</ion-card-title>
-      <ion-card-subtitle>Después de pagar en Flow, ingresa la referencia o comprobante</ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-      <form [formGroup]="form" (ngSubmit)="guardar()">
-        <ion-item>
-          <ion-label position="stacked">Monto</ion-label>
-          <ion-input type="number" formControlName="monto" readonly></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Referencia / transferencia</ion-label>
-          <ion-input formControlName="referencia"></ion-input>
-        </ion-item>
-
-        <ion-button expand="block" type="submit" [disabled]="!pagoSeleccionado || form.invalid">
-          Confirmar pago
-        </ion-button>
-      </form>
-
-      <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
-    </ion-card-content>
   </ion-card>
 
   <ion-card class="historial-card">
@@ -82,5 +60,7 @@
       </ion-item>
     </ion-list>
   </ion-card>
+
+  <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
 
 </ion-content>
