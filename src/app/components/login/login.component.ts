@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 import { UserService } from 'src/app/services/user.service';
 import { filter, take } from 'rxjs/operators';
 
@@ -17,12 +18,21 @@ export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private menuCtrl: MenuController
   ) {
     this.formLogin = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+  }
+
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
+  }
+
+  ionViewWillLeave() {
+    this.menuCtrl.enable(true);
   }
 
   async onSubmit() {
@@ -61,10 +71,11 @@ export class LoginComponent {
 
   private redirectByRole() {
     this.userService.user$.pipe(
-      filter(user => user !== undefined), // Wait for profile to load
-      take(1) // Automatically unsubscribe to prevent memory leaks
+      filter(user => user !== undefined),
+      take(1)
     ).subscribe(user => {
       this.loading = false;
+
       if (user && user.rol === 'admin') {
         this.router.navigate(['/admin']);
       } else {

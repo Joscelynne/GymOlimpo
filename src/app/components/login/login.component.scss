@@ -1,87 +1,200 @@
 .login-content {
-  --background: linear-gradient(180deg, #f4f4f5 0%, #e5e7eb 100%);
+  --background: #07090f;
+  font-family: 'Arial', sans-serif;
 }
 
-.login-wrapper {
-  min-height: 100%;
+.auth-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #07090f;
+}
+
+.brand-panel {
+  background:
+    radial-gradient(circle at 45% 35%, rgba(34, 197, 94, 0.22), transparent 30%),
+    radial-gradient(circle at 80% 80%, rgba(239, 68, 68, 0.18), transparent 24%),
+    #07100c;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
+  border-right: 1px solid #111827;
 }
 
-.login-card {
-  width: 100%;
-  max-width: 420px;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+.brand-box {
+  text-align: center;
+  color: #fff;
 }
 
-.login-banner {
-  background: linear-gradient(135deg, #6b0f1a 0%, #8b1e2d 60%, #374151 100%);
-  color: white;
-  padding: 28px 24px;
+.logo-icon {
+  width: 58px;
+  height: 58px;
+  background: #e63946;
+  border-radius: 14px;
+  margin: 0 auto 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 900;
+  color: #fff;
 }
 
-.login-banner h1 {
-  margin: 8px 0;
-  font-size: 26px;
+.brand-box h1 {
+  font-size: 44px;
+  line-height: 0.95;
+  letter-spacing: 3px;
+  font-weight: 900;
+  margin: 0;
+  color: #f8fafc;
+}
+
+.brand-box h1 span {
+  color: #45c764;
+}
+
+.brand-box p {
+  margin-top: 18px;
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: #64748b;
   font-weight: 800;
 }
 
-.login-banner p {
-  font-size: 14px;
-  opacity: 0.9;
+.brand-box ul {
+  list-style: none;
+  margin-top: 70px;
+  padding: 0;
+  text-align: left;
 }
 
-.login-badge {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 6px 12px;
-  border-radius: 999px;
+.brand-box li {
+  color: #8ca3b8;
+  font-size: 13px;
+  margin: 18px 0;
+}
+
+.brand-box li::before {
+  content: '✓';
+  color: #45c764;
+  margin-right: 10px;
+}
+
+.form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.form-box {
+  width: 100%;
+  max-width: 360px;
+}
+
+.form-box h2 {
+  color: #f8fafc;
+  font-size: 30px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #64748b;
   font-size: 12px;
-  font-weight: 700;
-  display: inline-block;
+  margin-bottom: 28px;
 }
 
-.custom-item {
-  --background: #f9fafb;
-  border-radius: 16px;
-  margin-bottom: 14px;
-  border: 1px solid #e5e7eb;
+label {
+  display: block;
+  margin: 16px 0 8px;
+  color: #3b5d8a;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.input-box {
+  --background: #171b27;
+  --border-radius: 8px;
+  --padding-start: 12px;
+  border: 1px solid #222838;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.input-box ion-icon {
+  color: #e63946;
+  font-size: 16px;
+}
+
+.input-box ion-input {
+  color: #fff;
+  font-size: 13px;
+}
+
+.forgot {
+  color: #45c764;
+  font-size: 11px;
+  text-align: right;
+  margin: 10px 0 18px;
 }
 
 .btn-login {
-  --background: linear-gradient(135deg, #166534 0%, #22c55e 100%);
-  --border-radius: 16px;
-  height: 50px;
-  font-weight: 700;
-  margin-top: 10px;
+  --background: #e63946;
+  --background-hover: #c92f3a;
+  --border-radius: 8px;
+  height: 46px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.divider {
+  height: 1px;
+  background: #1f2937;
+  margin: 26px 0 18px;
 }
 
 .btn-google {
-  --border-color: #6b0f1a;
-  --color: #6b0f1a;
-  margin-top: 10px;
-  border-radius: 16px;
+  --border-color: #222838;
+  --color: #e5e7eb;
+  --border-radius: 8px;
+  height: 44px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .register-box {
-  margin-top: 18px;
   text-align: center;
+  margin-top: 24px;
+  font-size: 12px;
+  color: #64748b;
 }
 
 .register-box a {
-  color: #6b0f1a;
-  font-weight: 700;
-  margin-left: 6px;
+  color: #45c764;
+  font-weight: 900;
+  margin-left: 4px;
+  text-decoration: none;
 }
 
 .error-box {
-  background: #fee2e2;
-  color: #991b1b;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
   padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    display: none;
+  }
 }

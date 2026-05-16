@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private menuCtrl: MenuController
   ) {
     this.formRegister = new FormGroup({
       rut: new FormControl('', [Validators.required, this.validateRutFormat]),
@@ -28,17 +30,25 @@ export class RegisterComponent implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
+  }
+
+  ionViewWillLeave() {
+    this.menuCtrl.enable(true);
+  }
+
   ngOnInit(): void {
-  this.formRegister.get('rut')?.valueChanges.subscribe(value => {
-    if (!value) return;
+    this.formRegister.get('rut')?.valueChanges.subscribe(value => {
+      if (!value) return;
 
-    const formateado = this.formatearRut(value);
+      const formateado = this.formatearRut(value);
 
-    this.formRegister.get('rut')?.setValue(formateado, {
-      emitEvent: false
+      this.formRegister.get('rut')?.setValue(formateado, {
+        emitEvent: false
+      });
     });
-  });
-}
+  }
 
   async onSubmit() {
     if (this.formRegister.invalid) {
@@ -66,26 +76,26 @@ export class RegisterComponent implements OnInit {
   }
 
   formatearRut(rut: string): string {
-  rut = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+    rut = rut.replace(/[^0-9kK]/g, '').toUpperCase();
 
-  if (rut.length < 2) return rut;
+    if (rut.length < 2) return rut;
 
-  const cuerpo = rut.slice(0, -1);
-  const dv = rut.slice(-1);
+    const cuerpo = rut.slice(0, -1);
+    const dv = rut.slice(-1);
 
-  let cuerpoFormateado = '';
-  let i = 0;
+    let cuerpoFormateado = '';
+    let i = 0;
 
-  for (let j = cuerpo.length - 1; j >= 0; j--) {
-    cuerpoFormateado = cuerpo[j] + cuerpoFormateado;
-    i++;
-    if (i % 3 === 0 && j !== 0) {
-      cuerpoFormateado = '.' + cuerpoFormateado;
+    for (let j = cuerpo.length - 1; j >= 0; j--) {
+      cuerpoFormateado = cuerpo[j] + cuerpoFormateado;
+      i++;
+      if (i % 3 === 0 && j !== 0) {
+        cuerpoFormateado = '.' + cuerpoFormateado;
+      }
     }
-  }
 
-  return `${cuerpoFormateado}-${dv}`;
-}
+    return `${cuerpoFormateado}-${dv}`;
+  }
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password')?.value;
