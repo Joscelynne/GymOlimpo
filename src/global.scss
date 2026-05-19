@@ -1,12 +1,6 @@
 /*
  * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * GymOlimpo — Dark Theme
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -18,9 +12,110 @@
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
 
-/* Optional CSS utils that can be commented out */
+/* Optional CSS utils */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ===== GLOBAL DARK OVERRIDES ===== */
+
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background-color: #0d1117 !important;
+}
+
+/* Force dark on ion-content */
+ion-content {
+  --background: #0d1117;
+  --color: #e2e8f0;
+}
+
+/* Toolbar */
+ion-toolbar {
+  --background: #0d1117;
+  --color: #e2e8f0;
+  --border-color: #1e2a38;
+}
+
+ion-header {
+  box-shadow: none !important;
+}
+
+ion-header::after {
+  background: #1e2a38 !important;
+}
+
+/* Menu */
+ion-menu {
+  --background: #0d1117;
+  --ion-item-background: transparent;
+}
+
+/* Cards */
+ion-card {
+  --background: #141b24;
+  --color: #e2e8f0;
+  border: 1px solid #1e2a38;
+  box-shadow: none;
+  border-radius: 14px;
+}
+
+/* Items */
+ion-item {
+  --background: transparent;
+  --color: #e2e8f0;
+  --border-color: #1e2a38;
+}
+
+ion-label {
+  color: #e2e8f0 !important;
+}
+
+/* List */
+ion-list {
+  background: transparent !important;
+}
+
+/* Datetime */
+ion-datetime {
+  --background: #141b24;
+  --background-rgb: 20, 27, 36;
+  color: #e2e8f0;
+}
+
+/* Split pane */
+ion-split-pane {
+  --side-max-width: 220px;
+  --side-min-width: 220px;
+}
+
+/* Menu button */
+ion-menu-button {
+  --color: #64748b;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e2a38;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3a50;
+}

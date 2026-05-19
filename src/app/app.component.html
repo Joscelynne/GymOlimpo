@@ -1,36 +1,76 @@
 <ion-app>
-  <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
-      <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>Gym Olimpo</ion-list-header>
-          <ion-note>Gestión de reservas y sesiones</ion-note>
-          <ng-container *ngIf="userService.user$ | async as user">
-            <!-- Common pages -->
-            <ion-menu-toggle auto-hide="false" *ngFor="let p of basePages">
-              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+  <ion-split-pane contentId="main-content" when="md">
+
+    <!-- ===== SIDEBAR ===== -->
+    <ion-menu contentId="main-content" type="overlay" class="gym-menu">
+      <ion-content class="menu-content">
+
+        <!-- Logo -->
+        <div class="menu-logo">
+          <div class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="8" width="4" height="8" rx="2" fill="#22c55e"/>
+              <rect x="18" y="8" width="4" height="8" rx="2" fill="#22c55e"/>
+              <rect x="6" y="10" width="12" height="4" rx="1" fill="#22c55e"/>
+            </svg>
+          </div>
+          <span class="logo-text">GYM<span class="logo-accent">OLIMPO</span></span>
+        </div>
+
+        <div class="menu-section-label">MENÚ</div>
+
+        <!-- Nav links -->
+        <ng-container *ngIf="userService.user$ | async as user">
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of basePages">
+            <ion-item
+              routerDirection="root"
+              [routerLink]="[p.url]"
+              lines="none"
+              detail="false"
+              routerLinkActive="menu-item-active"
+              class="menu-item">
+              <ion-icon slot="start" [name]="p.icon" class="menu-icon"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ng-container *ngIf="user?.rol?.toLowerCase() === 'admin'">
+            <div class="menu-section-label" style="margin-top:16px">ADMIN</div>
+            <ion-menu-toggle auto-hide="false" *ngFor="let p of adminPages">
+              <ion-item
+                routerDirection="root"
+                [routerLink]="[p.url]"
+                lines="none"
+                detail="false"
+                routerLinkActive="menu-item-active"
+                class="menu-item">
+                <ion-icon slot="start" [name]="p.icon" class="menu-icon"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
-
-            <!-- Admin pages -->
-            <ng-container *ngIf="user.rol === 'admin'">
-              <ion-menu-toggle auto-hide="false" *ngFor="let p of adminPages">
-                <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                  <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                  <ion-label>{{ p.title }}</ion-label>
-                </ion-item>
-              </ion-menu-toggle>
-            </ng-container>
           </ng-container>
-        </ion-list>
-        <ion-item (click)="logout()" lines="none">
-          <ion-icon slot="start" name="log-out-outline"></ion-icon>
-          <ion-label>Cerrar sesión</ion-label>
-        </ion-item>
+        </ng-container>
+
+        <!-- User footer -->
+        <div class="menu-footer">
+          <ng-container *ngIf="userService.user$ | async as user">
+            <div class="user-chip">
+              <div class="user-avatar">{{ getUserInitials(user) }}</div>
+              <div class="user-info">
+                <span class="user-name">{{ user.nombre || user.email?.split('@')[0] }}</span>
+                <span class="user-plan">{{ user.planActivo || 'Sin plan' }}</span>
+              </div>
+            </div>
+          </ng-container>
+          <ion-item lines="none" class="logout-item" (click)="logout()">
+            <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+            <ion-label color="danger">Cerrar sesión</ion-label>
+          </ion-item>
+        </div>
+
       </ion-content>
     </ion-menu>
+
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>

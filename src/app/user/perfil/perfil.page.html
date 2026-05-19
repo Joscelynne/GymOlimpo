@@ -1,143 +1,136 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Mi perfil</ion-title>
-    <ion-buttons slot="end">
-      <ion-button [routerLink]="['/main']">Inicio</ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button color="medium"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen class="ion-padding perfil-content">
+<ion-content class="perfil-content">
 
-  <ion-card *ngIf="cargando">
-    <ion-card-content>
-      Cargando información del perfil...
-    </ion-card-content>
-  </ion-card>
-
-  <div *ngIf="!cargando && userData">
-
-    <ion-card class="perfil-card principal-card">
-      <ion-card-header>
-        <ion-card-subtitle>Cliente Gym Olimpo</ion-card-subtitle>
-        <ion-card-title>{{ userData.nombre }} {{ userData.apellido }}</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        <div class="email-box">
-          {{ userData.email || user?.email }}
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-grid class="resumen-grid">
-      <ion-row>
-        <ion-col size="6">
-          <ion-card class="mini-card">
-            <ion-card-content>
-              <div class="mini-label">Reservas activas</div>
-              <div class="mini-value">{{ reservas?.length || 0 }}</div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-
-        <ion-col size="6">
-          <ion-card class="mini-card">
-            <ion-card-content>
-              <div class="mini-label">Pagos pendientes</div>
-              <div class="mini-value">{{ pagosPendientes || 0 }}</div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-card class="perfil-card">
-      <ion-card-header>
-        <ion-card-title>Información personal</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        <ion-list lines="none">
-
-          <ion-item>
-            <ion-label>
-              <h3>RUT</h3>
-              <p>{{ userData.rut || 'No registrado' }}</p>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>
-              <h3>Teléfono</h3>
-              <p>{{ userData.telefono || 'No registrado' }}</p>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>
-              <h3>Rol</h3>
-              <p>{{ userData.rol || 'cliente' }}</p>
-            </ion-label>
-          </ion-item>
-
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card class="perfil-card">
-      <ion-card-header>
-        <ion-card-title>Plan y sesiones</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        <ion-list lines="none">
-
-          <ion-item>
-            <ion-label>
-              <h3>Plan activo</h3>
-              <p>{{ userData.planActivo || 'Pendiente' }}</p>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>
-              <h3>Sesiones disponibles</h3>
-              <p>{{ userData.sesionesDisponibles ?? 0 }}</p>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>
-              <h3>Vigencia inicio</h3>
-              <p>{{ userData.vigenciaInicio || 'No definida' }}</p>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>
-              <h3>Vigencia fin</h3>
-              <p>{{ userData.vigenciaFin || 'No definida' }}</p>
-            </ion-label>
-          </ion-item>
-
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-
+  <!-- Loading -->
+  <div class="loading-box" *ngIf="cargando">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Cargando perfil...</p>
   </div>
 
-  <ion-card *ngIf="!cargando && !userData && errorMensaje">
-    <ion-card-content>
-      {{ errorMensaje }}
-    </ion-card-content>
-  </ion-card>
+  <div class="perfil-wrapper" *ngIf="!cargando && userData">
+
+    <!-- Page title -->
+    <h1 class="page-title">Mi Perfil</h1>
+
+    <div class="perfil-grid">
+
+      <!-- ============ LEFT COLUMN ============ -->
+      <div class="left-col">
+
+        <!-- Identity card -->
+        <div class="identity-card">
+          <div class="avatar-circle">
+            {{ getInitials() }}
+          </div>
+          <div class="identity-name">{{ userData.nombre }} {{ userData.apellido }}</div>
+          <div class="identity-email">{{ userData.email || user?.email }}</div>
+          <span class="plan-badge" *ngIf="userData.planActivo">{{ userData.planActivo }}</span>
+        </div>
+
+        <!-- Mini stats -->
+        <div class="mini-stats-row">
+          <div class="mini-stat-card">
+            <div class="mini-stat-icon">📅</div>
+            <div class="mini-stat-number green">{{ reservas.length || 0 }}</div>
+            <div class="mini-stat-label">RESERVAS ACTIVAS</div>
+          </div>
+          <div class="mini-stat-card">
+            <div class="mini-stat-icon">💰</div>
+            <div class="mini-stat-number red">{{ pagosPendientes || 0 }}</div>
+            <div class="mini-stat-label">PAGOS PEND.</div>
+          </div>
+        </div>
+
+        <!-- Logout button -->
+        <button class="btn-logout" (click)="confirmarCierreSesion()">
+          <ion-icon name="power-outline"></ion-icon>
+          CERRAR SESIÓN
+        </button>
+
+      </div>
+
+      <!-- ============ RIGHT COLUMN ============ -->
+      <div class="right-col">
+
+        <!-- Información personal -->
+        <div class="info-card">
+          <div class="card-section-label">INFORMACIÓN PERSONAL</div>
+
+          <div class="info-row">
+            <div class="info-row-left">
+              <ion-icon name="card-outline" class="row-icon icon-cyan"></ion-icon>
+              <span class="row-label">RUT</span>
+            </div>
+            <span class="row-value">{{ userData.rut || 'No registrado' }}</span>
+          </div>
+
+          <div class="row-divider"></div>
+
+          <div class="info-row">
+            <div class="info-row-left">
+              <ion-icon name="call-outline" class="row-icon icon-pink"></ion-icon>
+              <span class="row-label">Teléfono</span>
+            </div>
+            <span class="row-value">{{ userData.telefono || 'No registrado' }}</span>
+          </div>
+
+          <div class="row-divider"></div>
+
+          <div class="info-row">
+            <div class="info-row-left">
+              <ion-icon name="person-outline" class="row-icon icon-purple"></ion-icon>
+              <span class="row-label">Rol</span>
+            </div>
+            <span class="row-value capitalize">{{ userData.rol || 'Cliente' }}</span>
+          </div>
+        </div>
+
+        <!-- Plan y sesiones -->
+        <div class="plan-card">
+          <div class="card-section-label plan-label">PLAN Y SESIONES</div>
+
+          <div class="info-row">
+            <span class="row-label">Plan activo</span>
+            <span class="row-value gold">{{ userData.planActivo || 'Pendiente' }}</span>
+          </div>
+
+          <div class="row-divider"></div>
+
+          <div class="info-row">
+            <span class="row-label">Sesiones disponibles</span>
+            <span class="row-value green">{{ userData.sesionesDisponibles ?? 0 }}</span>
+          </div>
+
+          <div class="row-divider"></div>
+
+          <div class="info-row">
+            <span class="row-label">Vigencia inicio</span>
+            <span class="row-value bold-white">{{ userData.vigenciaInicio || 'No definida' }}</span>
+          </div>
+
+          <div class="row-divider"></div>
+
+          <div class="info-row">
+            <span class="row-label">Vigencia fin</span>
+            <span class="row-value bold-white">{{ userData.vigenciaFin || 'No definida' }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" *ngIf="!cargando && !userData && errorMensaje">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ errorMensaje }}</p>
+  </div>
 
 </ion-content>
-
-<ion-footer>
-  <ion-button color="danger" expand="block" (click)="confirmarCierreSesion()" shape="round" class="logout-btn">
-    <ion-icon slot="start" name="log-out"></ion-icon>
-    Cerrar sesión
-  </ion-button>
-</ion-footer>

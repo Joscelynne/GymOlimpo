@@ -1,97 +1,101 @@
-<ion-header class="main-header">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Gym Olimpo</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="toolbar-title">Panel Principal</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="main-content">
-
   <div class="main-wrapper">
 
-    <ion-card class="hero-card">
-      <ion-card-content>
-        <div class="hero-badge">Panel principal</div>
-        <h1>Bienvenido{{ nombreUsuario ? ', ' + nombreUsuario : '' }}</h1>
-        <p>Gestiona tus planes, reservas, horarios y pagos desde un solo lugar.</p>
-      </ion-card-content>
-    </ion-card>
+    <!-- ===== HERO CARD ===== -->
+    <div class="hero-card">
+      <div class="hero-badge">PANEL PRINCIPAL</div>
+      <h1 class="hero-greeting">Bienvenida,</h1>
+      <h1 class="hero-name">{{ nombreUsuario | uppercase }}</h1>
+      <p class="hero-sub">Gestiona tus planes, reservas, horarios y pagos desde un solo lugar.</p>
+      <div class="hero-actions">
+        <ion-button class="btn-primary-green" routerLink="/reservas">
+          <ion-icon slot="start" name="calendar-outline"></ion-icon>
+          Nueva Reserva
+        </ion-button>
+        <ion-button fill="outline" class="btn-outline-light" routerLink="/planes">
+          Ver Planes
+        </ion-button>
+      </div>
+    </div>
 
-    <ion-grid>
+    <!-- ===== STAT CARDS ===== -->
+    <ion-grid class="stats-grid">
       <ion-row>
-        <ion-col size="12" sizeMd="6">
-          <ion-card class="menu-card perfil-card" button routerLink="/perfil">
-            <ion-card-header>
-              <ion-card-title>Mi perfil</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Revisa tus datos, plan activo, sesiones disponibles y vigencia.
-            </ion-card-content>
-          </ion-card>
+        <ion-col size="6" sizeMd="3">
+          <div class="stat-card">
+            <div class="stat-icon">🗓️</div>
+            <div class="stat-value green">{{ reservasActivas }}</div>
+            <div class="stat-label">RESERVAS ACTIVAS</div>
+          </div>
         </ion-col>
-
-        <ion-col size="12" sizeMd="6">
-          <ion-card class="menu-card reservas-card" button routerLink="/reservas">
-            <ion-card-header>
-              <ion-card-title>Reservas</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Agenda tus sesiones y controla tus cupos disponibles.
-            </ion-card-content>
-          </ion-card>
+        <ion-col size="6" sizeMd="3">
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value orange">{{ pagosPendientes }}</div>
+            <div class="stat-label">PAGOS PENDIENTES</div>
+          </div>
         </ion-col>
-
-        <ion-col size="12" sizeMd="6">
-          <ion-card class="menu-card horarios-card" button routerLink="/horarios">
-            <ion-card-header>
-              <ion-card-title>Horarios</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Consulta los bloques disponibles y los cupos por sesión.
-            </ion-card-content>
-          </ion-card>
+        <ion-col size="6" sizeMd="3">
+          <div class="stat-card">
+            <div class="stat-icon">🏋️</div>
+            <div class="stat-value green">{{ sesionesDisponibles }}</div>
+            <div class="stat-label">SESIONES DISPONIBLES</div>
+          </div>
         </ion-col>
-
-        <ion-col size="12" sizeMd="6">
-          <ion-card class="menu-card planes-card" button routerLink="/planes">
-            <ion-card-header>
-              <ion-card-title>Planes</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Revisa los planes del gimnasio y selecciona el que más te acomode.
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-
-        <ion-col size="12" sizeMd="6">
-          <ion-card class="menu-card pagos-card" button routerLink="/pagos">
-            <ion-card-header>
-              <ion-card-title>Pagos</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Visualiza pagos pendientes y valida tu plan seleccionado.
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-
-        <ion-col size="12" sizeMd="6" *ngIf="(userService.user$ | async)?.rol === 'admin'">
-          <ion-card class="menu-card admin-card" button routerLink="/admin">
-            <ion-card-header>
-              <ion-card-title>Administración</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Herramientas de gestión interna y control general del gimnasio.
-            </ion-card-content>
-          </ion-card>
+        <ion-col size="6" sizeMd="3">
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-value white">{{ diasVigencia }}</div>
+            <div class="stat-label">DÍAS DE VIGENCIA</div>
+            <div class="stat-sublabel" *ngIf="vigenciaFin">hasta {{ vigenciaFin }}</div>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
 
-    <div class="acciones-box">
-      <ion-button expand="block" color="danger" class="btn-cerrar" (click)="onClick()">
-        Cerrar sesión
-      </ion-button>
-    </div>
+    <!-- ===== ACCESO RÁPIDO ===== -->
+    <div class="section-label">ACCESO RÁPIDO</div>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" sizeMd="4">
+          <div class="quick-card border-green" routerLink="/reservas">
+            <div class="quick-icon">🗓️</div>
+            <div class="quick-title">Reservas</div>
+            <div class="quick-sub">Agenda y controla tus sesiones</div>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeMd="4">
+          <div class="quick-card border-red" routerLink="/planes">
+            <div class="quick-icon">💳</div>
+            <div class="quick-title">Planes</div>
+            <div class="quick-sub">Explora planes disponibles</div>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeMd="4">
+          <div class="quick-card border-green2" routerLink="/pagos">
+            <div class="quick-icon">💰</div>
+            <div class="quick-title">Pagos</div>
+            <div class="quick-sub">Historial y confirmaciones</div>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeMd="4" *ngIf="(userService.user$ | async)?.rol === 'admin'">
+          <div class="quick-card border-purple" routerLink="/admin">
+            <div class="quick-icon">⚙️</div>
+            <div class="quick-title">Administración</div>
+            <div class="quick-sub">Herramientas de gestión interna</div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
   </div>
-
 </ion-content>

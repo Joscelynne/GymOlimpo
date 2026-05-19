@@ -1,1 +1,268 @@
-ul { padding-left: 18px; }
+/* ===================================================
+   ADMIN PAGE — GymOlimpo Dark Theme
+   =================================================== */
+
+.admin-content {
+  --background: #0d1117;
+}
+
+.admin-wrapper {
+  padding: 24px 20px 50px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Page heading ─────────────────────────────────── */
+.page-heading {
+  margin-bottom: 22px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin: 0 0 4px;
+}
+
+.page-sub {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ── Section label ───────────────────────────────── */
+.card-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #475569;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* ===================================================
+   STAT CARDS
+   =================================================== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 28px 20px 22px;
+  text-align: center;
+}
+
+.stat-icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.stat-value.green  { color: #4ade80; }
+.stat-value.orange { color: #f97316; }
+.stat-value.white  { color: #e2e8f0; }
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+/* ===================================================
+   MIDDLE ROW
+   =================================================== */
+.middle-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .middle-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Suggested actions card ──────────────────────── */
+.suggested-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+.suggested-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.suggested-item:hover {
+  opacity: 0.8;
+}
+
+.suggested-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.s-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.icon-blue { color: #60a5fa; }
+.icon-gray { color: #94a3b8; }
+
+.arrow-icon {
+  font-size: 16px;
+  color: #ef4444;
+}
+
+.suggested-divider {
+  height: 1px;
+  background: #1e2a38;
+}
+
+/* ── Quick actions card ──────────────────────────── */
+.quick-actions-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  border: none;
+}
+
+.action-btn:hover {
+  opacity: 0.85;
+}
+
+.action-btn ion-icon {
+  font-size: 16px;
+}
+
+.action-btn-green {
+  background: #22c55e;
+  color: #000000;
+}
+
+.action-btn-outline {
+  background: transparent;
+  border: 1px solid #2a3a50;
+  color: #94a3b8;
+}
+
+.action-btn-outline:hover {
+  border-color: #4a5568;
+  color: #e2e8f0;
+}
+
+/* ===================================================
+   ÚLTIMAS RESERVAS TABLE
+   =================================================== */
+.table-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+.reservas-table {
+  width: 100%;
+}
+
+.table-head {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.5fr;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #475569;
+  text-transform: uppercase;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1e2a38;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.5fr;
+  gap: 8px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #1a2230;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-empty {
+  text-align: center;
+  padding: 30px 0;
+  color: #475569;
+  font-size: 13px;
+}
+
+.table-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0 8px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.table-note ion-icon {
+  font-size: 18px;
+  color: #3b82f6;
+  flex-shrink: 0;
+}

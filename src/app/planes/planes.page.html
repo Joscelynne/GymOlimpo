@@ -1,80 +1,95 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Planes</ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/main">Inicio</ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
+    <ion-title>Planes Disponibles</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding planes-content">
+<ion-content class="planes-content">
+  <div class="planes-wrapper">
 
-  <ion-card class="estado-card" *ngIf="perfil">
-    <ion-card-header>
-      <ion-card-title>Tu estado actual</ion-card-title>
-    </ion-card-header>
+    <div class="page-heading">
+      <h1 class="page-title">Planes Disponibles</h1>
+      <p class="page-sub">Elige el plan que mejor se adapte a ti</p>
+    </div>
 
-    <ion-card-content *ngIf="tienePlanActivo(); else sinPlanActivo">
-      <p><strong>Plan activo:</strong> {{ perfil.planActivo }}</p>
-      <p><strong>Sesiones disponibles:</strong> {{ perfil.sesionesDisponibles ?? 0 }}</p>
-      <p><strong>Vigencia:</strong> {{ perfil.vigenciaInicio || 'No definida' }} al {{ perfil.vigenciaFin || 'No
-        definida' }}</p>
-    </ion-card-content>
+    <!-- Sin plan activo banner -->
+    <div class="alert-banner" *ngIf="perfil && !tienePlanActivo()">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <span>No tienes un plan activo en este momento. Selecciona uno de los planes disponibles para comenzar.</span>
+    </div>
 
-    <ng-template #sinPlanActivo>
-      <ion-card-content>
-        <p>No tienes un plan activo en este momento.</p>
-        <p>Selecciona uno de los planes disponibles para comenzar.</p>
-      </ion-card-content>
-    </ng-template>
-  </ion-card>
+    <!-- Plan activo banner -->
+    <div class="active-plan-banner" *ngIf="perfil && tienePlanActivo()">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+      <span>Plan activo: <strong>{{ perfil.planActivo }}</strong> · {{ perfil.sesionesDisponibles ?? 0 }} sesiones · {{ perfil.vigenciaInicio }} → {{ perfil.vigenciaFin }}</span>
+    </div>
 
-  <ion-card class="info-card">
-    <ion-card-header>
-      <ion-card-title>Planes disponibles</ion-card-title>
-      <ion-card-subtitle>Elige el plan que mejor se adapte a ti</ion-card-subtitle>
-    </ion-card-header>
-  </ion-card>
+    <!-- Planes grid -->
+    <ion-grid class="planes-grid">
+      <ion-row>
+        <ion-col
+          size="12"
+          sizeMd="6"
+          sizeLg="4"
+          *ngFor="let plan of planes">
 
-  <ion-card *ngFor="let plan of planes" class="plan-card" [class.recomendado]="plan.recomendado">
+          <div class="plan-card" [class.plan-card-recommended]="plan.recomendado">
 
-    <ion-card-header>
-      <ion-card-subtitle *ngIf="plan.recomendado" class="badge-recomendado">
-        Recomendado
-      </ion-card-subtitle>
-      <ion-card-title>{{ plan.nombre }}</ion-card-title>
-      <ion-card-subtitle>
-        ${{ plan.precio }} · {{ plan.sesiones }} sesión{{ plan.sesiones > 1 ? 'es' : '' }}
-      </ion-card-subtitle>
-    </ion-card-header>
+            <!-- Recommended badge -->
+            <div class="recommended-badge" *ngIf="plan.recomendado">RECOMENDADO</div>
 
-    <ion-card-content>
-      <ion-list lines="none">
-        <ion-item *ngFor="let item of plan.descripcion">
-          <ion-label>✔ {{ item }}</ion-label>
-        </ion-item>
-      </ion-list>
+            <!-- Plan name -->
+            <h2 class="plan-name" [class.gold]="plan.recomendado">{{ plan.nombre }}</h2>
 
-      <ion-button expand="block" color="primary" [disabled]="cargando" (click)="seleccionarPlan(plan)">
-        {{ cargando ? 'Procesando...' : 'Seleccionar plan' }}
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+            <!-- Price row -->
+            <div class="plan-price-row">
+              <span class="plan-price" [class.gold]="plan.recomendado">
+                ${{ plan.precio | number:'1.0-0' }}
+              </span>
+              <span class="plan-sessions-badge">{{ plan.sesiones }} sesion{{ plan.sesiones > 1 ? 'es' : '' }}</span>
+            </div>
 
-  <ion-card class="condiciones-card">
-    <ion-card-header>
-      <ion-card-title>Condiciones</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
+            <!-- Features -->
+            <ul class="plan-features">
+              <li *ngFor="let item of plan.descripcion">
+                <ion-icon name="checkmark-outline" class="check-icon" [class.gold]="plan.recomendado"></ion-icon>
+                {{ item }}
+              </li>
+            </ul>
+
+            <div class="plan-spacer"></div>
+
+            <!-- CTA button -->
+            <ion-button
+              expand="block"
+              class="plan-btn"
+              [class.plan-btn-gold]="plan.recomendado"
+              [disabled]="cargando"
+              (click)="seleccionarPlan(plan)">
+              {{ cargando ? 'Procesando...' : 'SELECCIONAR PLAN' }}
+            </ion-button>
+
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Mensaje error -->
+    <div class="error-msg" *ngIf="mensaje">
+      <ion-icon name="alert-circle-outline"></ion-icon> {{ mensaje }}
+    </div>
+
+    <!-- Condiciones -->
+    <div class="conditions-card">
+      <div class="info-section-label">CONDICIONES</div>
       <p>• Las sesiones deben usarse dentro del mes.</p>
       <p>• No son acumulables.</p>
       <p>• No hay devolución por inasistencias.</p>
       <p>• Cada bloque horario tiene un máximo de 3 cupos.</p>
-    </ion-card-content>
-  </ion-card>
+    </div>
 
-  <ion-text color="danger" *ngIf="mensaje">
-    <p class="mensaje">{{ mensaje }}</p>
-  </ion-text>
-
+  </div>
 </ion-content>

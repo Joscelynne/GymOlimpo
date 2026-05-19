@@ -1,66 +1,113 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Pagos</ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/main">Inicio</ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button color="medium"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding pagos-content">
+<ion-content class="pagos-content">
+  <div class="pagos-wrapper">
+    
+    <!-- Page heading -->
+    <div class="page-heading">
+      <h1 class="page-title">Pagos</h1>
+      <p class="page-sub">Gestiona y confirma tus pagos</p>
+    </div>
 
-  <ion-card class="pendientes-card">
-    <ion-card-header>
-      <ion-card-title>Pagos pendientes</ion-card-title>
-      <ion-card-subtitle>Selecciona el plan que deseas pagar</ion-card-subtitle>
-    </ion-card-header>
+    <!-- Error message if any -->
+    <p *ngIf="mensaje" class="mensaje-error">{{ mensaje }}</p>
 
-    <ion-list>
-      <ion-item *ngFor="let pago of pagosPendientes">
+    <!-- Top Row: Pendientes & Confirmar -->
+    <div class="top-row">
+      
+      <!-- PAGOS PENDIENTES -->
+      <div class="card dark-card card-pendientes">
+        <div class="card-section-label">PAGOS PENDIENTES</div>
+        <p class="card-desc">Selecciona el plan que deseas pagar</p>
+        
+        <!-- List -->
+        <div class="pending-list" *ngIf="pagosPendientes.length > 0">
+          <div class="pending-item" *ngFor="let pago of pagosPendientes">
+            <div class="pending-info">
+              <span class="p-plan">{{ pago.planNombre }}</span>
+              <span class="p-monto">${{ pago.monto | number }}</span>
+            </div>
+            <div class="pending-actions">
+              <button class="btn-flow" (click)="abrirFlow(pago)">PAGAR EN FLOW</button>
+              <button class="btn-delete" (click)="eliminarPago(pago)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </div>
 
-        <ion-label>
-          <h2>{{ pago.planNombre }}</h2>
-          <p>Monto: ${{ pago.monto }}</p>
-          <p>Estado: {{ pago.estado }}</p>
+        <!-- Empty state -->
+        <div class="empty-state" *ngIf="!pagosPendientes.length">
+          <div class="check-box">
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </div>
+          <p>No tienes pagos pendientes</p>
+        </div>
+      </div>
 
-          <ion-button expand="block" color="success" fill="outline" class="ion-margin-top"
-            (click)="abrirFlow(pago); $event.stopPropagation()">
-            Pagar en Flow
-          </ion-button>
+      <!-- CONFIRMAR PAGO REALIZADO -->
+      <div class="card dark-card card-confirmar">
+        <div class="card-section-label">CONFIRMAR PAGO REALIZADO</div>
+        <p class="card-desc">Después de pagar en Flow, ingresa la referencia o comprobante</p>
+        
+        <div class="form-group">
+          <label class="form-label">MONTO</label>
+          <div class="input-box monto-box">
+            <span class="monto-val">$0</span>
+          </div>
+        </div>
 
-          <ion-button expand="block" color="danger" fill="outline" class="ion-margin-top"
-            (click)="eliminarPago(pago); $event.stopPropagation()">
-            Eliminar plan pendiente
-          </ion-button>
-        </ion-label>
+        <div class="form-group">
+          <label class="form-label">REFERENCIA / TRANSFERENCIA</label>
+          <div class="input-box with-icon">
+            <ion-icon name="pricetag" class="tag-icon"></ion-icon>
+            <input type="text" placeholder="Número de referencia o transferencia" class="custom-input">
+          </div>
+        </div>
 
-      </ion-item>
+        <button class="btn-confirm-payment">CONFIRMAR PAGO</button>
+      </div>
 
-      <ion-item *ngIf="!pagosPendientes.length">
-        <ion-label>No tienes pagos pendientes.</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-card>
+    </div>
 
-  <ion-card class="historial-card">
-    <ion-card-header>
-      <ion-card-title>Historial de pagos</ion-card-title>
-    </ion-card-header>
+    <!-- HISTORIAL DE PAGOS -->
+    <div class="table-card">
+      <div class="card-section-label">HISTORIAL DE PAGOS</div>
+      
+      <div class="pagos-table">
+        <!-- Header -->
+        <div class="table-row table-head">
+          <span>PLAN</span>
+          <span>MONTO</span>
+          <span>ESTADO</span>
+          <span>FECHA / REF.</span>
+        </div>
 
-    <ion-list>
-      <ion-item *ngFor="let pago of pagos">
-        <ion-label>
-          <h2>{{ pago.planNombre }}</h2>
-          <p>${{ pago.monto }} · {{ pago.referencia || 'Sin referencia' }} · {{ pago.estado }}</p>
-        </ion-label>
-      </ion-item>
+        <!-- Empty state -->
+        <div class="table-empty" *ngIf="!pagos.length">
+          No hay pagos registrados.
+        </div>
 
-      <ion-item *ngIf="!pagos.length">
-        <ion-label>No hay pagos registrados.</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-card>
+        <!-- Rows -->
+        <div class="table-row" *ngFor="let pago of pagos">
+          <span class="bold-white">{{ pago.planNombre }}</span>
+          <span class="green-text">${{ pago.monto | number }}</span>
+          <span>
+            <span class="status-badge" [ngClass]="pago.estado === 'pendiente' ? 'pendiente' : 'validado'">
+              <ion-icon [name]="pago.estado === 'pendiente' ? 'time-outline' : 'checkmark-outline'"></ion-icon> 
+              {{ pago.estado === 'pendiente' ? 'PENDIENTE' : 'VALIDADO' }}
+            </span>
+          </span>
+          <span class="date-text">{{ pago.referencia || 'Sin fecha' }}</span>
+        </div>
+      </div>
+    </div>
 
-  <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
-
+  </div>
 </ion-content>

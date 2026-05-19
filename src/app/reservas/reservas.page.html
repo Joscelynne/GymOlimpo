@@ -1,111 +1,153 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Reservas</ion-title>
-    <ion-buttons slot="end">
-      <ion-button routerLink="/main">Inicio</ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
+    <ion-title>Reservas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding reservas-content">
+<ion-content class="reservas-content">
+  <div class="reservas-wrapper">
 
-  <ion-card class="estado-card" *ngIf="perfil">
-    <ion-card-header>
-      <ion-card-title>Tu plan actual</ion-card-title>
-    </ion-card-header>
+    <div class="page-heading">
+      <h1 class="page-title">Reservas</h1>
+      <p class="page-sub">Agenda y controla tus sesiones</p>
+    </div>
 
-    <ion-card-content *ngIf="tienePlanActivo(); else sinPlan">
-      <p><strong>Plan:</strong> {{ perfil.planActivo }}</p>
-      <p><strong>Sesiones disponibles:</strong> {{ perfil.sesionesDisponibles ?? 0 }}</p>
-      <p><strong>Vigencia:</strong> {{ perfil.vigenciaInicio || 'No definida' }} al {{ perfil.vigenciaFin || 'No definida' }}</p>
-      <p class="nota-reserva">Cada reserva consume 1 sesión de tu plan.</p>
-    </ion-card-content>
-
-    <ng-template #sinPlan>
-      <ion-card-content>
-        <p>No tienes un plan activo o aún no has realizado el pago.</p>
-        <p>Para agendar sesiones, primero debes seleccionar y pagar un plan.</p>
-        <ion-button expand="block" routerLink="/planes">
-          Ver planes disponibles
-        </ion-button>
-      </ion-card-content>
-    </ng-template>
-  </ion-card>
-
-  <ion-card class="reserva-card" *ngIf="tienePlanActivo()">
-    <ion-card-header>
-      <ion-card-title>Agendar sesión</ion-card-title>
-      <ion-card-subtitle>Selecciona una fecha y un bloque horario disponible</ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-item>
-        <ion-label position="stacked">Selecciona una fecha</ion-label>
-        <ion-datetime
-          presentation="date"
-          [min]="today"
-          (ionChange)="onFechaChange($event)">
-        </ion-datetime>
-      </ion-item>
-
-      <div *ngIf="fechaSeleccionada" class="horarios-box">
-        <h3>Horarios disponibles</h3>
-
-        <ion-list *ngIf="horariosDisponibles.length; else sinHorarios">
-          <ion-item
-            button
-            *ngFor="let horario of horariosDisponibles"
-            (click)="seleccionarHorario(horario)"
-            [color]="horarioSeleccionado?.id === horario.id ? 'primary' : ''">
-            <ion-label>
-              <h2>{{ horario.hora }}</h2>
-              <p>Cupos disponibles: {{ horario.cuposDisponibles }} / {{ horario.cupos }}</p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-
-        <ng-template #sinHorarios>
-          <p>No hay horarios disponibles para esta fecha.</p>
-        </ng-template>
+    <!-- ===== PLAN BANNER ===== -->
+    <div class="plan-banner" *ngIf="perfil && tienePlanActivo()">
+      <div class="plan-banner-left">
+        <div class="plan-banner-label">TU PLAN ACTUAL</div>
+        <div class="plan-banner-name">Plan: <span class="accent-green">{{ perfil.planActivo }}</span></div>
+        <div class="plan-banner-detail">
+          Vigencia: {{ perfil.vigenciaInicio }} → {{ perfil.vigenciaFin }} · Cada reserva consume 1 sesión.
+        </div>
       </div>
+      <div class="plan-banner-right">
+        <div class="sessions-count accent-green">{{ perfil.sesionesDisponibles ?? 0 }}</div>
+        <div class="sessions-label">SESIONES DISP.</div>
+      </div>
+    </div>
 
-      <ion-button
-        expand="block"
-        class="ion-margin-top"
-        [disabled]="!horarioSeleccionado || cargando"
-        (click)="guardar()">
-        {{ cargando ? 'Confirmando...' : 'Confirmar reserva' }}
-      </ion-button>
+    <!-- Sin plan -->
+    <div class="no-plan-card" *ngIf="perfil && !tienePlanActivo()">
+      <ion-icon name="warning-outline" color="warning"></ion-icon>
+      <p>No tienes un plan activo o aún no has realizado el pago.</p>
+      <ion-button size="small" routerLink="/planes">Ver planes disponibles</ion-button>
+    </div>
 
-      <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
-    </ion-card-content>
-  </ion-card>
+    <!-- ===== BOOKING SECTION ===== -->
+    <div class="booking-section" *ngIf="tienePlanActivo()">
+      <ion-grid>
+        <ion-row>
 
-  <ion-card class="historial-card">
-    <ion-card-header>
-      <ion-card-title>Mis reservas</ion-card-title>
-    </ion-card-header>
+          <!-- Calendar -->
+          <ion-col size="12" sizeMd="5">
+            <div class="calendar-card">
+              <ion-datetime
+                presentation="date"
+                [min]="today"
+                (ionChange)="onFechaChange($event)"
+                class="dark-calendar"
+                locale="es-CL">
+              </ion-datetime>
+            </div>
+          </ion-col>
 
-    <ion-list>
-      <ion-item *ngFor="let reserva of reservas">
-        <ion-label>
-          <h2>{{ reserva.fecha }} · {{ reserva.hora }}</h2>
-          <p>Estado: {{ reserva.estado }}</p>
-        </ion-label>
+          <!-- Time slots -->
+          <ion-col size="12" sizeMd="7">
+            <div class="slots-card">
+              <div class="slots-header">
+                BLOQUES DISPONIBLES
+                <span *ngIf="fechaSeleccionada"> — {{ fechaSeleccionada }}</span>
+              </div>
 
-        <ion-button
-          fill="outline"
-          color="danger"
-          (click)="cancelar(reserva.id)"
-          *ngIf="reserva.estado !== 'cancelada'">
-          Cancelar
-        </ion-button>
-      </ion-item>
+              <div class="no-date-msg" *ngIf="!fechaSeleccionada">
+                Selecciona una fecha en el calendario para ver los horarios.
+              </div>
 
-      <ion-item *ngIf="!reservas.length">
-        <ion-label>No tienes reservas registradas.</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-card>
+              <div class="slots-grid" *ngIf="fechaSeleccionada">
 
+                <div *ngIf="!horariosDisponibles.length" class="no-slots-msg">
+                  No hay horarios disponibles para esta fecha.
+                </div>
+
+                <div
+                  class="slot-chip"
+                  *ngFor="let horario of horariosDisponibles"
+                  [class.slot-selected]="horarioSeleccionado?.id === horario.id"
+                  (click)="seleccionarHorario(horario)">
+                  <span class="slot-time">{{ horario.hora }}</span>
+                  <span class="slot-cupos">{{ horario.cuposDisponibles }}/{{ horario.cupos }} cupos</span>
+                </div>
+              </div>
+
+              <ion-button
+                expand="block"
+                class="btn-confirm"
+                [disabled]="!horarioSeleccionado || cargando"
+                (click)="guardar()">
+                {{ cargando ? 'Confirmando...' : 'SELECCIONA UN HORARIO' }}
+              </ion-button>
+
+              <p *ngIf="mensaje" class="mensaje-error">{{ mensaje }}</p>
+            </div>
+          </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- ===== MIS RESERVAS TABLE ===== -->
+    <div class="historial-card">
+      <div class="historial-header">MIS RESERVAS</div>
+
+      <div class="historial-table">
+        <!-- Table header -->
+        <div class="table-row table-head">
+          <span>FECHA</span>
+          <span>HORA</span>
+          <span>ESTADO</span>
+          <span></span>
+        </div>
+
+        <!-- Empty state -->
+        <div class="table-empty" *ngIf="!reservas.length">
+          No tienes reservas registradas.
+        </div>
+
+        <!-- Rows -->
+        <div class="table-row" *ngFor="let reserva of reservas">
+          <span class="cell-date">{{ reserva.fecha }}</span>
+          <span class="cell-time">{{ reserva.hora }}</span>
+          <span>
+            <span class="status-badge" [ngClass]="{
+              'status-confirmed': reserva.estado === 'confirmada',
+              'status-pending':   reserva.estado === 'pendiente_pago',
+              'status-cancelled': reserva.estado === 'cancelada'
+            }">
+              <ion-icon
+                [name]="reserva.estado === 'confirmada' ? 'checkmark-outline' :
+                         reserva.estado === 'cancelada'  ? 'close-outline' : 'time-outline'">
+              </ion-icon>
+              {{ reserva.estado | uppercase }}
+            </span>
+          </span>
+          <span class="cell-action">
+            <ion-button
+              fill="outline"
+              size="small"
+              class="btn-cancel"
+              *ngIf="reserva.estado !== 'cancelada'"
+              (click)="cancelar(reserva.id)">
+              CANCELAR
+            </ion-button>
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </ion-content>

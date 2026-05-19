@@ -1,116 +1,179 @@
+/* ===== MAIN / INICIO PAGE ===== */
+
 .main-content {
-  --background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+  --background: #0d1117;
 }
 
 .main-wrapper {
-  padding: 20px 14px 28px;
+  padding: 20px 16px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-.hero-card {
-  border-radius: 24px;
-  overflow: hidden;
-  margin-bottom: 18px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
-  background: linear-gradient(135deg, #6b0f1a 0%, #8b1e2d 58%, #4b5563 100%);
-  color: white;
-}
-
-.hero-card h1 {
-  margin: 8px 0 10px;
-  font-size: 28px;
-  font-weight: 800;
-}
-
-.hero-card p {
-  margin: 0;
+/* Toolbar */
+.toolbar-title {
   font-size: 14px;
-  line-height: 1.5;
-  opacity: 0.96;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== HERO ===== */
+.hero-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  margin-bottom: 20px;
 }
 
 .hero-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.4px;
+  letter-spacing: 2px;
+  color: #64748b;
   text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
-.menu-card {
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 180px;
+.hero-greeting {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.menu-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+.hero-name {
+  font-size: 28px;
+  font-weight: 900;
+  color: #4ade80;
+  margin: 0 0 10px;
+  line-height: 1.2;
 }
 
-.menu-card ion-card-title {
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.menu-card ion-card-content {
-  color: #475569;
+.hero-sub {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 20px;
   line-height: 1.5;
 }
 
-.perfil-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-  border-left: 6px solid #6b0f1a;
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.reservas-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
-  border-left: 6px solid #15803d;
-}
-
-.horarios-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
-  border-left: 6px solid #4b5563;
-}
-
-.planes-card {
-  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
-  border-left: 6px solid #8b1e2d;
-}
-
-.pagos-card {
-  background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
-  border-left: 6px solid #16a34a;
-}
-
-.admin-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
-  border-left: 6px solid #6b7280;
-}
-
-.acciones-box {
-  margin-top: 8px;
-}
-
-.btn-generar {
-  margin-top: 8px;
-  --border-radius: 16px;
+.btn-primary-green {
+  --background: #22c55e;
+  --background-hover: #16a34a;
+  --color: #000;
+  --border-radius: 8px;
   font-weight: 700;
-  height: 48px;
+  font-size: 13px;
+  height: 40px;
 }
 
-.btn-cerrar {
-  margin-top: 10px;
-  --border-radius: 16px;
+.btn-outline-light {
+  --border-color: #334155;
+  --color: #94a3b8;
+  --border-radius: 8px;
+  --background: transparent;
+  font-weight: 600;
+  font-size: 13px;
+  height: 40px;
+}
+
+/* ===== STAT CARDS ===== */
+.stats-grid {
+  padding: 0;
+  margin-bottom: 6px;
+}
+
+.stat-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 14px;
+  padding: 20px 14px 16px;
+  text-align: center;
+  min-height: 120px;
+}
+
+.stat-icon {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-value.green  { color: #4ade80; }
+.stat-value.orange { color: #f97316; }
+.stat-value.white  { color: #e2e8f0; }
+
+.stat-label {
+  font-size: 10px;
   font-weight: 700;
-  height: 48px;
+  letter-spacing: 1.2px;
+  color: #475569;
+  text-transform: uppercase;
 }
 
-@media (max-width: 768px) {
-  .hero-card h1 {
-    font-size: 24px;
-  }
+.stat-sublabel {
+  font-size: 11px;
+  color: #334155;
+  margin-top: 4px;
+}
+
+/* ===== SECTION LABEL ===== */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #475569;
+  text-transform: uppercase;
+  margin: 4px 4px 10px;
+}
+
+/* ===== QUICK ACCESS CARDS ===== */
+.quick-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 14px;
+  padding: 20px 18px;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  margin-bottom: 4px;
+}
+
+.quick-card:hover {
+  background: #1a2535;
+}
+
+.quick-card.border-green  { border-left: 3px solid #4ade80; }
+.quick-card.border-red    { border-left: 3px solid #ef4444; }
+.quick-card.border-green2 { border-left: 3px solid #22c55e; }
+.quick-card.border-purple { border-left: 3px solid #a855f7; }
+
+.quick-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.quick-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 4px;
+}
+
+.quick-sub {
+  font-size: 12px;
+  color: #64748b;
 }

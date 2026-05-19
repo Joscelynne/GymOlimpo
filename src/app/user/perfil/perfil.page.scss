@@ -1,69 +1,276 @@
+/* ===================================================
+   PERFIL PAGE — GymOlimpo Dark Theme
+   =================================================== */
+
 .perfil-content {
-  --background: #f6f7fb;
+  --background: #0d1117;
 }
 
-.perfil-card {
+/* ── Page title ─────────────────────────────────── */
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #e2e8f0;
+  margin: 0 0 20px;
+  padding: 0;
+}
+
+/* ── Wrapper ─────────────────────────────────────── */
+.perfil-wrapper {
+  padding: 24px 20px 50px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ── Two-column grid ─────────────────────────────── */
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .perfil-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===============================================
+   LEFT COLUMN
+   =============================================== */
+
+/* ── Identity card ───────────────────────────────── */
+.identity-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
   border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  margin-bottom: 16px;
+  padding: 28px 20px 22px;
+  text-align: center;
+  margin-bottom: 14px;
 }
 
-.principal-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f1f5ff 100%);
+/* Avatar with multicolor gradient (matches screenshot) */
+.avatar-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f472b6 0%, #a855f7 40%, #f97316 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 auto 16px;
+  letter-spacing: 1px;
 }
 
-.email-box {
-  background: #eef3ff;
-  color: #2c3e50;
-  padding: 10px 14px;
-  border-radius: 12px;
+.identity-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+
+.identity-email {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 14px;
+}
+
+.plan-badge {
+  display: inline-block;
+  background: #141b24;
+  color: #4ade80;
+  border: 1px solid #22c55e55;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 16px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* ── Mini stats ──────────────────────────────────── */
+.mini-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.mini-stat-card {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 14px;
+  padding: 16px 8px 14px;
+  text-align: center;
+}
+
+.mini-stat-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.mini-stat-number {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.mini-stat-number.green { color: #4ade80; }
+.mini-stat-number.red   { color: #ef4444; }
+
+.mini-stat-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #475569;
+  text-transform: uppercase;
+}
+
+/* ── Logout button ───────────────────────────────── */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 0;
+  background: transparent;
+  border: 1px solid #ef4444;
+  border-radius: 10px;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-logout ion-icon {
+  font-size: 16px;
+}
+
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* ===============================================
+   RIGHT COLUMN
+   =============================================== */
+
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Section labels ──────────────────────────────── */
+.card-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #475569;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  padding-bottom: 12px;
+}
+
+.plan-label {
+  color: #b45309;
+}
+
+/* ── Info personal card ──────────────────────────── */
+.info-card {
+  background: #111827;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+/* ── Plan card ───────────────────────────────────── */
+.plan-card {
+  background: #1a1407;
+  border: 1px solid #2a1f08;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+/* ── Info rows ───────────────────────────────────── */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.info-row-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.row-icon {
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.icon-cyan   { color: #22d3ee; }
+.icon-pink   { color: #f472b6; }
+.icon-purple { color: #a78bfa; }
+
+.row-label {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.row-value {
   font-size: 14px;
   font-weight: 500;
+  color: #e2e8f0;
+  text-align: right;
 }
 
-.resumen-grid {
-  margin-bottom: 8px;
+.row-value.green      { color: #4ade80; font-weight: 700; }
+.row-value.gold       { color: #f59e0b; font-weight: 700; }
+.row-value.bold-white { color: #e2e8f0; font-weight: 700; }
+.row-value.capitalize { text-transform: capitalize; }
+
+.row-divider {
+  height: 1px;
+  background: #1e2a38;
+  margin: 0;
 }
 
-.mini-card {
-  border-radius: 16px;
+/* ── Loading / Error states ──────────────────────── */
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 20px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.error-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 80px 20px;
+  color: #ef4444;
+  font-size: 14px;
   text-align: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
-  margin: 0;
 }
 
-.mini-label {
-  font-size: 13px;
-  color: #6b7280;
-  margin-bottom: 8px;
-}
-
-.mini-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1f2937;
-}
-
-ion-item {
-  --background: transparent;
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  margin-bottom: 8px;
-}
-
-ion-label h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: #374151;
-  margin-bottom: 4px;
-}
-
-ion-label p {
-  font-size: 14px;
-  color: #6b7280;
-  margin: 0;
-}
-
-.logout-btn {
-  margin: 12px;
+.error-box ion-icon {
+  font-size: 40px;
 }

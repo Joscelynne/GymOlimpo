@@ -1,9 +1,133 @@
-<ion-header><ion-toolbar><ion-title>Administración</ion-title><ion-buttons slot="end"><ion-button routerLink="/main">Inicio</ion-button></ion-buttons></ion-toolbar></ion-header>
-<ion-content class="ion-padding">
-  <ion-card><ion-card-header><ion-card-title>Resumen general</ion-card-title></ion-card-header><ion-card-content><p>Reservas registradas: {{ resumen.reservas }}</p><p>Pagos pendientes: {{ resumen.pagosPendientes }}</p><p>Horarios creados: {{ resumen.horarios }}</p></ion-card-content></ion-card>
-  <ion-card><ion-card-header><ion-card-title>Acciones sugeridas</ion-card-title></ion-card-header><ion-card-content><ul><li>Validar pagos pendientes.</li><li>Revisar cupos por horario.</li><li>Confirmar reservas dentro de vigencia.</li></ul>
-    <ion-button expand="block" color="success" (click)="generarHorarios()">
-      Generar horarios 30 días
-    </ion-button>
-  </ion-card-content></ion-card>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="medium"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content">
+  <div class="admin-wrapper">
+
+    <!-- Page heading -->
+    <div class="page-heading">
+      <h1 class="page-title">Administración</h1>
+      <p class="page-sub">Gestión general del gimnasio</p>
+    </div>
+
+    <!-- ===== STAT CARDS ===== -->
+    <div class="stats-row">
+
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value green">{{ resumen.reservas }}</div>
+        <div class="stat-label">RESERVAS REGISTRADAS</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💳</div>
+        <div class="stat-value orange">{{ resumen.pagosPendientes }}</div>
+        <div class="stat-label">PAGOS PENDIENTES</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">⏰</div>
+        <div class="stat-value white">{{ resumen.horarios }}</div>
+        <div class="stat-label">HORARIOS CREADOS</div>
+      </div>
+
+    </div>
+
+    <!-- ===== MIDDLE ROW ===== -->
+    <div class="middle-row">
+
+      <!-- Acciones sugeridas -->
+      <div class="suggested-card">
+        <div class="card-section-label">ACCIONES SUGERIDAS</div>
+
+        <div class="suggested-item" routerLink="/pagos">
+          <div class="suggested-left">
+            <ion-icon name="card-outline" class="s-icon icon-blue"></ion-icon>
+            <span>Validar pagos pendientes</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="suggested-divider"></div>
+
+        <div class="suggested-item" routerLink="/horarios">
+          <div class="suggested-left">
+            <ion-icon name="time-outline" class="s-icon icon-gray"></ion-icon>
+            <span>Revisar cupos por horario</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="suggested-divider"></div>
+
+        <div class="suggested-item" routerLink="/reservas">
+          <div class="suggested-left">
+            <ion-icon name="calendar-outline" class="s-icon icon-blue"></ion-icon>
+            <span>Confirmar reservas dentro de vigencia</span>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+        </div>
+      </div>
+
+      <!-- Acciones rápidas -->
+      <div class="quick-actions-card">
+        <div class="card-section-label">ACCIONES RÁPIDAS</div>
+
+        <button class="action-btn action-btn-green" (click)="generarHorarios()">
+          <ion-icon name="calendar-outline"></ion-icon>
+          GENERAR HORARIOS 30 DÍAS
+        </button>
+
+        <button class="action-btn action-btn-outline" routerLink="/admin/usuarios">
+          <ion-icon name="people-outline"></ion-icon>
+          GESTIONAR USUARIOS
+        </button>
+
+        <button class="action-btn action-btn-outline" routerLink="/admin/reportes">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          VER REPORTES
+        </button>
+
+        <button class="action-btn action-btn-outline" routerLink="/pagos">
+          <ion-icon name="card-outline"></ion-icon>
+          VALIDAR PAGOS
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ===== ÚLTIMAS RESERVAS TABLE ===== -->
+    <div class="table-card">
+      <div class="card-section-label">ÚLTIMAS RESERVAS</div>
+
+      <div class="reservas-table">
+
+        <!-- Header -->
+        <div class="table-row table-head">
+          <span>CLIENTE</span>
+          <span>FECHA</span>
+          <span>HORA</span>
+          <span>PLAN</span>
+          <span>ESTADO</span>
+        </div>
+
+        <!-- Placeholder rows (data visual — driven by resumen) -->
+        <div class="table-empty" *ngIf="resumen.reservas === 0">
+          No hay reservas registradas aún.
+        </div>
+
+        <div class="table-note" *ngIf="resumen.reservas > 0">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          {{ resumen.reservas }} reservas registradas · {{ resumen.pagosPendientes }} pagos pendientes de validación
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </ion-content>

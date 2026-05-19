@@ -81,6 +81,14 @@ export class PerfilPage implements OnInit {
     await this.router.navigate(['/login']);
   }
 
+  getInitials(): string {
+    const n = this.userData?.nombre?.trim() || '';
+    const a = this.userData?.apellido?.trim() || '';
+    if (n && a) return (n[0] + a[0]).toUpperCase();
+    if (n) return n.substring(0, 2).toUpperCase();
+    return (this.user?.email?.[0] || '?').toUpperCase();
+  }
+
   async confirmarCierreSesion() {
     const alert = await this.alertController.create({
       header: 'Confirmar cierre de sesión',

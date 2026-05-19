@@ -9,13 +9,13 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'Gym Olimpo';
+
   basePages = [
-    { title: 'Inicio', url: '/main', icon: 'home' },
-    { title: 'Perfil', url: '/perfil', icon: 'person-circle' },
-    { title: 'Reservas', url: '/reservas', icon: 'calendar' },
-    { title: 'Horarios', url: '/horarios', icon: 'time' },
-    { title: 'Planes', url: '/planes', icon: 'document-text' },
-    { title: 'Pagos', url: '/pagos', icon: 'card' }
+    { title: 'Inicio',    url: '/main',     icon: 'home'          },
+    { title: 'Reservas',  url: '/reservas', icon: 'calendar'      },
+    { title: 'Planes',    url: '/planes',   icon: 'document-text' },
+    { title: 'Pagos',     url: '/pagos',    icon: 'card'          },
+    { title: 'Mi Perfil', url: '/perfil',   icon: 'person-circle' },
   ];
 
   adminPages = [
@@ -25,8 +25,18 @@ export class AppComponent {
   constructor(public userService: UserService, private router: Router) {}
 
   logout() {
-    this.userService.logout().then(() => this.router.navigate(['/login'])).catch(error => {
-      console.error('Error al cerrar sesión:', error);
-    });
+    this.userService.logout()
+      .then(() => this.router.navigate(['/login']))
+      .catch(error => console.error('Error al cerrar sesión:', error));
+  }
+
+  getUserInitials(user: any): string {
+    if (user?.nombre) {
+      const parts = user.nombre.trim().split(' ');
+      return parts.length >= 2
+        ? (parts[0][0] + parts[1][0]).toUpperCase()
+        : parts[0].substring(0, 2).toUpperCase();
+    }
+    return (user?.email?.[0] || '?').toUpperCase();
   }
 }
