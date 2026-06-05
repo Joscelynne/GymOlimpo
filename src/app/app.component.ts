@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Gym Olimpo';
+  title = 'Gym Olympo';
 
   basePages = [
     { title: 'Inicio',    url: '/main',     icon: 'home'          },

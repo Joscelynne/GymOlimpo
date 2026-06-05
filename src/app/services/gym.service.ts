@@ -513,7 +513,7 @@ export class GymService {
     };
 
     const cuposPorDefecto = 3;
-    const entrenadorPorDefecto = 'Coach Gym Olimpo';
+    const entrenadorPorDefecto = 'Coach Gym Olympo';
 
     for (let i = 0; i < 30; i++) {
       const fechaObj = new Date();
