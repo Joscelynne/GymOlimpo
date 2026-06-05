@@ -49,7 +49,12 @@
               <span class="plan-price" [class.gold]="plan.recomendado">
                 ${{ plan.precio | number:'1.0-0' }}
               </span>
-              <span class="plan-sessions-badge">{{ plan.sesiones }} sesion{{ plan.sesiones > 1 ? 'es' : '' }}</span>
+              <span class="plan-sessions-badge" *ngIf="plan.tipo === 'clase'">
+                {{ plan.sesiones }} sesion{{ plan.sesiones > 1 ? 'es' : '' }}
+              </span>
+              <span class="plan-sessions-badge" *ngIf="plan.tipo === 'asesoria'">
+                {{ plan.duracionMeses }} mes{{ plan.duracionMeses && plan.duracionMeses > 1 ? 'es' : '' }}
+              </span>
             </div>
 
             <!-- Features -->
@@ -59,6 +64,19 @@
                 {{ item }}
               </li>
             </ul>
+
+            <!-- Detalles de asesoría (expandible) -->
+            <div *ngIf="plan.tipo === 'asesoria' && plan.detalles" class="asesoria-details">
+              <button class="details-toggle" (click)="toggleDetalles(plan.id)">
+                <ion-icon [name]="detallesAbiertos[plan.id] ? 'chevron-up' : 'chevron-down'"></ion-icon>
+                Ver detalles completos
+              </button>
+              <div *ngIf="detallesAbiertos[plan.id]" class="details-content">
+                <ul class="details-list">
+                  <li *ngFor="let detalle of plan.detalles">{{ detalle }}</li>
+                </ul>
+              </div>
+            </div>
 
             <div class="plan-spacer"></div>
 

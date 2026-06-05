@@ -226,3 +226,60 @@
   text-transform: uppercase;
   margin-bottom: 12px;
 }
+
+/* ===== ASESORIA DETAILS ===== */
+.asesoria-details {
+  margin: 12px 0 0;
+}
+
+.details-toggle {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+
+.details-toggle:hover {
+  color: #60a5fa;
+}
+
+.details-toggle ion-icon {
+  font-size: 16px;
+}
+
+.details-content {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #1e2a38;
+}
+
+.details-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.details-list li {
+  font-size: 12px;
+  color: #cbd5e1;
+  padding-left: 16px;
+  position: relative;
+}
+
+.details-list li:before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-weight: 600;
+}

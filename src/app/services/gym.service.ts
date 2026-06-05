@@ -44,6 +44,9 @@ export interface PlanGym {
   descripcion: string[];
   recomendado?: boolean;
   linkFlow?: string;
+  tipo?: 'clase' | 'asesoria';
+  duracionMeses?: number;
+  detalles?: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -145,6 +148,7 @@ export class GymService {
       nombre: 'Empieza a moverte',
       precio: 32000,  
       sesiones: 8,
+      tipo: 'clase',
       linkFlow: 'https://sandbox.flow.cl/uri/5HrfKhwv4',
       descripcion: [
         'Evaluación inicial',
@@ -157,6 +161,7 @@ export class GymService {
       nombre: 'Movimiento con Confianza',
       precio: 39000,
       sesiones: 12,
+      tipo: 'clase',
       linkFlow: 'https://sandbox.flow.cl/uri/0L7krHT8b',
       descripcion: [
         'Evaluación inicial',
@@ -170,6 +175,7 @@ export class GymService {
       nombre: 'Prolympo',
       precio: 48000,
       sesiones: 12,
+      tipo: 'clase',
       recomendado: true,
       linkFlow: 'https://sandbox.flow.cl/uri/dcT46SPK7',
       descripcion: [
@@ -186,6 +192,7 @@ export class GymService {
       nombre: 'Plan estudiante (<60 años)',
       precio: 30000,
       sesiones: 12,
+      tipo: 'clase',
       linkFlow: 'https://sandbox.flow.cl/uri/zQ2MrKKCb',
       descripcion: [
         'Evaluación inicial',
@@ -201,9 +208,135 @@ export class GymService {
       nombre: 'Clase esporádica',
       precio: 6000,
       sesiones: 1,
+      tipo: 'clase',
       linkFlow: 'https://sandbox.flow.cl/uri/bmZFK0ty4',
       descripcion: [
         '1 sesión individual'
+      ]
+    },
+    {
+      id: 'asesoria-1-mes',
+      nombre: 'Asesoría Personalizada - 1 Mes',
+      precio: 30000,
+      sesiones: 1,
+      duracionMeses: 1,
+      tipo: 'asesoria',
+      linkFlow: 'https://sandbox.flow.cl/uri/asesoria-1mes',
+      descripcion: [
+        'Evaluación inicial completa',
+        'Rutina personalizada en PDF',
+        'Técnica y ejecución de ejercicios',
+        'Seguimiento por WhatsApp'
+      ],
+      detalles: [
+        'Entrevista inicial para conocer tus objetivos',
+        'Evaluación de experiencia y lesiones',
+        'Análisis de disponibilidad de tiempo y equipamiento',
+        'Diseño de plan completamente personalizado',
+        'Rutina en formato PDF fácil de seguir',
+        'Explicación de ejecución correcta de ejercicios',
+        'Intensidad y progresiones adaptadas a tu nivel',
+        'Acompañamiento por WhatsApp',
+        'Resolución de dudas en tiempo real',
+        'Corrección de técnica con videos',
+        'Ajustes de intensidad según necesidad',
+        'Modificación de ejercicios si es requerido'
+      ]
+    },
+    {
+      id: 'asesoria-2-meses',
+      nombre: 'Asesoría Personalizada - 2 Meses',
+      precio: 50000,
+      sesiones: 2,
+      duracionMeses: 2,
+      tipo: 'asesoria',
+      linkFlow: 'https://sandbox.flow.cl/uri/asesoria-2meses',
+      descripcion: [
+        'Evaluación inicial completa',
+        'Rutina personalizada en PDF',
+        'Técnica y ejecución de ejercicios',
+        'Seguimiento por WhatsApp prolongado'
+      ],
+      detalles: [
+        'Entrevista inicial para conocer tus objetivos',
+        'Evaluación de experiencia y lesiones',
+        'Análisis de disponibilidad de tiempo y equipamiento',
+        'Diseño de plan completamente personalizado',
+        'Rutina en formato PDF fácil de seguir',
+        'Explicación de ejecución correcta de ejercicios',
+        'Intensidad y progresiones adaptadas a tu nivel',
+        'Acompañamiento por WhatsApp durante 2 meses',
+        'Resolución de dudas en tiempo real',
+        'Corrección de técnica con videos',
+        'Ajustes de intensidad según progreso',
+        'Modificación de ejercicios si es requerido',
+        'Seguimiento de avances y adaptación'
+      ]
+    },
+    {
+      id: 'asesoria-3-meses',
+      nombre: 'Asesoría Personalizada - 3 Meses',
+      precio: 60000,
+      sesiones: 3,
+      duracionMeses: 3,
+      tipo: 'asesoria',
+      recomendado: true,
+      linkFlow: 'https://sandbox.flow.cl/uri/asesoria-3meses',
+      descripcion: [
+        'Evaluación inicial completa',
+        'Rutina personalizada en PDF',
+        'Técnica y ejecución de ejercicios',
+        'Seguimiento intensivo por WhatsApp',
+        'Revisión de progreso mensual'
+      ],
+      detalles: [
+        'Entrevista inicial para conocer tus objetivos',
+        'Evaluación de experiencia y lesiones',
+        'Análisis de disponibilidad de tiempo y equipamiento',
+        'Diseño de plan completamente personalizado',
+        'Rutina en formato PDF fácil de seguir',
+        'Explicación de ejecución correcta de ejercicios',
+        'Intensidad y progresiones adaptadas a tu nivel',
+        'Acompañamiento por WhatsApp durante 3 meses',
+        'Resolución de dudas en tiempo real',
+        'Corrección de técnica con videos',
+        'Revisiones mensuales de progreso',
+        'Ajustes de intensidad según progreso',
+        'Modificación de ejercicios según resultados',
+        'Adaptación continua del plan'
+      ]
+    },
+    {
+      id: 'asesoria-6-meses',
+      nombre: 'Asesoría Personalizada - 6 Meses',
+      precio: 110000,
+      sesiones: 6,
+      duracionMeses: 6,
+      tipo: 'asesoria',
+      linkFlow: 'https://sandbox.flow.cl/uri/asesoria-6meses',
+      descripcion: [
+        'Evaluación inicial completa',
+        'Rutina personalizada en PDF',
+        'Técnica y ejecución de ejercicios',
+        'Seguimiento integral por WhatsApp',
+        'Revisiones bimensuales'
+      ],
+      detalles: [
+        'Entrevista inicial para conocer tus objetivos',
+        'Evaluación de experiencia y lesiones',
+        'Análisis de disponibilidad de tiempo y equipamiento',
+        'Diseño de plan completamente personalizado',
+        'Rutina en formato PDF fácil de seguir',
+        'Explicación de ejecución correcta de ejercicios',
+        'Intensidad y progresiones adaptadas a tu nivel',
+        'Acompañamiento por WhatsApp durante 6 meses',
+        'Resolución de dudas en tiempo real',
+        'Corrección de técnica con videos',
+        'Revisiones bimensuales de progreso',
+        'Ajustes de intensidad según progreso',
+        'Modificación de ejercicios según resultados',
+        'Adaptación continua del plan',
+        'Construir hábitos sostenibles'
       ]
     }
         ];

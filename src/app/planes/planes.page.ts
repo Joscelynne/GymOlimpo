@@ -14,6 +14,7 @@ export class PlanesPage implements OnInit {
   planes: PlanGym[] = [];
   cargando = false;
   mensaje = '';
+  detallesAbiertos: { [planId: string]: boolean } = {};
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -52,5 +53,9 @@ export class PlanesPage implements OnInit {
 
   tienePlanActivo(): boolean {
     return !!this.perfil?.planActivo && (this.perfil?.sesionesDisponibles ?? 0) > 0;
+  }
+
+  toggleDetalles(planId: string): void {
+    this.detallesAbiertos[planId] = !this.detallesAbiertos[planId];
   }
 }
