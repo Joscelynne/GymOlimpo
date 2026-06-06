@@ -123,6 +123,87 @@
           </div>
         </div>
 
+        <div class="update-card">
+          <div class="card-section-label">ACTUALIZAR MIS DATOS</div>
+
+          <div class="alert-note" *ngIf="!userData?.rut || !userData?.telefono || !userData?.nombre || !userData?.apellido">
+            Tu cuenta está incompleta. Por favor, completa tu RUT, nombre, apellido y teléfono.
+          </div>
+
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+            <div class="form-group">
+              <label>RUT</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="card-outline" slot="start"></ion-icon>
+                <ion-input formControlName="rut" placeholder="12.345.678-9"></ion-input>
+              </ion-item>
+              <div class="error-inline" *ngIf="profileForm.get('rut')?.touched && profileForm.get('rut')?.invalid">
+                RUT inválido o incompleto.
+              </div>
+            </div>
+
+            <div class="form-group split-grid">
+              <div>
+                <label>Nombre</label>
+                <ion-item class="input-box" lines="none">
+                  <ion-icon name="person-outline" slot="start"></ion-icon>
+                  <ion-input formControlName="nombre" placeholder="Nombre"></ion-input>
+                </ion-item>
+              </div>
+              <div>
+                <label>Apellido</label>
+                <ion-item class="input-box" lines="none">
+                  <ion-icon name="person-outline" slot="start"></ion-icon>
+                  <ion-input formControlName="apellido" placeholder="Apellido"></ion-input>
+                </ion-item>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Teléfono</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="call-outline" slot="start"></ion-icon>
+                <ion-input formControlName="telefono" placeholder="+56 9 1234 5678"></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="form-group">
+              <label>Correo de acceso</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="mail-outline" slot="start"></ion-icon>
+                <ion-input type="email" formControlName="email" placeholder="correo@ejemplo.com"></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="form-group">
+              <label>Contraseña nueva <span class="muted">(dejar en blanco si no cambia)</span></label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                <ion-input type="password" formControlName="newPassword" placeholder="Nueva contraseña"></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="form-group">
+              <label>Confirmar contraseña</label>
+              <ion-item class="input-box" lines="none">
+                <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                <ion-input type="password" formControlName="confirmPassword" placeholder="Repite la contraseña"></ion-input>
+              </ion-item>
+            </div>
+
+            <div class="error-inline" *ngIf="profileForm?.hasError('passwordMismatch')">
+              Las contraseñas no coinciden.
+            </div>
+
+            <ion-button expand="block" type="submit" [disabled]="profileForm.invalid || savingProfile" class="btn-save">
+              {{ savingProfile ? 'Guardando...' : 'Guardar cambios' }}
+            </ion-button>
+
+            <div class="success-box" *ngIf="formMessage">{{ formMessage }}</div>
+            <div class="error-box" *ngIf="errorMensaje && !cargando">{{ errorMensaje }}</div>
+          </form>
+        </div>
+
       </div>
     </div>
   </div>

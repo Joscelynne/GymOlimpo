@@ -202,6 +202,83 @@
   padding: 20px 22px;
 }
 
+.update-card {
+  background: #111827;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.update-card .card-section-label {
+  margin-bottom: 16px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.input-box {
+  --background: #0f172a;
+  --border-radius: 10px;
+  --padding-start: 12px;
+  border: 1px solid #1e293b;
+}
+
+.btn-save {
+  --background: #22c55e;
+  --background-hover: #16a34a;
+  --border-radius: 10px;
+  height: 46px;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.alert-note {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #1f2937;
+  color: #f8fafc;
+  font-size: 13px;
+}
+
+.success-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #4ade80;
+  font-size: 13px;
+}
+
+.error-inline {
+  margin-top: 8px;
+  color: #f87171;
+  font-size: 12px;
+}
+
+.update-card label {
+  display: block;
+  margin-bottom: 8px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
 /* ── Info rows ───────────────────────────────────── */
 .info-row {
   display: flex;

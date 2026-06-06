@@ -4,6 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { GymService } from 'src/app/services/gym.service';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-perfil',
@@ -19,13 +20,28 @@ export class PerfilPage implements OnInit {
   reservas: any[] = [];
   pagosPendientes = 0;
 
+  profileForm: FormGroup;
+  savingProfile = false;
+  formMessage = '';
+
   constructor(
     private afAuth: AngularFireAuth,
     private userService: UserService,
     private gymService: GymService,
     private alertController: AlertController,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.profileForm = this.fb.group({
+      rut: ['', [Validators.required, this.validateRutFormat]],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      telefono: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      newPassword: ['', this.optionalMinLengthValidator(8)],
+      confirmPassword: ['']
+    }, { validators: this.passwordMatchValidator });
+  }
 
   ngOnInit() {
     this.afAuth.authState.subscribe({
@@ -45,6 +61,8 @@ export class PerfilPage implements OnInit {
 
             if (doc) {
               this.userData = doc;
+              this.formMessage = '';
+              this.patchProfileForm();
               this.errorMensaje = '';
             }
 
@@ -75,6 +93,87 @@ export class PerfilPage implements OnInit {
       }
     });
   }
+
+  private patchProfileForm() {
+    this.profileForm.patchValue({
+      rut: this.userData?.rut || '',
+      nombre: this.userData?.nombre || '',
+      apellido: this.userData?.apellido || '',
+      telefono: this.userData?.telefono || '',
+      email: this.userData?.email || this.user?.email || ''
+    });
+  }
+
+  async saveProfile() {
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+
+    if (!this.user) {
+      this.errorMensaje = 'No hay usuario autenticado.';
+      return;
+    }
+
+    this.savingProfile = true;
+    this.formMessage = '';
+    this.errorMensaje = '';
+
+    try {
+      const { rut, nombre, apellido, telefono, email, newPassword } = this.profileForm.value;
+
+      await this.userService.updateProfile(this.user.uid, {
+        rut,
+        nombre,
+        apellido,
+        telefono,
+        email,
+        provider: this.userData?.provider || this.user.providerData?.[0]?.providerId || 'password'
+      });
+
+      if (this.user.email !== email) {
+        await this.userService.updateEmail(email);
+      }
+
+      if (newPassword) {
+        await this.userService.updatePassword(newPassword);
+      }
+
+      this.formMessage = 'Perfil actualizado correctamente.';
+      this.profileForm.get('newPassword')?.reset('');
+      this.profileForm.get('confirmPassword')?.reset('');
+    } catch (error) {
+      console.error('Error actualizando perfil:', error);
+      this.errorMensaje = 'No fue posible actualizar el perfil. Revisa tus datos e intenta de nuevo.';
+    } finally {
+      this.savingProfile = false;
+    }
+  }
+
+  validateRutFormat(control: AbstractControl): ValidationErrors | null {
+    const rutRegex = /^[0-9]{1,2}\.[0-9]{3}\.[0-9]{3}-[0-9kK]$/;
+    return rutRegex.test(control.value) ? null : { invalidRutFormat: true };
+  }
+
+  optionalMinLengthValidator(length: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) {
+        return null;
+      }
+      return value.length >= length ? null : { minlength: { requiredLength: length, actualLength: value.length } };
+    };
+  }
+
+  passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('newPassword')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    if (!password && !confirmPassword) {
+      return null;
+    }
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  };
 
   async cerrarSesion() {
     await this.userService.logout();

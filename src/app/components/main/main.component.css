@@ -19,6 +19,13 @@
   letter-spacing: 1px;
 }
 
+.toolbar-logo {
+  height: 28px;
+  margin-left: 10px;
+  margin-right: 10px;
+  object-fit: contain;
+}
+
 /* ===== HERO ===== */
 .hero-card {
   background: #141b24;

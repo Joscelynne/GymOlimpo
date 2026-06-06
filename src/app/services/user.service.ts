@@ -112,6 +112,30 @@ export class UserService {
     return await this.auth.signOut();
   }
 
+  async updateProfile(uid: string, profileData: any): Promise<void> {
+    await this.saveUserProfile(uid, profileData, true);
+  }
+
+  async updateEmail(email: string): Promise<void> {
+    const user = await this.auth.currentUser;
+    if (!user) {
+      throw new Error('No hay usuario autenticado');
+    }
+    await user.updateEmail(email);
+  }
+
+  async updatePassword(password: string): Promise<void> {
+    const user = await this.auth.currentUser;
+    if (!user) {
+      throw new Error('No hay usuario autenticado');
+    }
+    await user.updatePassword(password);
+  }
+
+  isProfileComplete(user: any): boolean {
+    return !!user && !!user.rut && !!user.nombre && !!user.apellido && !!user.telefono;
+  }
+
   getCurrentUser() {
     return this.auth.authState;
   }

@@ -19,14 +19,27 @@
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   background: #0f2417;
   border: 1.5px solid #22c55e;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.logo-icon img.menu-logo-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.toolbar-logo {
+  height: 30px;
+  margin-left: 12px;
+  margin-right: 12px;
+  object-fit: contain;
 }
 
 .logo-text {

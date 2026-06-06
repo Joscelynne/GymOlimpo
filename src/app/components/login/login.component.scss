@@ -27,17 +27,20 @@
 }
 
 .logo-icon {
-  width: 58px;
-  height: 58px;
+  width: 72px;
+  height: 72px;
   background: #e63946;
-  border-radius: 14px;
+  border-radius: 18px;
   margin: 0 auto 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 34px;
-  font-weight: 900;
-  color: #fff;
+}
+
+.logo-icon img.app-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
 .brand-box h1 {

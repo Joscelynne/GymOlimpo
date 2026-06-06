@@ -76,7 +76,12 @@ export class LoginComponent {
     ).subscribe(user => {
       this.loading = false;
 
-      if (user && user.rol === 'admin') {
+      if (!user || !this.userService.isProfileComplete(user)) {
+        this.router.navigate(['/perfil']);
+        return;
+      }
+
+      if (user.rol === 'admin') {
         this.router.navigate(['/admin']);
       } else {
         this.router.navigate(['/main']);
