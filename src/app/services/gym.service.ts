@@ -601,4 +601,41 @@ export class GymService {
       });
     });
   }
+
+  getReservasPorFecha(fecha: string) {
+    return this.firestore.collection('reservas', ref =>
+      ref.where('fecha', '==', fecha).orderBy('hora', 'asc')
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Reserva) })))
+    );
+  }
+
+  getPagosPendientes() {
+    return this.firestore.collection<Pago>('pagos', ref => ref.where('estado', '==', 'pendiente')).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Pago) })))
+    );
+  }
+
+  getReservasRecientes(limit = 25) {
+    return this.firestore.collection<Reserva>('reservas', ref => ref.orderBy('createdAt', 'desc').limit(limit)).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Reserva) })))
+    );
+  }
+
+  async confirmarAsistencia(reservaId: string): Promise<void> {
+    const reservaRef = this.firestore.collection('reservas').doc(reservaId).ref;
+
+    await this.firestore.firestore.runTransaction(async transaction => {
+      const reservaSnap = await transaction.get(reservaRef);
+      if (!reservaSnap.exists) throw new Error('Reserva no encontrada');
+
+      const reservaData = reservaSnap.data() as any;
+      if (reservaData.estado === 'confirmada' && reservaData.checkIn) return;
+
+      transaction.update(reservaRef, {
+        estado: 'confirmada',
+        checkIn: new Date().toISOString()
+      });
+    });
+  }
 }
