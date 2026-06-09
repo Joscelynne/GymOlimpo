@@ -147,4 +147,44 @@ export class UserService {
   private async saveUserProfile(uid: string, data: any, merge = false): Promise<void> {
     await this.firestore.collection('users').doc(uid).set(data, { merge });
   }
+  
+  async validarVigenciaPlan(uid: string): Promise<void> {
+
+  const doc = await this.firestore
+    .collection('users')
+    .doc(uid)
+    .ref
+    .get();
+
+  if (!doc.exists) return;
+
+  const data: any = doc.data();
+
+  if (!data?.vigenciaFin) return;
+
+  const hoy = new Date();
+
+  const fechaFin = new Date(data.vigenciaFin);
+
+  hoy.setHours(0, 0, 0, 0);
+  fechaFin.setHours(0, 0, 0, 0);
+
+  if (hoy > fechaFin) {
+
+    await this.firestore
+      .collection('users')
+      .doc(uid)
+      .update({
+
+        planActivo: '',
+        planId: '',
+        sesionesTotales: 0,
+        sesionesDisponibles: 0
+
+      });
+
+  }
+}
+
+
 }

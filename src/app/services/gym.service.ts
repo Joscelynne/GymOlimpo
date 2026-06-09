@@ -57,6 +57,10 @@ export class GymService {
   ) { }
 
   getHorarios(): Observable<Horario[]> {
+
+    
+
+    
     return this.firestore.collection<Horario>('horarios').snapshotChanges().pipe(
       map(actions =>
         actions.map(a => ({
@@ -66,6 +70,57 @@ export class GymService {
       )
     );
   }
+
+  async crearHorario(
+  fecha: string,
+  hora: string,
+  cupos: number
+): Promise<void> {
+
+  const existe = await this.existeHorario(fecha, hora);
+
+  if (existe) {
+    throw new Error('Ya existe un horario para esa fecha y hora');
+  }
+
+  await this.firestore.collection('horarios').add({
+    fecha,
+    hora,
+    cupos,
+    cuposDisponibles: cupos,
+    entrenador: 'Manu'
+  });
+}
+
+async editarHorario(
+  id: string,
+  datos: Partial<Horario>
+): Promise<void> {
+
+  await this.firestore
+    .collection('horarios')
+    .doc(id)
+    .update(datos);
+}
+
+async eliminarHorario(id: string): Promise<void> {
+
+  const reservas = await this.firestore.collection(
+    'reservas',
+    ref => ref.where('horarioId', '==', id)
+  ).get().toPromise();
+
+  if (reservas && !reservas.empty) {
+    throw new Error(
+      'No puedes eliminar un horario con reservas asociadas'
+    );
+  }
+
+  await this.firestore
+    .collection('horarios')
+    .doc(id)
+    .delete();
+}
 
   getReservasUsuario(): Observable<Reserva[]> {
     return this.auth.authState.pipe(
@@ -591,11 +646,7 @@ export class GymService {
       transaction.update(horarioRef, {
         cuposDisponibles: horarioData.cuposDisponibles + 1
       });
-
-      transaction.update(userRef, {
-        sesionesDisponibles: (userData.sesionesDisponibles ?? 0) + 1
-      });
-
+      
       transaction.update(reservaRef, {
         estado: 'cancelada'
       });

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from '../services/user.service';
 import { GymService, PlanGym } from '../services/gym.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-planes',
@@ -20,35 +21,56 @@ export class PlanesPage implements OnInit {
     private afAuth: AngularFireAuth,
     private userService: UserService,
     private gymService: GymService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
     this.planes = this.gymService.getPlanesDisponibles();
 
     this.afAuth.authState.subscribe((user: any) => {
       if (user) {
-        this.userService.getUserProfile(user.uid).subscribe((data: any) => {
-          this.perfil = data;
-        });
-      }
-    });
-  }
+         this.userService.validarVigenciaPlan(user.uid);
+          this.userService
+            .getUserProfile(user.uid)
+            .subscribe((data: any) => {
+
+              this.perfil = data;
+          });
+        }
+      });
+    }
 
   async seleccionarPlan(plan: PlanGym) {
-    this.cargando = true;
-    this.mensaje = '';
 
-    try {
-      await this.gymService.crearPagoPlan(plan);
-      this.mensaje = `Se generó el pago pendiente para el plan "${plan.nombre}".`;
-      await this.router.navigate(['/pagos']);
-    } catch (error: any) {
-      console.error(error);
-      this.mensaje = error.message || 'No fue posible seleccionar el plan.';
-    } finally {
-      this.cargando = false;
-    }
+    const alert = await this.alertController.create({
+      header: 'Términos y Condiciones',
+
+      cssClass: 'gym-alert',
+
+      message:
+        '✓ Vigencia de 1 mes desde la activación.\n' +
+        '✓ Las sesiones no utilizadas expiran.\n' +
+        '✓ No existe devolución por inasistencias.\n' +
+        '✓ Cancelar una reserva implica perder la sesión.\n' +
+        '✓ No existe compensación económica.',
+
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Acepto y continuar',
+          handler: async () => {
+            await this.gymService.crearPagoPlan(plan);
+            this.router.navigate(['/pagos']);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   tienePlanActivo(): boolean {
@@ -58,4 +80,21 @@ export class PlanesPage implements OnInit {
   toggleDetalles(planId: string): void {
     this.detallesAbiertos[planId] = !this.detallesAbiertos[planId];
   }
+
+  categoriaSeleccionada: 'presencial' | 'online' = 'presencial';
+  get planesFiltrados(): PlanGym[] {
+
+  if (this.categoriaSeleccionada === 'presencial') {
+
+    return this.planes.filter(
+      p => p.tipo === 'clase'
+    );
+
+  }
+
+  return this.planes.filter(
+    p => p.tipo === 'asesoria'
+  );
+
+}
 }

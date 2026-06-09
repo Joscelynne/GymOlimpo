@@ -24,17 +24,45 @@
     <!-- Plan activo banner -->
     <div class="active-plan-banner" *ngIf="perfil && tienePlanActivo()">
       <ion-icon name="checkmark-circle-outline"></ion-icon>
-      <span>Plan activo: <strong>{{ perfil.planActivo }}</strong> · {{ perfil.sesionesDisponibles ?? 0 }} sesiones · {{ perfil.vigenciaInicio }} → {{ perfil.vigenciaFin }}</span>
+      <span>
+      Plan activo:
+      <strong>{{ perfil.planActivo }}</strong>
+      · {{ perfil.sesionesDisponibles ?? 0 }} sesiones
+      · {{ perfil.vigenciaInicio }} → {{ perfil.vigenciaFin }}
+    </span>
     </div>
 
     <!-- Planes grid -->
+
+    <div class="tipo-selector">
+
+  <button
+    class="tipo-btn"
+    [class.activo]="categoriaSeleccionada === 'presencial'"
+    (click)="categoriaSeleccionada = 'presencial'">
+
+    PRESENCIAL
+
+  </button>
+
+  <button
+    class="tipo-btn"
+    [class.activo]="categoriaSeleccionada === 'online'"
+    (click)="categoriaSeleccionada = 'online'">
+
+    ONLINE
+
+  </button>
+
+</div>
+
     <ion-grid class="planes-grid">
       <ion-row>
         <ion-col
           size="12"
           sizeMd="6"
           sizeLg="4"
-          *ngFor="let plan of planes">
+          *ngFor="let plan of planesFiltrados">
 
           <div class="plan-card" [class.plan-card-recommended]="plan.recomendado">
 

@@ -8,6 +8,23 @@
 </ion-header>
 
 <ion-content class="ion-padding horarios-content">
+  <div *ngIf="esAdmin" class="admin-actions">
+
+  <ion-button
+    expand="block"
+    color="success"
+    (click)="crearHorario()">
+
+    <ion-icon
+      slot="start"
+      name="add-circle-outline">
+    </ion-icon>
+
+    NUEVO HORARIO
+
+  </ion-button>
+
+</div>
 
   <ion-card *ngIf="cargando">
     <ion-card-content>
@@ -16,23 +33,52 @@
   </ion-card>
 
   <ion-card *ngFor="let horario of horarios" class="horario-card">
+
     <ion-card-header>
-      <ion-card-title>{{ horario.fecha }} · {{ horario.hora }}</ion-card-title>
-      <ion-card-subtitle>{{ horario.entrenador || 'Entrenador asignado' }}</ion-card-subtitle>
+      <ion-card-title>
+        {{ horario.fecha }} · {{ horario.hora }}
+      </ion-card-title>
+
+      <ion-card-subtitle>
+        {{ horario.entrenador || 'Coach Manu' }}
+      </ion-card-subtitle>
     </ion-card-header>
 
     <ion-card-content>
-      <p><strong>Cupos disponibles:</strong> {{ horario.cuposDisponibles }} / {{ horario.cupos }}</p>
+
+      <p>
+        <strong>Cupos disponibles:</strong>
+        {{ horario.cuposDisponibles }} / {{ horario.cupos }}
+      </p>
+
       <ion-progress-bar
         [value]="horario.cupos > 0 ? horario.cuposDisponibles / horario.cupos : 0">
       </ion-progress-bar>
-    </ion-card-content>
-  </ion-card>
 
-  <ion-card *ngIf="!cargando && !horarios.length">
-    <ion-card-content>
-      No hay horarios disponibles por el momento.
-    </ion-card-content>
-  </ion-card>
+      <div *ngIf="esAdmin" class="admin-buttons">
 
-</ion-content>
+        <ion-button
+          fill="outline"
+          size="small"
+          color="warning"
+          (click)="editarHorario(horario)">
+
+          Editar
+
+        </ion-button>
+
+        <ion-button
+          fill="outline"
+          size="small"
+          color="danger"
+          (click)="eliminarHorario(horario)">
+
+          Eliminar
+
+        </ion-button>
+
+      </div>
+
+    </ion-card-content>
+
+  </ion-card>

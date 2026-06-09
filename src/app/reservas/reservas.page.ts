@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GymService, Horario, Reserva } from '../services/gym.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from '../services/user.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-reservas',
@@ -22,7 +23,8 @@ export class ReservasPage implements OnInit {
   constructor(
     private gymService: GymService,
     private afAuth: AngularFireAuth,
-    private userService: UserService
+    private userService: UserService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -32,8 +34,13 @@ export class ReservasPage implements OnInit {
 
     this.afAuth.authState.subscribe((user: any) => {
       if (user) {
-        this.userService.getUserProfile(user.uid).subscribe((data: any) => {
-          this.perfil = data;
+      this.userService.validarVigenciaPlan(user.uid);
+
+      this.userService
+        .getUserProfile(user.uid)
+        .subscribe((data: any) => {
+
+    this.perfil = data;
         });
       }
     });
@@ -109,7 +116,43 @@ export class ReservasPage implements OnInit {
 
   async cancelar(id?: string) {
     if (!id) return;
-    await this.gymService.cancelarReserva(id);
+
+    const alert = await this.alertController.create({
+      header: 'Cancelar reserva',
+      message:
+        'Si cancelas esta reserva perderás la sesión utilizada. Esta acción no puede deshacerse.',
+      buttons: [
+        {
+          text: 'Volver',
+          role: 'cancel'
+        },
+        {
+          text: 'Cancelar reserva',
+          role: 'destructive',
+          handler: async () => {
+
+            try {
+
+              await this.gymService.cancelarReserva(id);
+
+              this.mensaje =
+                'Reserva cancelada correctamente.';
+
+            } catch (error: any) {
+
+              console.error(error);
+
+              this.mensaje =
+                error.message ||
+                'No fue posible cancelar la reserva.';
+            }
+
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   tienePlanActivo(): boolean {

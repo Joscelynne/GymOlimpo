@@ -283,3 +283,26 @@
   color: #3b82f6;
   font-weight: 600;
 }
+
+.tipo-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.tipo-btn {
+  flex: 1;
+  background: #111827;
+  border: 1px solid #2c3444;
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tipo-btn.activo {
+  background: #22c55e;
+  color: #000;
+  border-color: #22c55e;
+}

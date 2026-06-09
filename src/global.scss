@@ -119,3 +119,27 @@ ion-menu-button {
 ::-webkit-scrollbar-thumb:hover {
   background: #2a3a50;
 }
+.gym-alert .alert-wrapper{
+  max-width: 650px !important;
+  border-radius: 20px !important;
+  background: #0f172a !important;
+  border: 1px solid #22c55e !important;
+}
+
+.gym-alert .alert-title{
+  color: white !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
+.gym-alert .alert-message{
+  color: #d1d5db !important;
+  font-size: 16px !important;
+  line-height: 1.8 !important;
+  white-space: pre-line !important;
+}
+
+.gym-alert .alert-button{
+  color: #22c55e !important;
+  font-weight: 700 !important;
+}
