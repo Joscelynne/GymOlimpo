@@ -14,68 +14,75 @@
       <h1 class="page-title">Administración</h1>
       <p class="page-sub">Gestión general del gimnasio</p>
     </div>
-
-    <!-- ===== STAT CARDS ===== -->
-    <div class="stats-row">
-
-      <div class="stat-card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-value green">{{ resumen.reservas }}</div>
-        <div class="stat-label">RESERVAS REGISTRADAS</div>
+    <!-- ===== KPIs superiores ===== -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-left">
+          <div class="kpi-title">Reservas de Hoy</div>
+          <div class="kpi-value">{{ cuposOcupadosHoy }} / {{ cuposTotalesHoy }} cupos</div>
+        </div>
+        <div class="kpi-right">📆</div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-icon">💳</div>
-        <div class="stat-value orange">{{ resumen.pagosPendientes }}</div>
-        <div class="stat-label">PAGOS PENDIENTES</div>
+      <div class="kpi-card">
+        <div class="kpi-left">
+          <div class="kpi-title">Pagos por Validar</div>
+          <div class="kpi-value">{{ pagosPendientes }}</div>
+        </div>
+        <div class="kpi-right">💳</div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-icon">⏰</div>
-        <div class="stat-value white">{{ resumen.horarios }}</div>
-        <div class="stat-label">HORARIOS CREADOS</div>
+      <div class="kpi-card">
+        <div class="kpi-left">
+          <div class="kpi-title">Bloques Agotados</div>
+          <div class="kpi-value">{{ bloquesAgotados }} bloques</div>
+        </div>
+        <div class="kpi-right">⛔</div>
       </div>
 
+      <div class="kpi-card small">
+        <div class="kpi-left">
+          <div class="kpi-title">Reservas Totales</div>
+          <div class="kpi-value">{{ resumen.reservas }}</div>
+        </div>
+        <div class="kpi-right">📊</div>
+      </div>
     </div>
 
-    <!-- ===== MIDDLE ROW ===== -->
-    <div class="middle-row">
+    <!-- ===== MIDDLE ROW (2 columnas) ===== -->
+    <div class="middle-row two-col">
 
-      <!-- Acciones sugeridas -->
-      <div class="suggested-card">
-        <div class="card-section-label">ACCIONES SUGERIDAS</div>
+      <!-- Columna izquierda: Alertas y acciones sugeridas -->
+      <div class="left-col">
+        <div class="card-section-label">ALERTAS Y ACCIONES SUGERIDAS</div>
 
-        <div class="suggested-item" routerLink="/pagos">
-          <div class="suggested-left">
-            <ion-icon name="card-outline" class="s-icon icon-blue"></ion-icon>
-            <span>Validar pagos pendientes</span>
+        <div class="alert-block">
+          <div class="alert-title">Cupos libres próximos</div>
+          <div *ngIf="horariosHoy?.length === 0">No hay horarios para hoy.</div>
+          <div *ngFor="let h of horariosHoy.slice(0,6)" class="alert-item">
+            <div class="time">{{ h.hora }}</div>
+            <div class="status">{{ (h.cupos - (h.cuposDisponibles ?? 0)) }} / {{ h.cupos }}</div>
+            <div class="when">{{ h.cuposDisponibles >= 2 ? 'Disponible' : (h.cuposDisponibles === 1 ? 'Casi lleno' : 'Lleno') }}</div>
           </div>
-          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
         </div>
 
-        <div class="suggested-divider"></div>
-
-        <div class="suggested-item" routerLink="/horarios">
-          <div class="suggested-left">
-            <ion-icon name="time-outline" class="s-icon icon-gray"></ion-icon>
-            <span>Revisar cupos por horario</span>
+        <div class="alert-block waitlist">
+          <div class="alert-title">Lista de espera / Sobrecupo</div>
+          <div *ngIf="reservasPendientePago?.length === 0">Sin intentos de sobre-reserva detectados.</div>
+          <div *ngFor="let r of reservasPendientePago">
+            <div class="wait-item">{{ r.clienteNombre }} · {{ r.hora }} · Pendiente pago</div>
           </div>
-          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
         </div>
 
-        <div class="suggested-divider"></div>
-
-        <div class="suggested-item" routerLink="/reservas">
-          <div class="suggested-left">
-            <ion-icon name="calendar-outline" class="s-icon icon-blue"></ion-icon>
-            <span>Confirmar reservas dentro de vigencia</span>
-          </div>
-          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+        <div class="shortcuts">
+          <button class="shortcut" routerLink="/pagos">Validar pagos pendientes</button>
+          <button class="shortcut" (click)="generarHorarios()">Generar horarios (30 días)</button>
+          <button class="shortcut" routerLink="/reservas">Liberar cupo por inasistencia</button>
         </div>
       </div>
 
-      <!-- Acciones rápidas -->
-      <div class="quick-actions-card">
+      <!-- Columna derecha: Acciones rápidas -->
+      <div class="right-col">
         <div class="card-section-label">ACCIONES RÁPIDAS</div>
 
         <button class="action-btn action-btn-green" (click)="generarHorarios()">
@@ -107,29 +114,42 @@
 
     </div>
 
-    <!-- ===== ÚLTIMAS RESERVAS TABLE ===== -->
+    <!-- ===== ÚLTIMAS RESERVAS / MONITOREO ===== -->
     <div class="table-card">
       <div class="card-section-label">ÚLTIMAS RESERVAS</div>
 
       <div class="reservas-table">
-
-        <!-- Header -->
         <div class="table-row table-head">
-          <span>CLIENTE</span>
-          <span>FECHA</span>
-          <span>HORA</span>
-          <span>PLAN</span>
-          <span>ESTADO</span>
+          <span>Cliente</span>
+          <span>Bloque Horario</span>
+          <span>Estado del Cupo</span>
+          <span>Estado Pago / Plan</span>
+          <span>Acciones</span>
         </div>
 
-        <!-- Placeholder rows (data visual — driven by resumen) -->
-        <div class="table-empty" *ngIf="resumen.reservas === 0">
-          No hay reservas registradas aún.
-        </div>
+        <div *ngIf="recientes.length === 0" class="table-empty">No hay reservas recientes.</div>
 
-        <div class="table-note" *ngIf="resumen.reservas > 0">
-          <ion-icon name="information-circle-outline"></ion-icon>
-          {{ resumen.reservas }} reservas registradas · {{ resumen.pagosPendientes }} pagos pendientes de validación
+        <div *ngFor="let r of recientes" class="table-row">
+          <span class="client">{{ r.clienteNombre }}</span>
+          <span class="block">{{ r.fecha }} · {{ r.hora }}</span>
+          <span class="ocupacion">
+            <!-- Compute occupation by matching horario via precomputed index -->
+            <ng-container *ngIf="horariosIndex[r.fecha + '|' + r.hora] as hh">
+              <span class="badge" [ngClass]="{ 'full': (hh.cupos - (hh.cuposDisponibles ?? 0))>=hh.cupos, 'partial': (hh.cupos - (hh.cuposDisponibles ?? 0))>0 && (hh.cupos - (hh.cuposDisponibles ?? 0))<hh.cupos }">
+                {{ (hh.cupos - (hh.cuposDisponibles ?? 0)) }} / {{ hh.cupos }}
+              </span>
+            </ng-container>
+            <ng-container *ngIf="!horariosIndex[r.fecha + '|' + r.hora]">
+              —
+            </ng-container>
+          </span>
+          <span class="plan-status">
+            <span class="badge small" [ngClass]="{ 'green': r.estado==='confirmada', 'orange': r.estado==='pendiente_pago', 'red': r.estado==='cancelada' }">{{ r.estado }}</span>
+          </span>
+          <span class="actions">
+            <button class="btn small" (click)="confirmarAsistencia(r.id)">Confirmar Asistencia</button>
+            <button class="btn small outline" (click)="cancelarReserva(r.id)">Cancelar Reserva</button>
+          </span>
         </div>
 
       </div>
