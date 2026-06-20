@@ -689,4 +689,72 @@ async eliminarHorario(id: string): Promise<void> {
       });
     });
   }
+
+  // ── New dashboard methods ──────────────────────────────────────────────
+
+  /** Clientes activos (planActivo not empty) */
+  getClientesActivos(): Observable<any[]> {
+    return this.firestore.collection('users', ref =>
+      ref.where('planActivo', '!=', '')
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        uid: a.payload.doc.id,
+        ...(a.payload.doc.data() as any)
+      })))
+    );
+  }
+
+  /** Last N pagos (all statuses), ordered by createdAt desc */
+  getPagosRecientes(limit = 10): Observable<Pago[]> {
+    return this.firestore.collection<Pago>('pagos',
+      ref => ref.orderBy('createdAt', 'desc').limit(limit)
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        id: a.payload.doc.id,
+        ...(a.payload.doc.data() as Pago)
+      })))
+    );
+  }
+
+  /** Alias for getClientesActivos — used for inactivity cross-filtering */
+  getClientesConPlanActivo(): Observable<any[]> {
+    return this.getClientesActivos();
+  }
+
+  /** Users with vigenciaFin set (for expiring plans panel, limit 200) */
+  getUsuariosConVigencia(): Observable<any[]> {
+    return this.firestore.collection('users', ref =>
+      ref.where('vigenciaFin', '!=', '').limit(200)
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        uid: a.payload.doc.id,
+        ...(a.payload.doc.data() as any)
+      })))
+    );
+  }
+
+  /** Horarios for a specific date, ordered by hora asc */
+  getHorariosPorFecha(fecha: string): Observable<Horario[]> {
+    return this.firestore.collection<Horario>('horarios',
+      ref => ref.where('fecha', '==', fecha).orderBy('hora', 'asc')
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        id: a.payload.doc.id,
+        ...(a.payload.doc.data() as Horario)
+      })))
+    );
+  }
+
+  /** Reservas within a date range (for 7-day line chart) */
+  getReservasPorRango(fechaInicio: string, fechaFin: string): Observable<Reserva[]> {
+    return this.firestore.collection<Reserva>('reservas', ref =>
+      ref.where('fecha', '>=', fechaInicio)
+         .where('fecha', '<=', fechaFin)
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        id: a.payload.doc.id,
+        ...(a.payload.doc.data() as Reserva)
+      })))
+    );
+  }
 }

@@ -1,0 +1,27 @@
+<div class="kpi-card dashboard-card" [ngClass]="config.colorClass">
+  <div class="kpi-top">
+    <div class="kpi-label">{{ config.label }}</div>
+    <div class="kpi-icon">
+      <ion-icon [name]="config.icon"></ion-icon>
+    </div>
+  </div>
+
+  <div class="kpi-body">
+    <ng-container *ngIf="config.loading; else valueBlock">
+      <div class="skeleton"></div>
+    </ng-container>
+    <ng-template #valueBlock>
+      <div class="kpi-value">{{ displayValue }}</div>
+    </ng-template>
+  </div>
+
+  <div class="kpi-trend" *ngIf="config.tendencia && !config.loading">
+    <ion-icon
+      [name]="config.tendencia.tipo === 'sube' ? 'trending-up-outline' : config.tendencia.tipo === 'baja' ? 'trending-down-outline' : 'remove-outline'"
+      [class]="'trend-' + config.tendencia.tipo">
+    </ion-icon>
+    <span [class]="'trend-' + config.tendencia.tipo">
+      {{ config.tendencia.porcentaje }}%
+    </span>
+  </div>
+</div>

@@ -12,147 +12,55 @@
     <!-- Page heading -->
     <div class="page-heading">
       <h1 class="page-title">Administración</h1>
-      <p class="page-sub">Gestión general del gimnasio</p>
-    </div>
-    <!-- ===== KPIs superiores ===== -->
-    <div class="kpi-row">
-      <div class="kpi-card">
-        <div class="kpi-left">
-          <div class="kpi-title">Reservas de Hoy</div>
-          <div class="kpi-value">{{ cuposOcupadosHoy }} / {{ cuposTotalesHoy }} cupos</div>
-        </div>
-        <div class="kpi-right">📆</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-left">
-          <div class="kpi-title">Pagos por Validar</div>
-          <div class="kpi-value">{{ pagosPendientes }}</div>
-        </div>
-        <div class="kpi-right">💳</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-left">
-          <div class="kpi-title">Bloques Agotados</div>
-          <div class="kpi-value">{{ bloquesAgotados }} bloques</div>
-        </div>
-        <div class="kpi-right">⛔</div>
-      </div>
-
-      <div class="kpi-card small">
-        <div class="kpi-left">
-          <div class="kpi-title">Reservas Totales</div>
-          <div class="kpi-value">{{ resumen.reservas }}</div>
-        </div>
-        <div class="kpi-right">📊</div>
-      </div>
+      <p class="page-sub">Panel de gestión general y métricas en tiempo real</p>
     </div>
 
-    <!-- ===== MIDDLE ROW (2 columnas) ===== -->
-    <div class="middle-row two-col">
-
-      <!-- Columna izquierda: Alertas y acciones sugeridas -->
-      <div class="left-col">
-        <div class="card-section-label">ALERTAS Y ACCIONES SUGERIDAS</div>
-
-        <div class="alert-block">
-          <div class="alert-title">Cupos libres próximos</div>
-          <div *ngIf="horariosHoy?.length === 0">No hay horarios para hoy.</div>
-          <div *ngFor="let h of horariosHoy.slice(0,6)" class="alert-item">
-            <div class="time">{{ h.hora }}</div>
-            <div class="status">{{ (h.cupos - (h.cuposDisponibles ?? 0)) }} / {{ h.cupos }}</div>
-            <div class="when">{{ h.cuposDisponibles >= 2 ? 'Disponible' : (h.cuposDisponibles === 1 ? 'Casi lleno' : 'Lleno') }}</div>
-          </div>
-        </div>
-
-        <div class="alert-block waitlist">
-          <div class="alert-title">Lista de espera / Sobrecupo</div>
-          <div *ngIf="reservasPendientePago?.length === 0">Sin intentos de sobre-reserva detectados.</div>
-          <div *ngFor="let r of reservasPendientePago">
-            <div class="wait-item">{{ r.clienteNombre }} · {{ r.hora }} · Pendiente pago</div>
-          </div>
-        </div>
-
-        <div class="shortcuts">
-          <button class="shortcut" routerLink="/pagos">Validar pagos pendientes</button>
-          <button class="shortcut" (click)="generarHorarios()">Generar horarios (30 días)</button>
-          <button class="shortcut" routerLink="/reservas">Liberar cupo por inasistencia</button>
-        </div>
-      </div>
-
-      <!-- Columna derecha: Acciones rápidas -->
-      <div class="right-col">
-        <div class="card-section-label">ACCIONES RÁPIDAS</div>
-
-        <button class="action-btn action-btn-green" (click)="generarHorarios()">
-          <ion-icon name="calendar-outline"></ion-icon>
-          GENERAR HORARIOS 30 DÍAS
-        </button>
-
-        <button class="action-btn action-btn-outline" routerLink="/admin/usuarios">
-          <ion-icon name="people-outline"></ion-icon>
-          GESTIONAR USUARIOS
-        </button>
-
-        <button class="action-btn action-btn-outline" routerLink="/admin/reportes">
-          <ion-icon name="bar-chart-outline"></ion-icon>
-          VER REPORTES
-        </button>
-
-        <button class="action-btn action-btn-outline" routerLink="/pagos">
-          <ion-icon name="card-outline"></ion-icon>
-          VALIDAR PAGOS
-        </button>
-
-        <button class="action-btn action-btn-outline" routerLink="/horarios">
-        <ion-icon name="time-outline"></ion-icon>
-        GESTIONAR HORARIOS
-       </button>
-
-      </div>
-
+    <!-- Global error message (if any) -->
+    <div class="global-error" *ngIf="state.error">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <span>{{ state.error }}</span>
     </div>
 
-    <!-- ===== ÚLTIMAS RESERVAS / MONITOREO ===== -->
-    <div class="table-card">
-      <div class="card-section-label">ÚLTIMAS RESERVAS</div>
+    <!-- 1. Alertas del Sistema -->
+    <div class="dashboard-section alert-section">
+      <app-alert-panel [alertas]="state.alertas" [error]="state.error"></app-alert-panel>
+    </div>
 
-      <div class="reservas-table">
-        <div class="table-row table-head">
-          <span>Cliente</span>
-          <span>Bloque Horario</span>
-          <span>Estado del Cupo</span>
-          <span>Estado Pago / Plan</span>
-          <span>Acciones</span>
-        </div>
+    <!-- 2. KPI Cards Grid -->
+    <div class="kpi-grid">
+      <app-kpi-card *ngFor="let kpi of state.kpis" [config]="kpi"></app-kpi-card>
+    </div>
 
-        <div *ngIf="recientes.length === 0" class="table-empty">No hay reservas recientes.</div>
+    <!-- 3. Charts Grid (Ocupación, Reservas, Top Horarios) -->
+    <div class="charts-grid">
+      <app-chart-bar [data]="state.chartOcupacion" title="Ocupación por Horas"></app-chart-bar>
+      <app-chart-line [data]="state.chartReservasSemana" title="Reservas de la Semana"></app-chart-line>
+      <app-chart-hbar [data]="state.chartTopHorarios" title="Top 5 Demandados (SVG)"></app-chart-hbar>
+    </div>
 
-        <div *ngFor="let r of recientes" class="table-row">
-          <span class="client">{{ r.clienteNombre }}</span>
-          <span class="block">{{ r.fecha }} · {{ r.hora }}</span>
-          <span class="ocupacion">
-            <!-- Compute occupation by matching horario via precomputed index -->
-            <ng-container *ngIf="horariosIndex[r.fecha + '|' + r.hora] as hh">
-              <span class="badge" [ngClass]="{ 'full': (hh.cupos - (hh.cuposDisponibles ?? 0))>=hh.cupos, 'partial': (hh.cupos - (hh.cuposDisponibles ?? 0))>0 && (hh.cupos - (hh.cuposDisponibles ?? 0))<hh.cupos }">
-                {{ (hh.cupos - (hh.cuposDisponibles ?? 0)) }} / {{ hh.cupos }}
-              </span>
-            </ng-container>
-            <ng-container *ngIf="!horariosIndex[r.fecha + '|' + r.hora]">
-              —
-            </ng-container>
-          </span>
-          <span class="plan-status">
-            <span class="badge small" [ngClass]="{ 'green': r.estado==='confirmada', 'orange': r.estado==='pendiente_pago', 'red': r.estado==='cancelada' }">{{ r.estado }}</span>
-          </span>
-          <span class="actions">
-            <button class="btn small" (click)="confirmarAsistencia(r.id)">Confirmar Asistencia</button>
-            <button class="btn small outline" (click)="cancelarReserva(r.id)">Cancelar Reserva</button>
-          </span>
-        </div>
+    <!-- 4. Fila Media: Calendario y Tabla de Reservas -->
+    <div class="mid-grid">
+      <app-calendar-view></app-calendar-view>
+      <app-reservas-table
+        [reservas]="state.reservasRecientes"
+        [error]="state.error"
+        (confirmarAsistencia)="onConfirmarAsistencia($event, rTable)"
+        (cancelarReserva)="onCancelarReserva($event)"
+        #rTable>
+      </app-reservas-table>
+    </div>
 
-      </div>
+    <!-- 5. Fila Inferior: Pagos, Planes y Clientes Inactivos -->
+    <div class="bottom-grid">
+      <app-pagos-panel [pagos]="state.pagosRecientes" [error]="state.error"></app-pagos-panel>
+      <app-planes-panel [clientes]="state.planesPorVencer" [error]="state.error" (retry)="reloadPlanes()"></app-planes-panel>
+      <app-clientes-inactivos [clientes]="state.clientesInactivos" [error]="state.error"></app-clientes-inactivos>
+    </div>
+
+    <!-- 6. Fila Final: Horarios Demanda y Acciones Rápidas -->
+    <div class="footer-grid">
+      <app-horarios-demanda [horarios]="state.horariosDemanda" [error]="state.error"></app-horarios-demanda>
+      <app-quick-actions [generatingHorarios]="generatingHorarios" (generarHorarios)="onGenerarHorarios()"></app-quick-actions>
     </div>
 
   </div>

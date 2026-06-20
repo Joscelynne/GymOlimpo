@@ -1,0 +1,38 @@
+<div class="horarios-demanda dashboard-card">
+  <div class="panel-header">
+    <h3 class="panel-title">Horarios con Mayor Demanda</h3>
+  </div>
+
+  <!-- Error state -->
+  <div class="panel-error" *ngIf="error">
+    <ion-icon name="warning-outline"></ion-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="panel-empty" *ngIf="!error && horarios.length === 0">
+    <ion-icon name="time-outline"></ion-icon>
+    <p>No hay datos de horarios disponibles</p>
+  </div>
+
+  <!-- Content state -->
+  <div class="panel-content" *ngIf="!error && horarios.length > 0">
+    <div class="horario-row" *ngFor="let h of horarios; trackBy: trackByHora">
+      <div class="horario-meta">
+        <span class="time">{{ h.hora }}</span>
+        <span class="pct">{{ h.porcentajePromedio }}%</span>
+        <span class="badge" [ngClass]="badgeClass(h.nivelDemanda)">
+          {{ badgeText(h.nivelDemanda) }}
+        </span>
+      </div>
+
+      <!-- CSS-based Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar"
+             [ngClass]="barClass(h.nivelDemanda)"
+             [style.width.%]="h.porcentajePromedio">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

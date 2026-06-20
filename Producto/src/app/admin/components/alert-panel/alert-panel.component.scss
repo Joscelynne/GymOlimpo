@@ -1,0 +1,117 @@
+.alert-panel {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+.panel-header {
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.panel-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 0;
+  color: #ef4444;
+  font-size: 13px;
+
+  ion-icon { font-size: 18px; }
+}
+
+.panel-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 0;
+  color: #22c55e;
+  font-size: 14px;
+  font-weight: 600;
+
+  .icon-ok { font-size: 22px; }
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  &.urgente {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    .alert-icon-wrap ion-icon { color: #ef4444; }
+    .alert-count { color: #ef4444; }
+  }
+
+  &.advertencia {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    .alert-icon-wrap ion-icon { color: #f59e0b; }
+    .alert-count { color: #f59e0b; }
+  }
+
+  &.informativa {
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    .alert-icon-wrap ion-icon { color: #22c55e; }
+    .alert-count { color: #22c55e; }
+  }
+}
+
+.alert-icon-wrap {
+  flex-shrink: 0;
+  ion-icon { font-size: 20px; }
+}
+
+.alert-content {
+  flex: 1;
+
+  .alert-desc {
+    margin: 0 0 2px;
+    font-size: 13px;
+    color: #e2e8f0;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .alert-count {
+    font-size: 11px;
+    font-weight: 700;
+  }
+}
+
+.alert-action-btn {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: background 0.15s;
+
+  ion-icon { font-size: 16px; }
+
+  &:hover {
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+  }
+}

@@ -2,6 +2,7 @@ node_modules/
 dist/
 .angular/
 .env
+.kiro/
 
 # Logs
 npm-debug.log*

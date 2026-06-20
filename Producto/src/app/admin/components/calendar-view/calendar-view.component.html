@@ -1,0 +1,68 @@
+<div class="calendar-view dashboard-card">
+  <!-- Header -->
+  <div class="cal-header">
+    <button class="nav-btn" (click)="prevDay()" id="cal-prev-btn">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+    </button>
+
+    <div class="cal-date" [class.today]="isToday()">
+      <span class="date-text">{{ selectedDate }}</span>
+      <span class="today-badge" *ngIf="isToday()">Hoy</span>
+    </div>
+
+    <button class="nav-btn" (click)="nextDay()" id="cal-next-btn">
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="cal-loading" *ngIf="loading">
+    <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
+    <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
+    <div class="skeleton" style="height:60px;"></div>
+  </div>
+
+  <!-- Error -->
+  <div class="cal-error" *ngIf="!loading && error">
+    <ion-icon name="warning-outline"></ion-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="cal-empty" *ngIf="!loading && !error && bloques.length === 0">
+    <ion-icon name="calendar-outline"></ion-icon>
+    <p>No hay horarios para este día</p>
+  </div>
+
+  <!-- Blocks -->
+  <div class="cal-blocks" *ngIf="!loading && !error && bloques.length > 0">
+    <div
+      *ngFor="let bloque of bloques"
+      class="bloque-item"
+      [ngClass]="bloque.estado">
+
+      <div class="bloque-hora">{{ bloque.hora }}</div>
+
+      <div class="bloque-info">
+        <div class="bloque-cupos">
+          {{ bloque.cupos - bloque.cuposDisponibles }} / {{ bloque.cupos }} cupos
+        </div>
+        <div class="bloque-bar">
+          <div class="bloque-bar-fill" [style.width.%]="bloque.porcentajeOcupacion"></div>
+        </div>
+        <div class="bloque-clientes" *ngIf="bloque.clientes.length > 0">
+          <ion-icon name="person-outline"></ion-icon>
+          {{ bloque.clientes.slice(0, 3).join(', ') }}
+          <span *ngIf="bloque.clientes.length > 3">+{{ bloque.clientes.length - 3 }}</span>
+        </div>
+      </div>
+
+      <div class="bloque-badge">
+        <span class="badge-pill" *ngIf="bloque.estado === 'lleno'">Lleno</span>
+        <span class="badge-pill warning" *ngIf="bloque.estado === 'casi-lleno'">Casi lleno</span>
+        <span class="badge-pill ok" *ngIf="bloque.estado === 'parcial'">Disponible</span>
+        <span class="badge-pill libre" *ngIf="bloque.estado === 'libre'">Libre</span>
+      </div>
+    </div>
+  </div>
+</div>
