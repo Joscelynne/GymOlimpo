@@ -15,65 +15,40 @@
       <p class="page-sub">Gestiona y confirma tus pagos</p>
     </div>
 
-    <!-- Error message if any -->
-    <p *ngIf="mensaje" class="mensaje-error">{{ mensaje }}</p>
+    <!-- Error/Success message if any -->
+    <p *ngIf="mensaje" class="mensaje-error" [style.border-color]="mensaje.includes('éxito') ? '#4ade80' : '#ef4444'" [style.background]="mensaje.includes('éxito') ? '#0f2417' : '#1f1010'" [style.color]="mensaje.includes('éxito') ? '#4ade80' : '#ef4444'">
+      {{ mensaje }}
+    </p>
 
-    <!-- Top Row: Pendientes & Confirmar -->
-    <div class="top-row">
+    <!-- PAGOS PENDIENTES (Ancho completo para mejor simetría) -->
+    <div class="card dark-card card-pendientes" style="margin-bottom: 20px;">
+      <div class="card-section-label">PAGOS PENDIENTES</div>
+      <p class="card-desc">Tus planes que están esperando ser pagados</p>
       
-      <!-- PAGOS PENDIENTES -->
-      <div class="card dark-card card-pendientes">
-        <div class="card-section-label">PAGOS PENDIENTES</div>
-        <p class="card-desc">Selecciona el plan que deseas pagar</p>
-        
-        <!-- List -->
-        <div class="pending-list" *ngIf="pagosPendientes.length > 0">
-          <div class="pending-item" *ngFor="let pago of pagosPendientes">
-            <div class="pending-info">
-              <span class="p-plan">{{ pago.planNombre }}</span>
-              <span class="p-monto">${{ pago.monto | number }}</span>
-            </div>
-            <div class="pending-actions">
-              <button class="btn- " (click)="abrirFlow(pago)">PAGAR EN FLOW</button>
-              <button class="btn-delete" (click)="eliminarPago(pago)">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-            </div>
+      <!-- List -->
+      <div class="pending-list" *ngIf="pagosPendientes.length > 0">
+        <div class="pending-item" *ngFor="let pago of pagosPendientes">
+          <div class="pending-info">
+            <span class="p-plan">{{ pago.planNombre }}</span>
+            <span class="p-monto">${{ pago.monto | number }}</span>
           </div>
-        </div>
-
-        <!-- Empty state -->
-        <div class="empty-state" *ngIf="!pagosPendientes.length">
-          <div class="check-box">
-            <ion-icon name="checkmark-outline"></ion-icon>
+          <div class="pending-actions">
+            <!-- Botón modificado para llamar a la simulación -->
+            <button class="btn-flow" (click)="abrirPago(pago)">CONTINUAR PAGO</button>
+            <button class="btn-delete" (click)="eliminarPago(pago)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
           </div>
-          <p>No tienes pagos pendientes</p>
         </div>
       </div>
 
-      <!-- CONFIRMAR PAGO REALIZADO -->
-      <div class="card dark-card card-confirmar">
-        <div class="card-section-label">CONFIRMAR PAGO REALIZADO</div>
-        <p class="card-desc">Después de pagar en Flow, ingresa la referencia o comprobante</p>
-        
-        <div class="form-group">
-          <label class="form-label">MONTO</label>
-          <div class="input-box monto-box">
-            <span class="monto-val">$0</span>
-          </div>
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="!pagosPendientes.length">
+        <div class="check-box">
+          <ion-icon name="checkmark-outline"></ion-icon>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">REFERENCIA / TRANSFERENCIA</label>
-          <div class="input-box with-icon">
-            <ion-icon name="pricetag" class="tag-icon"></ion-icon>
-            <input type="text" placeholder="Número de referencia o transferencia" class="custom-input">
-          </div>
-        </div>
-
-        <button class="btn-confirm-payment">CONFIRMAR PAGO</button>
+        <p>No tienes pagos pendientes</p>
       </div>
-
     </div>
 
     <!-- HISTORIAL DE PAGOS -->
@@ -110,4 +85,103 @@
     </div>
 
   </div>
+
+  <!-- MODAL DE PAGO CON TARJETA -->
+  <div class="modal-overlay" *ngIf="mostrarModalPago">
+    <div class="modal-container">
+      <div class="modal-step">
+        <div class="modal-header">
+          <div class="webpay-logo">Pago con Tarjeta</div>
+          <button class="close-btn" (click)="cerrarPago()" [disabled]="cargandoPago">&times;</button>
+        </div>
+
+        <div class="modal-body" *ngIf="pasoPago === 'tarjeta'">
+          <p class="modal-subtitle">Estás pagando el plan:</p>
+          <div class="plan-preview-box">
+            <h4>{{ pagoSeleccionado?.planNombre }}</h4>
+            <h3>${{ pagoSeleccionado?.monto | number }}</h3>
+          </div>
+          
+          <!-- Tarjeta de Crédito Interactiva -->
+          <div class="credit-card-preview">
+            <div class="card-chip"></div>
+            <div class="card-number-display">{{ tarjetaNumero || '•••• •••• •••• ••••' }}</div>
+            <div class="card-footer-display">
+              <div>
+                <div class="label">TITULAR</div>
+                <div class="val">{{ tarjetaNombre || 'CLIENTE GYM OLIMPO' }}</div>
+              </div>
+              <div>
+                <div class="label">VENCE</div>
+                <div class="val">{{ tarjetaVence || 'MM/AA' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario de Entrada de Tarjeta -->
+          <div class="modal-form">
+            <div class="modal-field">
+              <label>NÚMERO DE TARJETA</label>
+              <input type="text" 
+                     [value]="tarjetaNumero" 
+                     (input)="formatearTarjetaNumero($event)" 
+                     placeholder="4575 •••• •••• ••••" 
+                     maxlength="19" 
+                     class="modal-input">
+            </div>
+
+            <div class="modal-field">
+              <label>NOMBRE DEL TITULAR</label>
+              <input type="text" 
+                     [(ngModel)]="tarjetaNombre" 
+                     placeholder="Juan Pérez" 
+                     class="modal-input">
+            </div>
+
+            <div class="modal-row">
+              <div class="modal-field">
+                <label>FECHA VENC.</label>
+                <input type="text" 
+                       [value]="tarjetaVence" 
+                       (input)="formatearFechaVence($event)" 
+                       placeholder="MM/AA" 
+                       maxlength="5" 
+                       class="modal-input">
+              </div>
+              <div class="modal-field">
+                <label>CVV</label>
+                <input type="text" 
+                       [value]="tarjetaCvv" 
+                       (input)="formatearCvv($event)" 
+                       placeholder="123" 
+                       maxlength="3" 
+                       class="modal-input">
+              </div>
+            </div>
+          </div>
+
+          <button class="pay-btn" (click)="ejecutarPago()">
+            PAGAR AHORA
+          </button>
+        </div>
+
+        <!-- Paso 2: Procesando -->
+        <div class="modal-loading-step" *ngIf="pasoPago === 'procesando'">
+          <div class="spinner"></div>
+          <h3>Procesando Pago</h3>
+          <p>Conectando con Transbank y validando fondos...</p>
+        </div>
+
+        <!-- Paso 3: Éxito -->
+        <div class="modal-loading-step success-step" *ngIf="pasoPago === 'exito'">
+          <div class="success-icon-container">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+          </div>
+          <h3>¡Pago Aprobado!</h3>
+          <p>Tu membresía ha sido activada correctamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </ion-content>

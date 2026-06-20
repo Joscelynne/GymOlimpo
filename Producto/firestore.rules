@@ -61,5 +61,18 @@ service cloud.firestore {
       // Delete: Solo los administradores pueden borrar las reservas
       allow delete: if isAdmin();
     }
+
+    // Colección de Pagos (Segura)
+    match /pagos/{pagoId} {
+      // Solo el creador del pago o el administrador pueden leer, actualizar o borrar
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      
+      // Cualquiera puede crear un pago si se asocia a su propio UID
+      allow create: if isAuthenticated() && (request.resource.data.userId == request.auth.uid || isAdmin());
+      
+      allow update: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      
+      allow delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
   }
 }
