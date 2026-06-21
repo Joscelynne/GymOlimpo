@@ -19,7 +19,8 @@ export class AppComponent {
   ];
 
   adminPages = [
-    { title: 'Administración', url: '/admin', icon: 'settings' }
+    { title: 'Administración', url: '/admin', icon: 'settings' },
+    { title: 'Planes Personalizados', url: '/admin/planes', icon: 'document-text' }
   ];
 
   constructor(public userService: UserService, private router: Router) {}

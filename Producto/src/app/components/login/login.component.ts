@@ -76,7 +76,7 @@ export class LoginComponent {
     ).subscribe(user => {
       this.loading = false;
 
-      if (!user || !this.userService.isProfileComplete(user)) {
+      if (user && user.provider === 'google' && !this.userService.isProfileComplete(user)) {
         this.router.navigate(['/completar-perfil']);
         return;
       }

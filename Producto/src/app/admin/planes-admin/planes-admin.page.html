@@ -1,0 +1,241 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="medium"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Planes Personalizados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-content">
+  <div class="admin-wrapper">
+
+    <!-- Page heading -->
+    <div class="page-heading">
+      <h1 class="page-title">Planes Personalizados</h1>
+      <p class="page-sub">Gestiona y crea planes o asesorías de forma dinámica para tus clientes</p>
+    </div>
+
+    <div class="planes-layout">
+
+      <!-- Panel izquierdo: Planes actuales -->
+      <div class="left-panel">
+        <div class="dashboard-card current-plans-card">
+          <div class="panel-header">
+            <h3 class="panel-title">Planes Personalizados Activos</h3>
+          </div>
+
+          <div class="planes-list" *ngIf="customPlanes$ | async as customPlanes; else loadingTpl">
+            <div class="no-plans" *ngIf="customPlanes.length === 0">
+              <ion-icon name="document-text-outline"></ion-icon>
+              <p>No hay planes creados por el administrador todavía.</p>
+            </div>
+
+            <div class="plan-item-card" *ngFor="let plan of customPlanes">
+              <div class="plan-item-header">
+                <div class="plan-info">
+                  <h4 class="plan-item-name">{{ plan.nombre }}</h4>
+                  <span class="plan-item-badge" [class.badge-presencial]="plan.tipo === 'clase'" [class.badge-online]="plan.tipo === 'asesoria'">
+                    {{ plan.tipo === 'clase' ? 'Presencial' : 'Online' }}
+                  </span>
+                  <span class="plan-item-badge badge-recom" *ngIf="plan.recomendado">
+                    Recomendado
+                  </span>
+                </div>
+                <div class="plan-item-price">
+                  ${{ plan.precio | number:'1.0-0' }}
+                </div>
+              </div>
+
+              <div class="plan-item-details">
+                <div class="detail-sec" *ngIf="plan.tipo === 'clase'">
+                  <strong>Sesiones:</strong> {{ plan.sesiones }}
+                </div>
+                <div class="detail-sec" *ngIf="plan.tipo === 'asesoria'">
+                  <strong>Duración:</strong> {{ plan.duracionMeses }} mes{{ (plan.duracionMeses || 0) > 1 ? 'es' : '' }}
+                </div>
+                
+                <div class="detail-sec">
+                  <strong>Características:</strong>
+                  <ul class="bullets-preview">
+                    <li *ngFor="let desc of plan.descripcion">{{ desc }}</li>
+                  </ul>
+                </div>
+
+                <div class="detail-sec" *ngIf="plan.tipo === 'asesoria' && plan.detalles && plan.detalles.length > 0">
+                  <strong>Detalles adicionales:</strong>
+                  <ul class="bullets-preview">
+                    <li *ngFor="let det of plan.detalles">{{ det }}</li>
+                  </ul>
+                </div>
+
+                <div class="detail-sec" *ngIf="plan.linkFlow">
+                  <strong>Link de Pago (Flow):</strong> <span class="flow-link-txt">{{ plan.linkFlow }}</span>
+                </div>
+              </div>
+
+              <div class="plan-item-actions">
+                <button class="btn-delete" (click)="eliminarPlan(plan)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                  <span>Eliminar Plan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #loadingTpl>
+            <div class="loading-box">
+              <ion-spinner name="crescent"></ion-spinner>
+              <p>Cargando planes...</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Panel derecho: Formulario de creación -->
+      <div class="right-panel">
+        <div class="dashboard-card form-card">
+          <div class="panel-header">
+            <h3 class="panel-title">Crear Nuevo Plan</h3>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="guardar()">
+            
+            <!-- Nombre -->
+            <div class="field">
+              <label>Nombre del Plan / Asesoría</label>
+              <ion-item lines="none" class="input-box">
+                <ion-input formControlName="nombre" placeholder="Ej. Asesoría Pro - 3 Meses"></ion-input>
+              </ion-item>
+              <div class="error" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid">
+                El nombre es requerido.
+              </div>
+            </div>
+
+            <!-- Precio y Tipo en fila -->
+            <div class="form-row">
+              <div class="field col-6">
+                <label>Precio (CLP)</label>
+                <ion-item lines="none" class="input-box">
+                  <ion-input type="number" formControlName="precio" placeholder="35000"></ion-input>
+                </ion-item>
+                <div class="error" *ngIf="form.get('precio')?.touched && form.get('precio')?.invalid">
+                  Precio válido requerido (min 0).
+                </div>
+              </div>
+
+              <div class="field col-6">
+                <label>Tipo de Plan</label>
+                <ion-item lines="none" class="input-box">
+                  <ion-select formControlName="tipo" interface="popover" class="admin-select">
+                    <ion-select-option value="clase">Presencial (Clases)</ion-select-option>
+                    <ion-select-option value="asesoria">Online (Asesoría)</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </div>
+            </div>
+
+            <!-- Fila condicional dependiendo del Tipo -->
+            <div class="form-row">
+              <!-- Sesiones (para Presencial) -->
+              <div class="field col-12" *ngIf="form.get('tipo')?.value === 'clase'">
+                <label>Número de Sesiones</label>
+                <ion-item lines="none" class="input-box">
+                  <ion-input type="number" formControlName="sesiones" placeholder="12"></ion-input>
+                </ion-item>
+                <div class="error" *ngIf="form.get('sesiones')?.touched && form.get('sesiones')?.invalid">
+                  Se requiere al menos 1 sesión.
+                </div>
+              </div>
+
+              <!-- Duración en Meses (para Asesoría) -->
+              <div class="field col-12" *ngIf="form.get('tipo')?.value === 'asesoria'">
+                <label>Duración del Plan (Meses)</label>
+                <ion-item lines="none" class="input-box">
+                  <ion-input type="number" formControlName="duracionMeses" placeholder="3"></ion-input>
+                </ion-item>
+                <div class="error" *ngIf="form.get('duracionMeses')?.touched && form.get('duracionMeses')?.invalid">
+                  Se requiere al menos 1 mes.
+                </div>
+              </div>
+            </div>
+
+            <!-- Link Flow -->
+            <div class="field">
+              <label>Enlace de Pago (Flow URL - Opcional)</label>
+              <ion-item lines="none" class="input-box">
+                <ion-input formControlName="linkFlow" placeholder="https://sandbox.flow.cl/..."></ion-input>
+              </ion-item>
+            </div>
+
+            <!-- Recomendado -->
+            <div class="field-checkbox">
+              <ion-checkbox formControlName="recomendado" mode="md"></ion-checkbox>
+              <label class="check-label" (click)="form.get('recomendado')?.setValue(!form.get('recomendado')?.value)">
+                Destacar como Plan Recomendado
+              </label>
+            </div>
+
+            <!-- Características (Descripción) -->
+            <div class="field bullet-field">
+              <label>Características del Plan (Descripción para tarjeta)</label>
+              <div class="bullet-input-row">
+                <ion-item lines="none" class="input-box bullet-input">
+                  <ion-input [(ngModel)]="nuevaDescripcion" [ngModelOptions]="{standalone: true}" placeholder="Ej. Rutina en PDF mensual" (keyup.enter)="addDescripcionBullet()"></ion-input>
+                </ion-item>
+                <button type="button" class="btn-add-bullet" (click)="addDescripcionBullet()">
+                  <ion-icon name="add-outline"></ion-icon>
+                </button>
+              </div>
+              <ul class="admin-bullets-list">
+                <li *ngFor="let item of descripcionList; let i = index">
+                  <span>{{ item }}</span>
+                  <button type="button" class="btn-remove-bullet" (click)="removeDescripcionBullet(i)">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </button>
+                </li>
+              </ul>
+              <div class="bullets-info" *ngIf="descripcionList.length === 0">
+                Añade al menos una característica descriptiva.
+              </div>
+            </div>
+
+            <!-- Detalles adicionales (Solo para Asesorías) -->
+            <div class="field bullet-field" *ngIf="form.get('tipo')?.value === 'asesoria'">
+              <label>Detalles Completos (Desplegables en asesoría - Opcional)</label>
+              <div class="bullet-input-row">
+                <ion-item lines="none" class="input-box bullet-input">
+                  <ion-input [(ngModel)]="nuevoDetalle" [ngModelOptions]="{standalone: true}" placeholder="Ej. Entrevista por Zoom 1 a 1" (keyup.enter)="addDetalleBullet()"></ion-input>
+                </ion-item>
+                <button type="button" class="btn-add-bullet" (click)="addDetalleBullet()">
+                  <ion-icon name="add-outline"></ion-icon>
+                </button>
+              </div>
+              <ul class="admin-bullets-list">
+                <li *ngFor="let item of detallesList; let i = index">
+                  <span>{{ item }}</span>
+                  <button type="button" class="btn-remove-bullet" (click)="removeDetalleBullet(i)">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Acciones -->
+            <div class="form-actions">
+              <button type="submit" class="btn-submit" [disabled]="form.invalid || guardando">
+                {{ guardando ? 'Guardando...' : 'Crear Plan Personalizado' }}
+              </button>
+              <button type="button" class="btn-clear" (click)="limpiarFormulario()">
+                Limpiar
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>

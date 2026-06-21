@@ -18,11 +18,11 @@
       <div class="checklist">
         <div class="info-box">
           <span class="info-label">ÚLTIMO PASO</span>
-          <p class="info-text">Solo necesitamos tu RUT y teléfono para activar tu cuenta completa.</p>
+          <p class="info-text">Necesitamos verificar tus datos personales para activar tu cuenta completa.</p>
         </div>
         <div class="check-item done">✓ Tu cuenta de Google ya está vinculada</div>
-        <div class="check-item done">✓ Nombre y correo registrados</div>
-        <div class="check-item pending">◎ Completa RUT y teléfono</div>
+        <div class="check-item done">✓ Correo registrado</div>
+        <div class="check-item pending">◎ Completa nombre, apellido, RUT y teléfono</div>
       </div>
     </div>
 
@@ -39,6 +39,36 @@
         <p class="form-sub">Para acceder al sistema necesitamos estos datos</p>
 
         <form [formGroup]="form" (ngSubmit)="guardar()">
+
+          <div class="field">
+            <label>Nombre</label>
+            <ion-item lines="none" class="input-box">
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              <ion-input
+                formControlName="nombre"
+                placeholder="Juan"
+                maxlength="50">
+              </ion-input>
+            </ion-item>
+            <div class="error" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid">
+              El nombre es requerido.
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Apellido</label>
+            <ion-item lines="none" class="input-box">
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              <ion-input
+                formControlName="apellido"
+                placeholder="Pérez"
+                maxlength="50">
+              </ion-input>
+            </ion-item>
+            <div class="error" *ngIf="form.get('apellido')?.touched && form.get('apellido')?.invalid">
+              El apellido es requerido.
+            </div>
+          </div>
 
           <div class="field">
             <label>RUT</label>

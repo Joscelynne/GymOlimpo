@@ -167,14 +167,24 @@ async eliminarHorario(id: string): Promise<void> {
       'horarios',
       ref => ref.where('fecha', '==', fecha)
     ).snapshotChanges().pipe(
-      map(actions =>
-        actions
+      map(actions => {
+        const list = actions
           .map(a => ({
             id: a.payload.doc.id,
             ...(a.payload.doc.data() as Horario)
           }))
           .filter(h => h.cuposDisponibles > 0)
-      )
+          .sort((a, b) => a.hora.localeCompare(b.hora));
+
+        const seen = new Set<string>();
+        return list.filter(h => {
+          if (seen.has(h.hora)) {
+            return false;
+          }
+          seen.add(h.hora);
+          return true;
+        });
+      })
     );
   }
 
@@ -397,6 +407,20 @@ async eliminarHorario(id: string): Promise<void> {
         ];
   }
 
+  getPlanesCustom(): Observable<PlanGym[]> {
+    return this.firestore.collection<PlanGym>('planes').valueChanges({ idField: 'id' });
+  }
+
+  async crearPlanCustom(plan: Omit<PlanGym, 'id'>): Promise<void> {
+    const docRef = this.firestore.collection('planes').doc();
+    const id = docRef.ref.id;
+    await docRef.set({ ...plan, id });
+  }
+
+  async eliminarPlanCustom(planId: string): Promise<void> {
+    await this.firestore.collection('planes').doc(planId).delete();
+  }
+
   async eliminarPagoPendiente(pagoId: string): Promise<void> {
   const user = await this.auth.currentUser;
   if (!user) throw new Error('Debes iniciar sesión');
@@ -457,7 +481,15 @@ async eliminarHorario(id: string): Promise<void> {
         return;
       }
 
-      const plan = planes.find(p => p.id === pagoData.planId);
+      let plan = planes.find(p => p.id === pagoData.planId);
+      if (!plan) {
+        const planDoc = await transaction.get(this.firestore.collection('planes').doc(pagoData.planId).ref);
+        if (planDoc.exists) {
+          plan = planDoc.data() as PlanGym;
+          plan.id = planDoc.id;
+        }
+      }
+
       if (!plan) {
         throw new Error('El plan asociado no existe');
       }
@@ -761,10 +793,21 @@ async eliminarHorario(id: string): Promise<void> {
     return this.firestore.collection<Horario>('horarios',
       ref => ref.where('fecha', '==', fecha)
     ).snapshotChanges().pipe(
-      map(actions => actions.map(a => ({
-        id: a.payload.doc.id,
-        ...(a.payload.doc.data() as Horario)
-      })).sort((a, b) => a.hora.localeCompare(b.hora)))
+      map(actions => {
+        const list = actions.map(a => ({
+          id: a.payload.doc.id,
+          ...(a.payload.doc.data() as Horario)
+        })).sort((a, b) => a.hora.localeCompare(b.hora));
+
+        const seen = new Set<string>();
+        return list.filter(h => {
+          if (seen.has(h.hora)) {
+            return false;
+          }
+          seen.add(h.hora);
+          return true;
+        });
+      })
     );
   }
 

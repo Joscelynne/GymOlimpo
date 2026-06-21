@@ -28,11 +28,11 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    // Verificar si tiene RUT y teléfono
+    // Verificar si tiene RUT y teléfono (solo para usuarios registrados vía Google)
     const doc = await this.firestore.collection('users').doc(user.uid).ref.get();
     const data: any = doc.data();
 
-    if (!data?.rut || !data?.telefono) {
+    if (data?.provider === 'google' && (!data?.rut || !data?.telefono)) {
       await this.router.navigate(['/completar-perfil']);
       return false;
     }

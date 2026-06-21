@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MenuController } from '@ionic/angular';
 import { UserService } from 'src/app/services/user.service';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-completar-perfil',
@@ -23,12 +24,26 @@ export class CompletarPerfilPage implements OnInit {
     private menuCtrl: MenuController
   ) {
     this.form = this.fb.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
       rut: ['', [Validators.required, this.validarRut]],
       telefono: ['', [Validators.required, this.validarTelefono]]
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.userService.user$.pipe(
+      filter(user => !!user),
+      take(1)
+    ).subscribe(user => {
+      this.form.patchValue({
+        nombre: user.nombre || '',
+        apellido: user.apellido || '',
+        rut: user.rut || '',
+        telefono: user.telefono || ''
+      });
+    });
+  }
 
   ionViewWillEnter() {
     this.menuCtrl.enable(false);
@@ -93,8 +108,8 @@ export class CompletarPerfilPage implements OnInit {
       const user = await this.afAuth.currentUser;
       if (!user) throw new Error('No hay usuario autenticado');
 
-      const { rut, telefono } = this.form.value;
-      await this.userService.updateProfile(user.uid, { rut, telefono });
+      const { rut, telefono, nombre, apellido } = this.form.value;
+      await this.userService.updateProfile(user.uid, { rut, telefono, nombre, apellido });
 
       await this.router.navigate(['/main']);
     } catch (error) {
