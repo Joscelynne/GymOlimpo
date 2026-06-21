@@ -77,7 +77,7 @@ export class LoginComponent {
       this.loading = false;
 
       if (!user || !this.userService.isProfileComplete(user)) {
-        this.router.navigate(['/perfil']);
+        this.router.navigate(['/completar-perfil']);
         return;
       }
 

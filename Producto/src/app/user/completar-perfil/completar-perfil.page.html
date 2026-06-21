@@ -1,0 +1,87 @@
+<ion-content class="completar-perfil-content" fullscreen>
+  <div class="layout">
+
+    <!-- Panel izquierdo -->
+    <div class="brand-panel">
+      <div class="bg-circle top"></div>
+      <div class="bg-circle bottom"></div>
+
+      <svg width="80" height="80" viewBox="0 0 40 40" fill="none" class="logo-svg">
+        <rect width="40" height="40" rx="10" fill="#d83d45"/>
+        <path d="M7 20h5M28 20h5M12 20h16M12 15v10M28 15v10M16 12v16M24 12v16"
+          stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+
+      <h1 class="brand-title">GYM<br/><span class="brand-accent">OLIMPO</span></h1>
+      <p class="brand-sub">SALUD · FUERZA · MOVIMIENTO</p>
+
+      <div class="checklist">
+        <div class="info-box">
+          <span class="info-label">ÚLTIMO PASO</span>
+          <p class="info-text">Solo necesitamos tu RUT y teléfono para activar tu cuenta completa.</p>
+        </div>
+        <div class="check-item done">✓ Tu cuenta de Google ya está vinculada</div>
+        <div class="check-item done">✓ Nombre y correo registrados</div>
+        <div class="check-item pending">◎ Completa RUT y teléfono</div>
+      </div>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="form-panel">
+      <div class="form-box">
+
+        <div class="badge-incompleto">
+          <span class="badge-dot">◎</span>
+          <span class="badge-text">PERFIL INCOMPLETO</span>
+        </div>
+
+        <h2 class="form-title">Completa tu perfil</h2>
+        <p class="form-sub">Para acceder al sistema necesitamos estos datos</p>
+
+        <form [formGroup]="form" (ngSubmit)="guardar()">
+
+          <div class="field">
+            <label>RUT</label>
+            <ion-item lines="none" class="input-box">
+              <ion-icon name="card-outline" slot="start"></ion-icon>
+              <ion-input
+                formControlName="rut"
+                placeholder="12.345.678-9"
+                (ionInput)="formatearRut($event)"
+                maxlength="12">
+              </ion-input>
+            </ion-item>
+            <div class="error" *ngIf="form.get('rut')?.touched && form.get('rut')?.invalid">
+              RUT inválido o incompleto.
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Teléfono</label>
+            <ion-item lines="none" class="input-box">
+              <ion-icon name="call-outline" slot="start"></ion-icon>
+              <ion-input
+                formControlName="telefono"
+                placeholder="+56 9 1234 5678"
+                (ionInput)="formatearTelefono($event)"
+                maxlength="15">
+              </ion-input>
+            </ion-item>
+            <div class="error" *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid">
+              Teléfono inválido. Ejemplo: +56 9 1234 5678
+            </div>
+          </div>
+
+          <button type="submit" class="btn-guardar" [disabled]="form.invalid || guardando">
+            {{ guardando ? 'GUARDANDO...' : 'GUARDAR Y CONTINUAR →' }}
+          </button>
+
+        </form>
+
+        <p class="footer-note">🔒 Tus datos son privados y seguros</p>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>
