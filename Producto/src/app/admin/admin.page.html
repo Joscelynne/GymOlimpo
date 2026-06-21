@@ -31,11 +31,10 @@
       <app-kpi-card *ngFor="let kpi of state.kpis" [config]="kpi"></app-kpi-card>
     </div>
 
-    <!-- 3. Charts Grid (Ocupación, Reservas, Top Horarios) -->
-    <div class="charts-grid">
+    <!-- 3. Charts Grid (Ocupación, Reservas) -->
+    <div class="charts-grid charts-grid--2col">
       <app-chart-bar [data]="state.chartOcupacion" title="Ocupación por Horas"></app-chart-bar>
       <app-chart-line [data]="state.chartReservasSemana" title="Reservas de la Semana"></app-chart-line>
-      <app-chart-hbar [data]="state.chartTopHorarios" title="Top 5 Demandados (SVG)"></app-chart-hbar>
     </div>
 
     <!-- 4. Fila Media: Calendario y Tabla de Reservas -->
@@ -50,16 +49,14 @@
       </app-reservas-table>
     </div>
 
-    <!-- 5. Fila Inferior: Pagos, Planes y Clientes Inactivos -->
-    <div class="bottom-grid">
+    <!-- 5. Fila Inferior: Pagos y Planes por Vencer -->
+    <div class="bottom-grid bottom-grid--2col">
       <app-pagos-panel [pagos]="state.pagosRecientes" [error]="state.error"></app-pagos-panel>
       <app-planes-panel [clientes]="state.planesPorVencer" [error]="state.error" (retry)="reloadPlanes()"></app-planes-panel>
-      <app-clientes-inactivos [clientes]="state.clientesInactivos" [error]="state.error"></app-clientes-inactivos>
     </div>
 
-    <!-- 6. Fila Final: Horarios Demanda y Acciones Rápidas -->
-    <div class="footer-grid">
-      <app-horarios-demanda [horarios]="state.horariosDemanda" [error]="state.error"></app-horarios-demanda>
+    <!-- 6. Acciones Rápidas -->
+    <div class="quick-row">
       <app-quick-actions [generatingHorarios]="generatingHorarios" (generarHorarios)="onGenerarHorarios()"></app-quick-actions>
     </div>
 

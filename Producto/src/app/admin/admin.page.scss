@@ -71,7 +71,7 @@
   }
 }
 
-/* ── Charts Grid: 3 col desktop / 2 col tablet / 1 col mobile ── */
+/* ── Charts Grid: 2 col desktop / 1 col mobile ── */
 .charts-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -83,6 +83,14 @@
   }
   @media (max-width: 767px) {
     grid-template-columns: 1fr;
+  }
+
+  &--2col {
+    grid-template-columns: repeat(2, 1fr);
+
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
   }
 }
 
@@ -98,7 +106,7 @@
   }
 }
 
-/* ── Bottom Grid: Pagos | Planes | Inactivos (3 col desktop / 2 col tablet / 1 col mobile) ── */
+/* ── Bottom Grid: Pagos | Planes (2 col desktop / 1 col mobile) ── */
 .bottom-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -111,17 +119,25 @@
   @media (max-width: 767px) {
     grid-template-columns: 1fr;
   }
+
+  &--2col {
+    grid-template-columns: repeat(2, 1fr);
+
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
+  }
 }
 
-/* ── Footer Grid: Horarios Demanda + Quick Actions (1fr + 340px desktop / 1 col mobile) ── */
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 16px;
+/* ── Quick Row: Quick Actions centered ── */
+.quick-row {
+  display: flex;
+  justify-content: flex-start;
   margin-bottom: 24px;
 
-  @media (max-width: 767px) {
-    grid-template-columns: 1fr;
+  app-quick-actions {
+    max-width: 420px;
+    width: 100%;
   }
 }
 

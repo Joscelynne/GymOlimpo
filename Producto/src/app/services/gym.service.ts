@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, switchMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 
 export interface Horario {
   id?: string;
@@ -712,15 +712,30 @@ async eliminarHorario(id: string): Promise<void> {
     );
   }
 
-  /** Last N pagos (all statuses), ordered by createdAt desc */
-  getPagosRecientes(limit = 10): Observable<Pago[]> {
+  /** Last N pagos (all statuses), ordered by createdAt desc — enriched with user name */
+  getPagosRecientes(limit = 10): Observable<(Pago & { clienteNombre: string })[]> {
     return this.firestore.collection<Pago>('pagos',
       ref => ref.orderBy('createdAt', 'desc').limit(limit)
     ).snapshotChanges().pipe(
       map(actions => actions.map(a => ({
         id: a.payload.doc.id,
         ...(a.payload.doc.data() as Pago)
-      })))
+      }))),
+      switchMap(pagos => {
+        if (!pagos.length) return of([]);
+        const userFetches = pagos.map(p =>
+          this.firestore.collection('users').doc(p.userId).get().pipe(
+            map(snap => {
+              const data = snap.data() as any;
+              const nombre = data?.nombre && data?.apellido
+                ? `${data.nombre} ${data.apellido}`.trim()
+                : data?.nombre || data?.displayName || data?.email || 'Sin nombre';
+              return { ...p, clienteNombre: nombre };
+            })
+          )
+        );
+        return forkJoin(userFetches);
+      })
     );
   }
 
