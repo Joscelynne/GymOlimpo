@@ -58,15 +58,16 @@ export class AdminPage implements OnInit, OnDestroy {
       this.gymService.getReservasPorFecha(hoy).pipe(catchError(() => of([]))),
       this.gymService.getPagosPendientes().pipe(catchError(() => of([]))),
       this.gymService.getUsuariosConVigencia().pipe(catchError(() => of([]))),
-      this.gymService.getHorarios().pipe(catchError(() => of([])))
+      this.gymService.getHorarios().pipe(catchError(() => of([]))),
+      this.gymService.getPagosValidados().pipe(catchError(() => of([])))
     ]).pipe(
       takeUntil(this.destroy$),
       catchError(err => {
         this.state.error = 'Error al cargar KPIs del dashboard.';
-        return of([[], [], [], [], []]);
+        return of([[], [], [], [], [], []]);
       })
-    ).subscribe(([clientes, reservasHoy, pagos, usuarios, horarios]) => {
-      this.state.kpis = calcularKpis(clientes, reservasHoy, pagos, usuarios, horarios, hoy);
+    ).subscribe(([clientes, reservasHoy, pagos, usuarios, horarios, pagosValidados]) => {
+      this.state.kpis = calcularKpis(clientes, reservasHoy, pagos, usuarios, horarios, pagosValidados, hoy);
       this.state.cargando = false;
     });
 

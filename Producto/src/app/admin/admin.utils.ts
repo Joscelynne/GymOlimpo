@@ -93,14 +93,15 @@ export function formatMonto(monto: number): string {
 export function calcularKpis(
   clientes: any[],
   reservasHoy: Reserva[],
-  pagos: Pago[],
+  pagosPendientes: Pago[],
   usuarios: any[],
   horarios: Horario[],
+  pagosValidados: Pago[],
   hoy: string
 ): KpiCardConfig[] {
   const clientesActivos = clientes.length;
   const reservasDelDia = reservasHoy.filter(r => r.estado !== 'cancelada').length;
-  const pagosPendientes = pagos.length;
+  const numPagosPendientes = pagosPendientes.length;
 
   // Planes próximos a vencer (≤7 days)
   const planesPorVencer = calcularPlanesPorVencer(usuarios, hoy).length;
@@ -115,9 +116,10 @@ export function calcularKpis(
   }
   const ocupacionPct = totalCupos > 0 ? Math.round((cuposOcupados / totalCupos) * 100) : 0;
 
-  // Monthly revenue from validated payments (rough estimate from available data)
-  const ingresosMes = pagos
-    .filter(p => (p as any).estado === 'validado')
+  // Monthly revenue from validated payments for the current month
+  const currentMonthPrefix = hoy.substring(0, 7); // e.g. "2026-06"
+  const ingresosMes = pagosValidados
+    .filter(p => p.createdAt && p.createdAt.startsWith(currentMonthPrefix))
     .reduce((acc, p) => acc + (p.monto || 0), 0);
 
   return [
@@ -151,9 +153,9 @@ export function calcularKpis(
     {
       id: 'pagos-pendientes',
       label: 'Pagos Pendientes',
-      value: pagosPendientes,
+      value: numPagosPendientes,
       icon: 'card-outline',
-      colorClass: pagosPendientes > 0 ? 'warning' : 'success',
+      colorClass: numPagosPendientes > 0 ? 'warning' : 'success',
       loading: false,
       formato: 'numero'
     },

@@ -655,14 +655,22 @@ async eliminarHorario(id: string): Promise<void> {
 
   getReservasPorFecha(fecha: string) {
     return this.firestore.collection('reservas', ref =>
-      ref.where('fecha', '==', fecha).orderBy('hora', 'asc')
+      ref.where('fecha', '==', fecha)
     ).snapshotChanges().pipe(
-      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Reserva) })))
+      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Reserva) }))
+        .sort((a, b) => a.hora.localeCompare(b.hora))
+      )
     );
   }
 
   getPagosPendientes() {
     return this.firestore.collection<Pago>('pagos', ref => ref.where('estado', '==', 'pendiente')).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Pago) })))
+    );
+  }
+
+  getPagosValidados() {
+    return this.firestore.collection<Pago>('pagos', ref => ref.where('estado', '==', 'validado')).snapshotChanges().pipe(
       map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Pago) })))
     );
   }
@@ -736,12 +744,12 @@ async eliminarHorario(id: string): Promise<void> {
   /** Horarios for a specific date, ordered by hora asc */
   getHorariosPorFecha(fecha: string): Observable<Horario[]> {
     return this.firestore.collection<Horario>('horarios',
-      ref => ref.where('fecha', '==', fecha).orderBy('hora', 'asc')
+      ref => ref.where('fecha', '==', fecha)
     ).snapshotChanges().pipe(
       map(actions => actions.map(a => ({
         id: a.payload.doc.id,
         ...(a.payload.doc.data() as Horario)
-      })))
+      })).sort((a, b) => a.hora.localeCompare(b.hora)))
     );
   }
 
