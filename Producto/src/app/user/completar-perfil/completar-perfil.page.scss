@@ -1,0 +1,213 @@
+:host {
+  --ion-background-color: #080a0c;
+}
+
+.completar-perfil-content {
+  --background: #080a0c;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ── Panel izquierdo ── */
+.brand-panel {
+  background: linear-gradient(160deg, #0d1014 0%, #0f1a0f 50%, #0a0d0a 100%);
+  border-right: 1px solid #1f2733;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  &.top    { top: 10%; left: 10%; width: 300px; height: 300px; background: radial-gradient(circle, #4db25e15 0%, transparent 70%); }
+  &.bottom { bottom: 15%; right: 5%; width: 200px; height: 200px; background: radial-gradient(circle, #d83d4512 0%, transparent 70%); }
+}
+
+.logo-svg { margin-bottom: 24px; }
+
+.brand-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #e8edf5;
+  text-align: center;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.brand-accent { color: #4db25e; }
+
+.brand-sub {
+  color: #7a8fa6;
+  letter-spacing: 4px;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.checklist {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.info-box {
+  background: #4db25e18;
+  border: 1px solid #4db25e33;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 4px;
+}
+
+.info-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #4db25e;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.info-text {
+  color: #7a8fa6;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  &.done    { color: #7a8fa6; &::first-letter { color: #4db25e; } }
+  &.pending { color: #e8edf5; }
+}
+
+/* ── Panel derecho ── */
+.form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+}
+
+.form-box {
+  width: 100%;
+  max-width: 380px;
+}
+
+.badge-incompleto {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e8a02018;
+  border: 1px solid #e8a02033;
+  border-radius: 20px;
+  padding: 4px 14px;
+  margin-bottom: 24px;
+}
+
+.badge-dot { color: #e8a020; font-size: 12px; }
+
+.badge-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #e8a020;
+}
+
+.form-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #e8edf5;
+  margin-bottom: 6px;
+}
+
+.form-sub {
+  color: #7a8fa6;
+  font-size: 13px;
+  margin-bottom: 32px;
+}
+
+.field {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: #7a8fa6;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+}
+
+.input-box {
+  --background: #191e28;
+  --border-radius: 9px;
+  --color: #e8edf5;
+  --placeholder-color: #3d4d5e;
+  --padding-start: 8px;
+  border: 1px solid #252d3a;
+  border-radius: 9px;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: #4db25e;
+  }
+
+  ion-icon {
+    color: #3d4d5e;
+    margin-right: 6px;
+  }
+}
+
+.error {
+  color: #d83d45;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.btn-guardar {
+  width: 100%;
+  padding: 13px 24px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-family: 'Barlow Condensed', sans-serif;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(135deg, #4db25e, #3a9449);
+  color: #fff;
+  text-transform: uppercase;
+  margin-top: 12px;
+  transition: filter 0.18s;
+
+  &:hover:not(:disabled) { filter: brightness(1.1); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.footer-note {
+  text-align: center;
+  color: #3d4d5e;
+  font-size: 12px;
+  margin-top: 20px;
+}

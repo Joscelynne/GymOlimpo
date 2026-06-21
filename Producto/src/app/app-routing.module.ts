@@ -43,7 +43,11 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminPageModule),
     canActivate: [AuthGuard, AdminGuard]
+  },  {
+    path: 'completar-perfil',
+    loadChildren: () => import('./user/completar-perfil/completar-perfil.module').then( m => m.CompletarPerfilPageModule)
   }
+
 ];
 
 @NgModule({

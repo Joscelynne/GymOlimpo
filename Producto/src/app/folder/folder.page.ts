@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './folder.page.html',
   styleUrls: ['./folder.page.scss'],
 })
+
+
 export class FolderPage implements OnInit {
   public folder!: string;
   private activatedRoute = inject(ActivatedRoute);
@@ -14,4 +16,7 @@ export class FolderPage implements OnInit {
   ngOnInit() {
     this.folder = this.activatedRoute.snapshot.paramMap.get('id') as string;
   }
+
+
+  
 }
