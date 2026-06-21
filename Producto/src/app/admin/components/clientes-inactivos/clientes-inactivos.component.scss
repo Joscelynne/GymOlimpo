@@ -1,0 +1,104 @@
+.clientes-inactivos {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.panel-header {
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.panel-empty, .panel-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px;
+  text-align: center;
+  color: #64748b;
+
+  ion-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    color: #475569;
+  }
+
+  p {
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+.panel-empty ion-icon {
+  color: #22c55e;
+}
+
+.panel-error ion-icon {
+  color: #ef4444;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.inactivos-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+
+  th {
+    color: #475569;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #1e2a38;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #1a2230;
+    color: #cbd5e1;
+    white-space: nowrap;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .client-name {
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+
+  .plan-name {
+    color: #cbd5e1;
+  }
+
+  .days-badge {
+    padding: 3px 6px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .last-session {
+    color: #64748b;
+  }
+}

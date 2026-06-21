@@ -1,0 +1,179 @@
+.calendar-view {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 18px 20px;
+  height: 100%;
+}
+
+// Header
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.nav-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #1e2a38;
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  ion-icon { font-size: 16px; }
+
+  &:hover {
+    background: rgba(255,255,255,0.12);
+    color: #e2e8f0;
+  }
+}
+
+.cal-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  .date-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .today-badge {
+    font-size: 10px;
+    font-weight: 700;
+    background: #22c55e;
+    color: #000;
+    padding: 1px 8px;
+    border-radius: 999px;
+  }
+
+  &.today .date-text {
+    text-decoration: underline;
+    font-weight: 900;
+  }
+}
+
+// States
+.cal-loading, .cal-error, .cal-empty {
+  padding: 20px 0;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1e2a38 25%, #263040 50%, #1e2a38 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.cal-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #ef4444;
+  text-align: center;
+  ion-icon { font-size: 22px; }
+  p { font-size: 13px; margin: 0; }
+}
+
+.cal-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #475569;
+  text-align: center;
+  ion-icon { font-size: 22px; }
+  p { font-size: 13px; margin: 0; }
+}
+
+// Blocks
+.cal-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bloque-item {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #1e2a38;
+  background: rgba(255,255,255,0.03);
+
+  &.lleno {
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.06);
+  }
+
+  &.casi-lleno {
+    border-color: rgba(245, 158, 11, 0.35);
+    background: rgba(245, 158, 11, 0.05);
+  }
+}
+
+.bloque-hora {
+  font-size: 14px;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+
+.bloque-info {
+  .bloque-cupos {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+  }
+
+  .bloque-bar {
+    height: 4px;
+    background: #1e2a38;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 4px;
+
+    .bloque-bar-fill {
+      height: 100%;
+      background: #22c55e;
+      border-radius: 999px;
+      transition: width 0.3s;
+    }
+  }
+
+  .bloque-clientes {
+    font-size: 10px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    ion-icon { font-size: 11px; }
+  }
+}
+
+.bloque-badge {
+  .badge-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #fff;
+
+    &.warning { background: #f59e0b; color: #000; }
+    &.ok { background: #22c55e; color: #000; }
+    &.libre { background: #1e2a38; color: #94a3b8; }
+  }
+}

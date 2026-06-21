@@ -1,0 +1,39 @@
+<div class="alert-panel dashboard-card">
+  <div class="panel-header">
+    <h3 class="panel-title">Alertas del Sistema</h3>
+  </div>
+
+  <!-- Error state -->
+  <div class="panel-error" *ngIf="error">
+    <ion-icon name="warning-outline"></ion-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Empty state -->
+  <div class="panel-empty" *ngIf="!error && !hasAlertas">
+    <ion-icon name="checkmark-circle-outline" class="icon-ok"></ion-icon>
+    <span>Todo en orden</span>
+  </div>
+
+  <!-- Alerts list -->
+  <div class="alerts-list" *ngIf="!error && hasAlertas">
+    <div
+      *ngFor="let alerta of alertas; trackBy: trackById"
+      class="alert-item"
+      [ngClass]="alerta.categoria">
+
+      <div class="alert-icon-wrap">
+        <ion-icon [name]="alerta.icono"></ion-icon>
+      </div>
+
+      <div class="alert-content">
+        <p class="alert-desc">{{ alerta.descripcion }}</p>
+        <span class="alert-count">{{ alerta.conteo }} afectado{{ alerta.conteo !== 1 ? 's' : '' }}</span>
+      </div>
+
+      <button class="alert-action-btn" (click)="navigate(alerta.rutaAccion)" [attr.id]="'alert-btn-' + alerta.id">
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,111 +1,282 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { GymService, Horario, Reserva } from '../services/gym.service';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { AlertController, ToastController } from '@ionic/angular';
+import { Subject, combineLatest, of } from 'rxjs';
+import { takeUntil, catchError, finalize } from 'rxjs/operators';
+import { GymService, Reserva } from '../services/gym.service';
+import { DashboardState, initialDashboardState } from './admin.models';
+import {
+  fechaHoy,
+  fechaOffset,
+  calcularOcupacion,
+  calcularKpis,
+  calcularAlertas,
+  agruparReservasPorDia,
+  calcularHorariosDemanda,
+  calcularPlanesPorVencer,
+  calcularClientesInactivos,
+  mapearPagosAdmin
+} from './admin.utils';
 
-@Component({ selector: 'app-admin', templateUrl: './admin.page.html', styleUrls: ['./admin.page.scss'] })
+@Component({
+  selector: 'app-admin',
+  templateUrl: './admin.page.html',
+  styleUrls: ['./admin.page.scss']
+})
 export class AdminPage implements OnInit, OnDestroy {
-  resumen = { reservas: 0, pagosPendientes: 0, horarios: 0 };
+  private destroy$ = new Subject<void>();
 
-  today = new Date();
-  fechaHoy = this.formatDate(this.today);
+  state: DashboardState = initialDashboardState();
+  generatingHorarios = false;
 
-  horariosHoy: Horario[] = [];
-  reservasHoy: Reserva[] = [];
-  reservasPendientePago: Reserva[] = [];
-  horariosIndex: { [key: string]: Horario } = {};
+  constructor(
+    private gymService: GymService,
+    private toastCtrl: ToastController,
+    private alertCtrl: AlertController,
+    private router: Router
+  ) {}
 
-  pagosPendientes = 0;
-  bloquesAgotados = 0;
-  cuposTotalesHoy = 0;
-  cuposOcupadosHoy = 0;
-
-  recientes: Reserva[] = [];
-
-  private subs: Subscription[] = [];
-
-  constructor(private gymService: GymService) {}
-
-  ngOnInit() {
-    this.subs.push(this.gymService.getResumenAdmin().subscribe(data => this.resumen = data));
-
-    this.subs.push(this.gymService.getHorarios().subscribe(hs => {
-      this.horariosHoy = hs.filter(h => h.fecha === this.fechaHoy).sort((a,b) => a.hora.localeCompare(b.hora));
-      // build index for fast lookup from templates
-      this.horariosIndex = {};
-      for (const h of this.horariosHoy) {
-        this.horariosIndex[`${h.fecha}|${h.hora}`] = h;
-      }
-      this.calculateCupos();
-    }));
-
-    this.subs.push(this.gymService.getReservasPorFecha(this.fechaHoy).subscribe(rs => {
-      this.reservasHoy = rs;
-      // precompute pendiente_pago list used by template (avoids arrow funcs in template)
-      this.reservasPendientePago = this.reservasHoy.filter(r => r.estado === 'pendiente_pago');
-      this.calculateCupos();
-    }));
-
-    this.subs.push(this.gymService.getPagosPendientes().subscribe(p => this.pagosPendientes = p.length));
-
-    this.subs.push(this.gymService.getReservasRecientes(50).subscribe(r => this.recientes = r));
+  ngOnInit(): void {
+    this.suscribirStreams();
   }
 
-  ngOnDestroy() { this.subs.forEach(s => s.unsubscribe()); }
-
-  private calculateCupos() {
-    let total = 0;
-    let ocupados = 0;
-    let agotados = 0;
-
-    for (const h of this.horariosHoy) {
-      total += h.cupos;
-      const ocup = (h.cupos - (h.cuposDisponibles ?? 0));
-      ocupados += ocup;
-      if ((h.cupos - (h.cuposDisponibles ?? 0)) >= h.cupos) agotados++;
-    }
-
-    this.cuposTotalesHoy = total;
-    this.cuposOcupadosHoy = ocupados;
-    this.bloquesAgotados = agotados;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  formatDate(d: Date) {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  private suscribirStreams(): void {
+    const hoy = fechaHoy();
+    const hace7Dias = fechaOffset(-7);
+
+    this.state.cargando = true;
+    this.state.error = null;
+
+    // Stream 1: KPIs base
+    combineLatest([
+      this.gymService.getClientesActivos().pipe(catchError(() => of([]))),
+      this.gymService.getReservasPorFecha(hoy).pipe(catchError(() => of([]))),
+      this.gymService.getPagosPendientes().pipe(catchError(() => of([]))),
+      this.gymService.getUsuariosConVigencia().pipe(catchError(() => of([]))),
+      this.gymService.getHorarios().pipe(catchError(() => of([]))),
+      this.gymService.getPagosValidados().pipe(catchError(() => of([])))
+    ]).pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al cargar KPIs del dashboard.';
+        return of([[], [], [], [], [], []]);
+      })
+    ).subscribe(([clientes, reservasHoy, pagos, usuarios, horarios, pagosValidados]) => {
+      this.state.kpis = calcularKpis(clientes, reservasHoy, pagos, usuarios, horarios, pagosValidados, hoy);
+      this.state.cargando = false;
+    });
+
+    // Stream 2: Alertas
+    combineLatest([
+      this.gymService.getPagosPendientes().pipe(catchError(() => of([]))),
+      this.gymService.getUsuariosConVigencia().pipe(catchError(() => of([]))),
+      this.gymService.getHorariosPorFecha(hoy).pipe(catchError(() => of([]))),
+      this.gymService.getReservasRecientes(500).pipe(catchError(() => of([])))
+    ]).pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al calcular alertas del sistema.';
+        return of([[], [], [], []]);
+      })
+    ).subscribe(([pagos, usuarios, horariosHoy, reservas]) => {
+      this.state.alertas = calcularAlertas(pagos, usuarios, horariosHoy, reservas, hoy);
+    });
+
+    // Stream 3a: Gráfico de ocupación (barras verticales)
+    this.gymService.getHorariosPorFecha(hoy).pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al cargar horarios de hoy para el gráfico.';
+        return of([]);
+      })
+    ).subscribe(horarios => {
+      this.state.chartOcupacion = horarios.map(h => ({
+        label: h.hora,
+        value: calcularOcupacion(h.cupos, h.cuposDisponibles)
+      }));
+    });
+
+    // Stream 3b: Gráfico de reservas últimos 7 días (línea + área)
+    this.gymService.getReservasPorRango(hace7Dias, hoy).pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al cargar reservas de la semana para el gráfico.';
+        return of([]);
+      })
+    ).subscribe(reservas => {
+      this.state.chartReservasSemana = agruparReservasPorDia(reservas, hace7Dias, hoy);
+    });
+
+    // Stream 3c & 10.4: Gráfico barras horizontales (top 5 demanda) & horariosDemanda
+    this.gymService.getHorarios().pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al cargar ranking de demanda de horarios.';
+        return of([]);
+      })
+    ).subscribe(horarios => {
+      this.state.horariosDemanda = calcularHorariosDemanda(horarios);
+      this.state.chartTopHorarios = this.state.horariosDemanda
+        .slice(0, 5)
+        .map(h => ({ label: h.hora, value: h.porcentajePromedio }));
+    });
+
+    // Stream 4: Tabla de reservas recientes (50)
+    this.gymService.getReservasRecientes(50).pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al cargar las reservas recientes.';
+        return of([]);
+      })
+    ).subscribe(reservas => {
+      this.state.reservasRecientes = reservas;
+    });
+
+    // Stream 5: Pagos recientes (10)
+    this.gymService.getPagosRecientes(10).pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al cargar los pagos recientes.';
+        return of([]);
+      })
+    ).subscribe(pagos => {
+      this.state.pagosRecientes = mapearPagosAdmin(pagos);
+    });
+
+    // Stream 6: Clientes inactivos
+    combineLatest([
+      this.gymService.getClientesConPlanActivo().pipe(catchError(() => of([]))),
+      this.gymService.getReservasRecientes(500).pipe(catchError(() => of([])))
+    ]).pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al calcular los clientes inactivos.';
+        return of([[], []]);
+      })
+    ).subscribe(([clientes, reservas]) => {
+      this.state.clientesInactivos = calcularClientesInactivos(clientes, reservas, hoy);
+    });
+
+    // Stream 7: Planes por vencer
+    this.gymService.getUsuariosConVigencia().pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.state.error = 'Error al cargar planes por vencer.';
+        return of([]);
+      })
+    ).subscribe(usuarios => {
+      this.state.planesPorVencer = calcularPlanesPorVencer(usuarios, hoy);
+    });
   }
 
-  async generarHorarios() {
+  // Reload Planes Panel
+  reloadPlanes(): void {
+    const hoy = fechaHoy();
+    this.gymService.getUsuariosConVigencia().pipe(
+      takeUntil(this.destroy$),
+      catchError(err => {
+        this.showErrorToast('No se pudieron recargar los planes por vencer.');
+        return of([]);
+      })
+    ).subscribe(usuarios => {
+      this.state.planesPorVencer = calcularPlanesPorVencer(usuarios, hoy);
+    });
+  }
+
+  // Action: Generar Horarios
+  async onGenerarHorarios(): Promise<void> {
+    if (this.generatingHorarios) return;
+    this.generatingHorarios = true;
+
     try {
       await this.gymService.generarHorariosProximos30Dias();
-      alert('Horarios generados correctamente');
-    } catch (error) {
-      console.error(error);
-      alert('Error al generar horarios');
+      this.showToast('Horarios para los próximos 30 días generados con éxito.', 'success');
+    } catch (err: any) {
+      console.error(err);
+      this.showErrorToast(err?.message || 'Error al generar los horarios de los próximos 30 días.');
+    } finally {
+      this.generatingHorarios = false;
     }
   }
 
-  async confirmarAsistencia(reservaId?: string) {
-    if (!reservaId) return;
+  // Action: Confirmar Asistencia
+  async onConfirmarAsistencia(reservaId: string, reservasTableComp: any): Promise<void> {
     try {
       await this.gymService.confirmarAsistencia(reservaId);
-      alert('Asistencia registrada');
-    } catch (error) {
-      console.error(error);
-      alert('Error al registrar asistencia');
+      this.showToast('Asistencia registrada correctamente.', 'success');
+    } catch (err: any) {
+      console.error(err);
+      this.showErrorToast(err?.message || 'Error al registrar la asistencia.');
+      if (reservasTableComp) {
+        reservasTableComp.enableButton(reservaId);
+      }
     }
   }
 
-  async cancelarReserva(id?: string) {
-    if (!id) return;
-    if (!confirm('¿Confirmas cancelar esta reserva?')) return;
+  // Action: Cancelar Reserva
+  async onCancelarReserva(reserva: Reserva): Promise<void> {
+    if (!reserva.id) return;
+
+    const confirmed = await this.confirmarCancelacion(reserva);
+    if (!confirmed) return;
+
     try {
-      await this.gymService.cancelarReserva(id);
-      alert('Reserva cancelada y cupo liberado');
-    } catch (error) {
-      console.error(error);
-      alert('Error al cancelar la reserva');
+      await this.gymService.cancelarReserva(reserva.id);
+      this.showToast(`La reserva de ${reserva.clienteNombre} ha sido cancelada.`, 'success');
+    } catch (err: any) {
+      console.error(err);
+      this.showErrorToast(err?.message || 'Error al cancelar la reserva.');
     }
+  }
+
+  // Toast / Alert UI controllers
+  private async showToast(message: string, color: 'success' | 'warning' | 'danger'): Promise<void> {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 5000,
+      color,
+      position: 'bottom',
+      buttons: [{ role: 'cancel', icon: 'close-outline' }]
+    });
+    await toast.present();
+  }
+
+  private async showErrorToast(message: string): Promise<void> {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 10000,
+      color: 'danger',
+      position: 'bottom',
+      buttons: [{ role: 'cancel', text: 'Cerrar' }]
+    });
+    await toast.present();
+  }
+
+  private async confirmarCancelacion(reserva: Reserva): Promise<boolean> {
+    return new Promise(async resolve => {
+      const alert = await this.alertCtrl.create({
+        header: 'Cancelar Reserva',
+        message: `¿Confirmas cancelar la reserva de <strong>${reserva.clienteNombre}</strong> para el ${reserva.fecha} a las ${reserva.hora}?`,
+        cssClass: 'gym-alert',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => resolve(false)
+          },
+          {
+            text: 'Sí, cancelar',
+            role: 'confirm',
+            handler: () => resolve(true)
+          }
+        ]
+      });
+      await alert.present();
+    });
   }
 }

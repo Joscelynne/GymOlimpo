@@ -1,0 +1,43 @@
+<div class="clientes-inactivos dashboard-card">
+  <div class="panel-header">
+    <h3 class="panel-title">Clientes Inactivos</h3>
+  </div>
+
+  <!-- Error state -->
+  <div class="panel-error" *ngIf="error">
+    <ion-icon name="warning-outline"></ion-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="panel-empty" *ngIf="!error && clientes.length === 0">
+    <ion-icon name="people-outline"></ion-icon>
+    <p>Todos los clientes están activos</p>
+  </div>
+
+  <!-- Content state -->
+  <div class="panel-content-wrapper" *ngIf="!error && clientes.length > 0">
+    <div class="table-responsive">
+      <table class="inactivos-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Plan</th>
+            <th>Días Inactivo</th>
+            <th>Última Sesión</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of clientes; trackBy: trackById">
+            <td class="client-name">{{ c.nombreCompleto }}</td>
+            <td class="plan-name">{{ c.planActivo }}</td>
+            <td class="days">
+              <span class="days-badge">{{ c.diasInactividad }} días</span>
+            </td>
+            <td class="last-session">{{ formatLastSession(c.ultimaSesion) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

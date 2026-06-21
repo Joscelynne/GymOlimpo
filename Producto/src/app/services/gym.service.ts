@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, switchMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 
 export interface Horario {
   id?: string;
@@ -655,14 +655,22 @@ async eliminarHorario(id: string): Promise<void> {
 
   getReservasPorFecha(fecha: string) {
     return this.firestore.collection('reservas', ref =>
-      ref.where('fecha', '==', fecha).orderBy('hora', 'asc')
+      ref.where('fecha', '==', fecha)
     ).snapshotChanges().pipe(
-      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Reserva) })))
+      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Reserva) }))
+        .sort((a, b) => a.hora.localeCompare(b.hora))
+      )
     );
   }
 
   getPagosPendientes() {
     return this.firestore.collection<Pago>('pagos', ref => ref.where('estado', '==', 'pendiente')).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Pago) })))
+    );
+  }
+
+  getPagosValidados() {
+    return this.firestore.collection<Pago>('pagos', ref => ref.where('estado', '==', 'validado')).snapshotChanges().pipe(
       map(actions => actions.map(a => ({ id: a.payload.doc.id, ...(a.payload.doc.data() as Pago) })))
     );
   }
@@ -688,5 +696,88 @@ async eliminarHorario(id: string): Promise<void> {
         checkIn: new Date().toISOString()
       });
     });
+  }
+
+  // ── New dashboard methods ──────────────────────────────────────────────
+
+  /** Clientes activos (planActivo not empty) */
+  getClientesActivos(): Observable<any[]> {
+    return this.firestore.collection('users', ref =>
+      ref.where('planActivo', '!=', '')
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        uid: a.payload.doc.id,
+        ...(a.payload.doc.data() as any)
+      })))
+    );
+  }
+
+  /** Last N pagos (all statuses), ordered by createdAt desc — enriched with user name */
+  getPagosRecientes(limit = 10): Observable<(Pago & { clienteNombre: string })[]> {
+    return this.firestore.collection<Pago>('pagos',
+      ref => ref.orderBy('createdAt', 'desc').limit(limit)
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        id: a.payload.doc.id,
+        ...(a.payload.doc.data() as Pago)
+      }))),
+      switchMap(pagos => {
+        if (!pagos.length) return of([]);
+        const userFetches = pagos.map(p =>
+          this.firestore.collection('users').doc(p.userId).get().pipe(
+            map(snap => {
+              const data = snap.data() as any;
+              const nombre = data?.nombre && data?.apellido
+                ? `${data.nombre} ${data.apellido}`.trim()
+                : data?.nombre || data?.displayName || data?.email || 'Sin nombre';
+              return { ...p, clienteNombre: nombre };
+            })
+          )
+        );
+        return forkJoin(userFetches);
+      })
+    );
+  }
+
+  /** Alias for getClientesActivos — used for inactivity cross-filtering */
+  getClientesConPlanActivo(): Observable<any[]> {
+    return this.getClientesActivos();
+  }
+
+  /** Users with vigenciaFin set (for expiring plans panel, limit 200) */
+  getUsuariosConVigencia(): Observable<any[]> {
+    return this.firestore.collection('users', ref =>
+      ref.where('vigenciaFin', '!=', '').limit(200)
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        uid: a.payload.doc.id,
+        ...(a.payload.doc.data() as any)
+      })))
+    );
+  }
+
+  /** Horarios for a specific date, ordered by hora asc */
+  getHorariosPorFecha(fecha: string): Observable<Horario[]> {
+    return this.firestore.collection<Horario>('horarios',
+      ref => ref.where('fecha', '==', fecha)
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        id: a.payload.doc.id,
+        ...(a.payload.doc.data() as Horario)
+      })).sort((a, b) => a.hora.localeCompare(b.hora)))
+    );
+  }
+
+  /** Reservas within a date range (for 7-day line chart) */
+  getReservasPorRango(fechaInicio: string, fechaFin: string): Observable<Reserva[]> {
+    return this.firestore.collection<Reserva>('reservas', ref =>
+      ref.where('fecha', '>=', fechaInicio)
+         .where('fecha', '<=', fechaFin)
+    ).snapshotChanges().pipe(
+      map(actions => actions.map(a => ({
+        id: a.payload.doc.id,
+        ...(a.payload.doc.data() as Reserva)
+      })))
+    );
   }
 }

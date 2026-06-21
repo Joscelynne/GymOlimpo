@@ -1,0 +1,147 @@
+.reservas-panel {
+  background: #141b24;
+  border: 1px solid #1e2a38;
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.panel-header {
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ef4444;
+  font-size: 13px;
+  padding: 14px 0;
+}
+
+.empty-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  text-align: center;
+  padding: 28px 0;
+
+  ion-icon { font-size: 28px; }
+  p { font-size: 13px; margin: 0; }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.reservas-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 13px;
+  }
+
+  th {
+    color: #475569;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #1e2a38;
+    white-space: nowrap;
+  }
+
+  td {
+    color: #94a3b8;
+    border-bottom: 1px solid #1a2230;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+}
+
+.col-client {
+  color: #e2e8f0 !important;
+  font-weight: 600;
+}
+
+.col-actions {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &.badge-green { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+  &.badge-orange { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+  &.badge-red { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+  &.badge-gray { background: rgba(148, 163, 184, 0.1); color: #94a3b8; }
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+
+  ion-icon { font-size: 13px; }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &.confirm {
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.25);
+
+    &:hover:not(:disabled) {
+      background: rgba(34, 197, 94, 0.2);
+    }
+  }
+
+  &.cancel {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+
+    &:hover:not(:disabled) {
+      background: rgba(239, 68, 68, 0.18);
+    }
+  }
+}

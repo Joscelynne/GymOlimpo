@@ -1,0 +1,54 @@
+<div class="pagos-panel dashboard-card">
+  <div class="panel-header">
+    <h3 class="panel-title">Pagos Recientes</h3>
+  </div>
+
+  <!-- Error state -->
+  <div class="panel-error" *ngIf="error">
+    <ion-icon name="warning-outline"></ion-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="panel-empty" *ngIf="!error && pagos.length === 0">
+    <ion-icon name="card-outline"></ion-icon>
+    <p>No hay pagos recientes para mostrar</p>
+  </div>
+
+  <!-- Content state -->
+  <div class="panel-content-wrapper" *ngIf="!error && pagos.length > 0">
+    <div class="table-responsive">
+      <table class="pagos-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Plan</th>
+            <th>Monto</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pagos; trackBy: trackById">
+            <td class="client-name">{{ p.clienteNombre }}</td>
+            <td class="plan-name">{{ p.planNombre }}</td>
+            <td class="amount">{{ formatPrice(p.monto) }}</td>
+            <td>
+              <span class="badge" [ngClass]="badgeClass(p.estado)">
+                {{ p.estado | titlecase }}
+              </span>
+            </td>
+            <td class="date">{{ formatDate(p.createdAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel-footer">
+      <button class="footer-link" routerLink="/pagos">
+        Ver todos los pagos
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+</div>

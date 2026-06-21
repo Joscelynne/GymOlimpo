@@ -1,0 +1,60 @@
+<div class="reservas-panel dashboard-card">
+  <div class="panel-header">
+    <h3 class="panel-title">Últimas Reservas</h3>
+  </div>
+
+  <!-- Error -->
+  <div class="error-msg" *ngIf="error">
+    <ion-icon name="warning-outline"></ion-icon> {{ error }}
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-msg" *ngIf="!error && reservas.length === 0">
+    <ion-icon name="calendar-outline"></ion-icon>
+    <p>No hay reservas para mostrar</p>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper" *ngIf="!error && reservas.length > 0">
+    <table class="reservas-table">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of reservas; trackBy: trackById">
+          <td class="col-client">{{ r.clienteNombre }}</td>
+          <td>{{ r.fecha }}</td>
+          <td>{{ r.hora }}</td>
+          <td>
+            <span class="badge" [ngClass]="badgeClass(r.estado)">
+              {{ r.estado }}
+            </span>
+          </td>
+          <td class="col-actions">
+            <button
+              class="action-btn confirm"
+              [disabled]="disabledButtons.has(r.id || '')"
+              (click)="onConfirmar(r)"
+              [attr.id]="'confirm-' + r.id">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              Asistencia
+            </button>
+            <button
+              class="action-btn cancel"
+              (click)="onCancelar(r)"
+              [attr.id]="'cancel-' + r.id">
+              <ion-icon name="close-circle-outline"></ion-icon>
+              Cancelar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
