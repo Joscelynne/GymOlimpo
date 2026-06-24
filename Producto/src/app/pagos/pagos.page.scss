@@ -361,3 +361,255 @@
     row-gap: 12px;
   }
 }
+
+/* ===================================================
+   MODAL SIMULADOR MÍNIMO
+   =================================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-container {
+  background: #141b24;
+  border: 1px solid #2a3a50;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-step {
+  padding: 24px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.webpay-logo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #e2e8f0;
+  span {
+    color: #4ade80;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+    background: #0f2417;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 24px;
+  cursor: pointer;
+  outline: none;
+  &:hover {
+    color: #ef4444;
+  }
+}
+
+.modal-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 8px;
+}
+
+.plan-preview-box {
+  background: #0d1117;
+  border: 1px solid #1e2a38;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 20px;
+  text-align: center;
+  
+  h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    color: #64748b;
+  }
+  
+  h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: #4ade80;
+  }
+}
+
+/* Tarjeta estática decorativa */
+.credit-card-preview {
+  background: linear-gradient(135deg, #1e3a8a 0%, #0d9488 100%);
+  border-radius: 10px;
+  height: 150px;
+  padding: 16px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  
+  .card-chip {
+    width: 32px;
+    height: 24px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border-radius: 4px;
+  }
+  
+  .card-number-display {
+    font-size: 16px;
+    font-family: monospace;
+    letter-spacing: 2px;
+  }
+  
+  .card-footer-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    
+    .label {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 2px;
+    }
+    
+    .val {
+      font-weight: 700;
+    }
+  }
+}
+
+.pay-btn {
+  background: #4ade80;
+  color: #0c0f14;
+  font-weight: 800;
+  font-size: 13px;
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  outline: none;
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.modal-loading-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 200px;
+  
+  h3 {
+    margin: 16px 0 6px;
+    color: #e2e8f0;
+  }
+  
+  p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #1e2a38;
+  border-top: 3px solid #4ade80;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos de Formulario en Modal */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  
+  label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+}
+
+.modal-row {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-input {
+  background: #0d1117;
+  border: 1px solid #1e2a38;
+  color: #e2e8f0;
+  height: 38px;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  
+  &:focus {
+    border-color: #4ade80;
+  }
+}
+
+/* Pantalla de Éxito en Modal */
+.success-step {
+  .success-icon-container {
+    color: #4ade80;
+    font-size: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    animation: popUp 0.3s ease-out;
+  }
+}
+
+@keyframes popUp {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

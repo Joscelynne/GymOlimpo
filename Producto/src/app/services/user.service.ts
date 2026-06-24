@@ -80,30 +80,35 @@ export class UserService {
       throw new Error('No se pudo autenticar con Google');
     }
 
-    const fullName = credential.user.displayName || '';
-    const [nombre = '', ...resto] = fullName.split(' ');
-    const apellido = resto.join(' ');
+    const userDocRef = this.firestore.collection('users').doc(credential.user.uid).ref;
+    const doc = await userDocRef.get();
 
-    await this.saveUserProfile(
-      credential.user.uid,
-     {
-        nombre,
-        apellido,
-        email: credential.user.email || '',
-        telefono: credential.user.phoneNumber || '',
-        provider: 'google',
-        rol: 'cliente',
-        planActivo: '',
-        planId: '',
-        precioPlan: 0,
-        sesionesTotales: 0,
-        sesionesDisponibles: 0,
-        vigenciaInicio: '',
-        vigenciaFin: '',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    },
-    true
-  );
+    if (!doc.exists) {
+      const fullName = credential.user.displayName || '';
+      const [nombre = '', ...resto] = fullName.split(' ');
+      const apellido = resto.join(' ');
+
+      await this.saveUserProfile(
+        credential.user.uid,
+        {
+          nombre,
+          apellido,
+          email: credential.user.email || '',
+          telefono: credential.user.phoneNumber || '',
+          provider: 'google',
+          rol: 'cliente',
+          planActivo: '',
+          planId: '',
+          precioPlan: 0,
+          sesionesTotales: 0,
+          sesionesDisponibles: 0,
+          vigenciaInicio: '',
+          vigenciaFin: '',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        },
+        true
+      );
+    }
 
     return credential;
   }

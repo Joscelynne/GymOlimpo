@@ -1,0 +1,29 @@
+<div class="quick-actions dashboard-card">
+  <div class="panel-header">
+    <h3 class="panel-title">Acciones Rápidas</h3>
+  </div>
+
+  <div class="actions-grid">
+    <!-- Generar Horarios button -->
+    <button class="action-btn action-btn-green" (click)="onGenerar()" [disabled]="generatingHorarios">
+      <ng-container *ngIf="!generatingHorarios">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>Generar Horarios (30 días)</span>
+      </ng-container>
+      <ng-container *ngIf="generatingHorarios">
+        <ion-spinner name="crescent" color="dark"></ion-spinner>
+        <span>Generando...</span>
+      </ng-container>
+    </button>
+
+    <button class="action-btn action-btn-outline" routerLink="/horarios">
+      <ion-icon name="time-outline"></ion-icon>
+      <span>Gestionar Horarios</span>
+    </button>
+
+    <button class="action-btn action-btn-outline" routerLink="/planes">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <span>Gestionar Planes</span>
+    </button>
+  </div>
+</div>

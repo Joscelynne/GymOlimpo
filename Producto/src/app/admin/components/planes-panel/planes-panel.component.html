@@ -1,0 +1,49 @@
+<div class="planes-panel dashboard-card">
+  <div class="panel-header">
+    <h3 class="panel-title">Planes por Vencer</h3>
+  </div>
+
+  <!-- Error state with retry action -->
+  <div class="panel-error" *ngIf="error">
+    <ion-icon name="warning-outline"></ion-icon>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="onRetry()">
+      <ion-icon name="refresh-outline"></ion-icon>
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Empty state -->
+  <div class="panel-empty" *ngIf="!error && clientes.length === 0">
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+    <p>No hay planes por vencer en los próximos 7 días</p>
+  </div>
+
+  <!-- Content state -->
+  <div class="panel-content-wrapper" *ngIf="!error && clientes.length > 0">
+    <div class="table-responsive">
+      <table class="planes-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Plan</th>
+            <th>Vence</th>
+            <th>Vencimiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of clientes; trackBy: trackById">
+            <td class="client-name">{{ c.nombreCompleto }}</td>
+            <td class="plan-name">{{ c.planActivo }}</td>
+            <td class="date">{{ formatDate(c.vigenciaFin) }}</td>
+            <td>
+              <span class="badge" [ngClass]="badgeClass(c.diasRestantes)">
+                {{ getBadgeText(c.diasRestantes) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

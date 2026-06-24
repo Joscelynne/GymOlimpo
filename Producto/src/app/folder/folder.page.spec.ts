@@ -22,4 +22,27 @@ describe('FolderPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+    it('debe tener componente definido', () => {
+    expect(component).toBeDefined();
+  });
+
+  it('debe ser una instancia de FolderPage', () => {
+    expect(component instanceof FolderPage).toBeTrue();
+  });
+
+  it('fixture debe existir', () => {
+    expect(fixture).toBeTruthy();
+  });
+
+  it('debe detectar cambios correctamente', () => {
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+  });
+
+  it('el html debe cargarse', () => {
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement;
+    expect(compiled).toBeTruthy();
+  });
 });

@@ -1,0 +1,59 @@
+<div class="chart-container dashboard-card">
+  <div class="chart-title">{{ title }}</div>
+
+  <div class="no-data" *ngIf="!hasEnoughData">
+    <ion-icon name="podium-outline"></ion-icon>
+    <p>{{ title }}: Sin datos suficientes</p>
+  </div>
+
+  <div class="svg-wrap" *ngIf="hasEnoughData">
+    <svg [attr.viewBox]="'0 0 ' + SVG_W + ' ' + svgH"
+         width="100%"
+         preserveAspectRatio="xMidYMid meet">
+
+      <g *ngFor="let bar of bars">
+        <!-- Label -->
+        <text
+          [attr.x]="PAD_LEFT - 6"
+          [attr.y]="bar.y + 16"
+          text-anchor="end"
+          fill="#94a3b8"
+          font-size="11"
+          font-family="Inter, sans-serif">
+          {{ bar.label }}
+        </text>
+
+        <!-- Background bar -->
+        <rect
+          [attr.x]="PAD_LEFT"
+          [attr.y]="bar.y + 6"
+          [attr.width]="SVG_W - PAD_LEFT - 40"
+          height="16"
+          rx="4"
+          fill="#1e2a38">
+        </rect>
+
+        <!-- Value bar -->
+        <rect
+          [attr.x]="PAD_LEFT"
+          [attr.y]="bar.y + 6"
+          [attr.width]="bar.width"
+          height="16"
+          rx="4"
+          [attr.fill]="bar.fill">
+        </rect>
+
+        <!-- Value label -->
+        <text
+          [attr.x]="PAD_LEFT + bar.width + 6"
+          [attr.y]="bar.y + 18"
+          fill="#e2e8f0"
+          font-size="10"
+          font-weight="700"
+          font-family="Inter, sans-serif">
+          {{ bar.value }}%
+        </text>
+      </g>
+    </svg>
+  </div>
+</div>

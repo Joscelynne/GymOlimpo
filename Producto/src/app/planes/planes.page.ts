@@ -26,7 +26,14 @@ export class PlanesPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.planes = this.gymService.getPlanesDisponibles();
+    const planesBase = this.gymService.getPlanesDisponibles();
+    this.planes = [...planesBase];
+
+    this.gymService.getPlanesCustom().subscribe((customPlanes) => {
+      const baseIds = new Set(planesBase.map(p => p.id));
+      const filteredCustom = customPlanes.filter(p => !baseIds.has(p.id));
+      this.planes = [...planesBase, ...filteredCustom];
+    });
 
     this.afAuth.authState.subscribe((user: any) => {
       if (user) {

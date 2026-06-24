@@ -1,0 +1,68 @@
+<div class="chart-container dashboard-card">
+  <div class="chart-title">{{ title }}</div>
+
+  <div class="no-data" *ngIf="!hasEnoughData">
+    <ion-icon name="bar-chart-outline"></ion-icon>
+    <p>{{ title }}: Sin datos suficientes para mostrar el gráfico (mínimo 2 puntos)</p>
+  </div>
+
+  <div class="svg-wrap" *ngIf="hasEnoughData">
+    <svg [attr.viewBox]="'0 0 ' + SVG_W + ' ' + (SVG_H + 10)"
+         width="100%"
+         preserveAspectRatio="xMidYMid meet">
+
+      <!-- Grid lines -->
+      <g class="grid">
+        <line *ngFor="let g of gridLines"
+              x1="0" [attr.y1]="gridY(g)"
+              [attr.x2]="SVG_W" [attr.y2]="gridY(g)"
+              stroke="#1e2a38" stroke-width="1">
+        </line>
+      </g>
+
+      <!-- Y-axis labels -->
+      <g class="y-labels">
+        <text *ngFor="let g of gridLines"
+              x="4" [attr.y]="labelY(g)"
+              fill="#475569" font-size="10" font-family="Inter, sans-serif">
+          {{ g }}%
+        </text>
+      </g>
+
+      <!-- Bars -->
+      <g class="bars">
+        <g *ngFor="let bar of bars">
+          <rect
+            [attr.x]="bar.x"
+            [attr.y]="bar.y"
+            [attr.width]="bar.width"
+            [attr.height]="bar.height"
+            [attr.fill]="bar.fill"
+            rx="4">
+          </rect>
+          <!-- Value label -->
+          <text
+            [attr.x]="bar.x + bar.width / 2"
+            [attr.y]="bar.y - 4"
+            text-anchor="middle"
+            fill="#e2e8f0"
+            font-size="10"
+            font-family="Inter, sans-serif"
+            font-weight="700">
+            {{ bar.value }}%
+          </text>
+          <!-- Hour label -->
+          <text
+            [attr.x]="bar.x + bar.width / 2"
+            [attr.y]="SVG_H - 4"
+            text-anchor="middle"
+            fill="#94a3b8"
+            font-size="9"
+            font-family="Inter, sans-serif">
+            {{ bar.label }}
+          </text>
+        </g>
+      </g>
+    </svg>
+  </div>
+</div>

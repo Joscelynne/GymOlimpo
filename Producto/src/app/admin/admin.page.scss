@@ -1,322 +1,185 @@
 /* ===================================================
-   ADMIN PAGE — GymOlimpo Dark Theme
+   ADMIN PAGE REDESIGN — GymOlimpo Dark Theme
    =================================================== */
 
 .admin-content {
   --background: #0d1117;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .admin-wrapper {
-  padding: 24px 20px 50px;
-  max-width: 1100px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 24px 20px 60px;
 }
 
 /* ── Page heading ─────────────────────────────────── */
 .page-heading {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 800;
   color: #e2e8f0;
-  margin: 0 0 4px;
+  margin: 0 0 6px;
+  letter-spacing: -0.5px;
 }
 
 .page-sub {
-  font-size: 13px;
-  color: #64748b;
+  font-size: 14px;
+  color: #94a3b8;
   margin: 0;
 }
 
-/* ── Section label ───────────────────────────────── */
-.card-section-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #475569;
-  text-transform: uppercase;
-  margin-bottom: 16px;
+/* ── Global Error Banner ──────────────────────────── */
+.global-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  font-weight: 500;
+
+  ion-icon {
+    font-size: 18px;
+  }
 }
 
-/* ===================================================
-   STAT CARDS
-   =================================================== */
-.stats-row {
+/* ── Alert Section spacing ────────────────────────── */
+.alert-section {
+  margin-bottom: 24px;
+}
+
+/* ── KPI Cards: 3 col desktop / 2 col tablet / 2 col mobile (as per design spec) ── */
+.kpi-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-bottom: 20px;
-}
+  margin-bottom: 24px;
 
-@media (max-width: 600px) {
-  .stats-row {
-    grid-template-columns: 1fr;
+  @media (max-width: 1023px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 767px) {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-.stat-card {
-  background: #141b24;
-  border: 1px solid #1e2a38;
-  border-radius: 16px;
-  padding: 28px 20px 22px;
-  text-align: center;
-}
-
-.stat-icon {
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-
-.stat-value {
-  font-size: 52px;
-  font-weight: 900;
-  line-height: 1;
-  margin-bottom: 12px;
-}
-
-.stat-value.green  { color: #4ade80; }
-.stat-value.orange { color: #f97316; }
-.stat-value.white  { color: #e2e8f0; }
-
-.stat-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #475569;
-  text-transform: uppercase;
-}
-
-/* ===================================================
-   MIDDLE ROW
-   =================================================== */
-.middle-row {
+/* ── Charts Grid: 2 col desktop / 1 col mobile ── */
+.charts-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+
+  @media (max-width: 1023px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+
+  &--2col {
+    grid-template-columns: repeat(2, 1fr);
+
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
+  }
 }
 
-@media (max-width: 768px) {
-  .middle-row {
+/* ── Middle Grid: Calendar (420px fixed on desktop) + Reservas Table ── */
+.mid-grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 1023px) {
     grid-template-columns: 1fr;
   }
 }
 
-/* ── Suggested actions card ──────────────────────── */
-.suggested-card {
-  background: #141b24;
-  border: 1px solid #1e2a38;
-  border-radius: 16px;
-  padding: 20px 22px;
-}
-
-.suggested-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
-
-.suggested-item:hover {
-  opacity: 0.8;
-}
-
-.suggested-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-  color: #cbd5e1;
-  font-weight: 500;
-}
-
-.s-icon {
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.icon-blue { color: #60a5fa; }
-.icon-gray { color: #94a3b8; }
-
-.arrow-icon {
-  font-size: 16px;
-  color: #ef4444;
-}
-
-.suggested-divider {
-  height: 1px;
-  background: #1e2a38;
-}
-
-/* ── Quick actions card ──────────────────────────── */
-.quick-actions-card {
-  background: #141b24;
-  border: 1px solid #1e2a38;
-  border-radius: 16px;
-  padding: 20px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 13px 16px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-  border: none;
-}
-
-.action-btn:hover {
-  opacity: 0.85;
-}
-
-.action-btn ion-icon {
-  font-size: 16px;
-}
-
-.action-btn-green {
-  background: #22c55e;
-  color: #000000;
-}
-
-.action-btn-outline {
-  background: transparent;
-  border: 1px solid #2a3a50;
-  color: #94a3b8;
-}
-
-.action-btn-outline:hover {
-  border-color: #4a5568;
-  color: #e2e8f0;
-}
-
-/* ===================================================
-   ÚLTIMAS RESERVAS TABLE
-   =================================================== */
-.table-card {
-  background: #141b24;
-  border: 1px solid #1e2a38;
-  border-radius: 16px;
-  padding: 20px 22px;
-}
-
-.reservas-table {
-  width: 100%;
-}
-
-.table-head {
+/* ── Bottom Grid: Pagos | Planes (2 col desktop / 1 col mobile) ── */
+.bottom-grid {
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.5fr;
-  gap: 8px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  color: #475569;
-  text-transform: uppercase;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #1e2a38;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 1023px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+
+  &--2col {
+    grid-template-columns: repeat(2, 1fr);
+
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
+  }
 }
 
-.table-row {
-  display: grid;
-  grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.5fr;
-  gap: 8px;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid #1a2230;
-  font-size: 14px;
-  color: #94a3b8;
-}
-
-.table-row:last-child {
-  border-bottom: none;
-}
-
-.table-empty {
-  text-align: center;
-  padding: 30px 0;
-  color: #475569;
-  font-size: 13px;
-}
-
-.table-note {
+/* ── Quick Row: Quick Actions centered ── */
+.quick-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 20px 0 8px;
-  color: #64748b;
-  font-size: 13px;
+  justify-content: flex-start;
+  margin-bottom: 24px;
+
+  app-quick-actions {
+    max-width: 420px;
+    width: 100%;
+  }
 }
 
-.table-note ion-icon {
-  font-size: 18px;
-  color: #3b82f6;
-  flex-shrink: 0;
+/* ── Entrance Animations (Requirement 11.4) ─────────────────────── */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ===== KPI ROW ===== */
-.kpi-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 18px;
+.dashboard-card {
+  animation: slideInUp 300ms ease-out forwards;
+  opacity: 0; /* starts invisible */
+
+  &:nth-child(1) { animation-delay: 0ms; }
+  &:nth-child(2) { animation-delay: 40ms; }
+  &:nth-child(3) { animation-delay: 80ms; }
+  &:nth-child(4) { animation-delay: 120ms; }
+  &:nth-child(5) { animation-delay: 160ms; }
+  &:nth-child(6) { animation-delay: 200ms; }
 }
 
-.kpi-card {
-  background: #0f1720;
-  border: 1px solid #1e2a38;
-  border-radius: 12px;
-  padding: 14px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* ── Global Skeleton loader structure (referenced by sub-components) ── */
+.skeleton {
+  background: linear-gradient(90deg, #1e2a38 25%, #263040 50%, #1e2a38 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+  height: 48px;
+  width: 80%;
 }
 
-.kpi-card.small { font-size: 13px; }
-.kpi-title { color: #94a3b8; font-weight: 700; font-size: 12px; text-transform: uppercase; }
-.kpi-value { color: #e2e8f0; font-weight: 900; font-size: 20px; margin-top: 6px; }
-.kpi-right { font-size: 22px; opacity: 0.9; }
-
-/* ===== MIDDLE ROW - two columns layout tweaks ===== */
-.middle-row.two-col { grid-template-columns: 1fr 320px; }
-.left-col { background: transparent; }
-.right-col { background: transparent; }
-
-.alert-block { background: #0f1724; border: 1px solid #1e2a38; padding: 12px; border-radius: 10px; margin-bottom: 12px; }
-.alert-title { font-weight: 800; color: #e2e8f0; margin-bottom: 8px; }
-.alert-item { display:flex; justify-content:space-between; padding: 8px 6px; border-radius:6px; background: transparent; color: #cbd5e1; margin-bottom:6px; }
-.wait-item { padding: 6px 0; color: #f59e0b; }
-
-.shortcuts { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
-.shortcut { background:#111827; border:1px solid #1e2a38; color:#94a3b8; padding:10px; border-radius:8px; text-align:left; }
-
-.action-btn-primary { background:#22c55e; color:#000; padding:12px; border-radius:10px; width:100%; font-weight:800; }
-.action-btn { background:#0f1724; border:1px solid #1e2a38; color:#e2e8f0; padding:10px; border-radius:8px; width:100%; text-align:left; }
-
-/* Badges & table helpers */
-.badge { padding:6px 10px; border-radius:999px; font-weight:700; font-size:13px; }
-.badge.green { background:#16a34a; color:#fff; }
-.badge.small { font-size:11px; padding:4px 8px; }
-.badge.full { background:#ef4444; color:#fff; }
-.badge.partial { background:#f59e0b; color:#111; }
-
-.btn.small { padding:6px 10px; border-radius:8px; margin-right:6px; }
-.btn.outline { background:transparent; border:1px solid #334155; color:#94a3b8; }
-
-@media (max-width: 900px) {
-  .kpi-row { grid-template-columns: repeat(2, 1fr); }
-  .middle-row.two-col { grid-template-columns: 1fr; }
+@keyframes shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
 }

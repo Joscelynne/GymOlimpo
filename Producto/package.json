@@ -31,7 +31,6 @@
     "firebase": "^10.10.0",
     "ionicons": "^7.0.0",
     "jsbarcode": "^3.11.6",
-    "ngx-barcode": "^0.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

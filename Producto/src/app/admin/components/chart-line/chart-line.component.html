@@ -1,0 +1,49 @@
+<div class="chart-container dashboard-card">
+  <div class="chart-title">{{ title }}</div>
+
+  <div class="no-data" *ngIf="!hasEnoughData">
+    <ion-icon name="trending-up-outline"></ion-icon>
+    <p>{{ title }}: Sin datos suficientes (mínimo 2 días)</p>
+  </div>
+
+  <div class="svg-wrap" *ngIf="hasEnoughData">
+    <svg [attr.viewBox]="'0 0 ' + SVG_W + ' ' + SVG_H"
+         width="100%"
+         preserveAspectRatio="xMidYMid meet">
+
+      <!-- Area fill -->
+      <path [attr.d]="areaPath" fill="#22c55e" opacity="0.15"></path>
+
+      <!-- Line -->
+      <path [attr.d]="linePath" stroke="#22c55e" stroke-width="2.5" fill="none" stroke-linejoin="round"></path>
+
+      <!-- Points -->
+      <g *ngFor="let p of points">
+        <circle [attr.cx]="p.x" [attr.cy]="p.y" r="4" fill="#22c55e">
+          <title>{{ p.fecha }}: {{ p.conteo }} reservas</title>
+        </circle>
+        <!-- Date label -->
+        <text
+          [attr.x]="p.x"
+          [attr.y]="SVG_H - 2"
+          text-anchor="middle"
+          fill="#94a3b8"
+          font-size="9"
+          font-family="Inter, sans-serif">
+          {{ p.fecha.slice(8) }}
+        </text>
+        <!-- Value label -->
+        <text
+          [attr.x]="p.x"
+          [attr.y]="p.y - 8"
+          text-anchor="middle"
+          fill="#e2e8f0"
+          font-size="10"
+          font-weight="700"
+          font-family="Inter, sans-serif">
+          {{ p.conteo }}
+        </text>
+      </g>
+    </svg>
+  </div>
+</div>
